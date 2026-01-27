@@ -1,0 +1,102 @@
+Paracetamol B-DRUG
+500 B-DOSE
+mg I-DOSE
+once B-FREQ
+daily I-FREQ
+for O
+2 B-DUR
+days I-DUR
+after B-ROUTE
+food I-ROUTE
+
+Azithromycin B-DRUG
+250 B-DOSE
+mg I-DOSE
+once B-FREQ
+a I-FREQ
+day I-FREQ
+for O
+5 B-DUR
+days I-DUR
+
+Pantoprazole B-DRUG
+40 B-DOSE
+mg I-DOSE
+before B-ROUTE
+breakfast I-ROUTE
+once B-FREQ
+daily I-FREQ
+
+Cetirizine B-DRUG
+5 B-DOSE
+mg I-DOSE
+at B-FREQ
+night I-FREQ
+for O
+3 B-DUR
+days I-DUR
+
+Ibuprofen B-DRUG
+200 B-DOSE
+mg I-DOSE
+thrice B-FREQ
+daily I-FREQ
+after B-ROUTE
+meals I-ROUTE
+
+Vitamin B-DRUG
+C I-DRUG
+500 B-DOSE
+mg I-DOSE
+once B-FREQ
+daily I-FREQ
+
+Paracetamol B-DRUG
+650 B-DOSE
+mg I-DOSE
+every B-FREQ
+eight I-FREQ
+hours I-FREQ
+for O
+1 B-DUR
+day I-DUR
+
+Amoxicillin B-DRUG
+500 B-DOSE
+mg I-DOSE
+twice B-FREQ
+daily I-FREQ
+for O
+7 B-DUR
+days I-DUR
+
+ORS B-DRUG
+solution I-DRUG
+as B-FREQ
+required I-FREQ
+
+Levocetirizine B-DRUG
+5 B-DOSE
+mg I-DOSE
+once B-FREQ
+daily I-FREQ
+at B-ROUTE
+night I-ROUTE
+
+Paracetamol B-DRUG
+500 B-DOSE
+mg I-DOSE
+din B-FREQ
+mein I-FREQ
+ek I-FREQ
+baar I-FREQ
+2 B-DUR
+din I-DUR
+
+Cetirizine B-DRUG
+10 B-DOSE
+mg I-DOSE
+raat B-FREQ
+ko I-FREQ
+5 B-DUR
+din I-DUR
