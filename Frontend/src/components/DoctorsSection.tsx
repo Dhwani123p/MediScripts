@@ -77,11 +77,11 @@ export function DoctorsSection({ onViewAllDoctors }: DoctorsSectionProps) {
                       <Star
                         key={i}
                         size={14}
-                        className={i < Math.floor(doctor.rating || 4.5) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}
+                        className={i < Math.floor(parseFloat(doctor.rating) || 4.5) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}
                       />
                     ))}
                   </div>
-                  <span className="text-gray-700 text-sm">{(doctor.rating || 4.5).toFixed(1)}</span>
+                  <span className="text-gray-700 text-sm">{(parseFloat(doctor.rating) || 4.5).toFixed(1)}</span>
                 </div>
 
                 {doctor.location && (
