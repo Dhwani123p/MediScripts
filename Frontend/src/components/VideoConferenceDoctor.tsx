@@ -56,6 +56,10 @@ export function VideoConferenceDoctor({
   const [peerStatus, setPeerStatus] = useState<PeerStatus>('loading');
   const [peerError,  setPeerError]  = useState("");
 
+  // ── Resolved patient for this appointment ───────────────────────────────
+  const [resolvedPatientId,   setResolvedPatientId]   = useState<number | null>(patientId ?? null);
+  const [resolvedPatientName, setResolvedPatientName] = useState<string>(propPatientName);
+
   // ── Call controls ────────────────────────────────────────────────────────
   const [isMuted,       setIsMuted]       = useState(false);
   const [isCameraOff,   setIsCameraOff]   = useState(false);
@@ -85,6 +89,26 @@ export function VideoConferenceDoctor({
     const match = (roomName || "").match(/(\d+)$/);
     return match ? match[1] : "demo";
   };
+
+  // ── Fetch patient from appointment (so prescription saves correctly) ─────
+  useEffect(() => {
+    const apptId = parseInt(getApptId());
+    if (!apptId || patientId) return;          // already have it via prop
+    const token = localStorage.getItem("token");
+    if (!token) return;
+    fetch(`${API}/appointments`, { headers: authHeader() })
+      .then((r) => r.json())
+      .then((rows: any[]) => {
+        if (!Array.isArray(rows)) return;
+        const match = rows.find((a: any) => a.id === apptId);
+        if (match) {
+          setResolvedPatientId(match.patient_id);
+          setResolvedPatientName(match.patient_name || "Patient");
+        }
+      })
+      .catch(() => {});
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [roomName]);
 
   // ── PeerJS initialisation ────────────────────────────────────────────────
   useEffect(() => {
@@ -299,6 +323,10 @@ export function VideoConferenceDoctor({
   const savePrescription = async () => {
     const valid = medications.filter((m) => m.medication.trim());
     if (!valid.length) { alert("Please add at least one medication."); return; }
+    if (!resolvedPatientId) {
+      alert("Could not identify patient — please go back to dashboard and try again.");
+      return;
+    }
 
     setIsSaving(true);
     try {
@@ -308,7 +336,7 @@ export function VideoConferenceDoctor({
             method:  "POST",
             headers: authHeader(),
             body:    JSON.stringify({
-              patient_id:   patientId ?? 0,
+              patient_id:   resolvedPatientId,
               medication:   m.medication,
               dosage:       m.dosage,
               instructions: m.instructions,
@@ -364,7 +392,7 @@ export function VideoConferenceDoctor({
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2 flex-wrap">
                       <FileText className="w-5 h-5" />
-                      Prescription for {propPatientName}
+                      Prescription for {resolvedPatientName}
                       {extractSuccess && (
                         <span className="text-xs font-normal text-teal-600">
                           (AI-filled — edit as needed)
@@ -505,7 +533,7 @@ export function VideoConferenceDoctor({
               <Card>
                 <CardContent className="p-4 flex items-center justify-between">
                   <div>
-                    <h2 className="text-lg">Consultation with {propPatientName}</h2>
+                    <h2 className="text-lg">Consultation with {resolvedPatientName}</h2>
                     <p className={`text-sm ${
                       peerStatus === "error"     ? "text-red-500"   :
                       peerStatus === "connected" ? "text-green-600" : "text-gray-500"
