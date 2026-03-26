@@ -43,36 +43,6 @@ interface PatientDashboardProps {
   onViewAppointments?: () => void;
 }
 
-const MOCK_APPOINTMENTS = [
-  { id: 1, doctor: "Dr. Sarah Johnson", specialty: "Cardiologist", date: "Today", time: "2:30 PM", type: "Video Call", status: "upcoming" },
-  { id: 2, doctor: "Dr. Michael Chen", specialty: "General Medicine", date: "Tomorrow", time: "10:00 AM", type: "In-Person", status: "scheduled" },
-  { id: 3, doctor: "Dr. Emily Rodriguez", specialty: "Dermatologist", date: "Dec 18, 2024", time: "3:00 PM", type: "Video Call", status: "scheduled" },
-  { id: 4, doctor: "Dr. James Wilson", specialty: "Orthopedist", date: "Dec 20, 2024", time: "11:30 AM", type: "In-Person", status: "scheduled" },
-  { id: 5, doctor: "Dr. Lisa Brown", specialty: "Psychiatrist", date: "Dec 22, 2024", time: "2:00 PM", type: "Video Call", status: "scheduled" },
-  { id: 6, doctor: "Dr. Robert Davis", specialty: "Endocrinologist", date: "Dec 25, 2024", time: "9:15 AM", type: "Video Call", status: "scheduled" },
-  { id: 7, doctor: "Dr. Maria Garcia", specialty: "Neurologist", date: "Dec 28, 2024", time: "4:45 PM", type: "In-Person", status: "scheduled" },
-  { id: 8, doctor: "Dr. Daniel Lee", specialty: "Urologist", date: "Dec 30, 2024", time: "1:15 PM", type: "Video Call", status: "scheduled" },
-  { id: 9, doctor: "Dr. Amanda Taylor", specialty: "Gynecologist", date: "Jan 2, 2025", time: "10:45 AM", type: "In-Person", status: "scheduled" },
-  { id: 10, doctor: "Dr. Kevin Martinez", specialty: "Ophthalmologist", date: "Jan 5, 2025", time: "3:30 PM", type: "Video Call", status: "scheduled" },
-];
-
-const MOCK_DOCTORS = [
-  { id: 1, name: "Dr. Sarah Johnson", specialty: "Cardiologist", rating: 4.9, nextAvailable: "Today 3:00 PM" },
-  { id: 2, name: "Dr. Michael Chen", specialty: "General Medicine", rating: 4.8, nextAvailable: "Tomorrow 9:00 AM" },
-  { id: 3, name: "Dr. Emily Rodriguez", specialty: "Dermatologist", rating: 4.7, nextAvailable: "Dec 18, 3:00 PM" },
-  { id: 4, name: "Dr. James Wilson", specialty: "Orthopedist", rating: 4.9, nextAvailable: "Dec 20, 11:30 AM" },
-  { id: 5, name: "Dr. Lisa Brown", specialty: "Psychiatrist", rating: 4.8, nextAvailable: "Dec 22, 2:00 PM" },
-  { id: 6, name: "Dr. Robert Davis", specialty: "Endocrinologist", rating: 4.6, nextAvailable: "Dec 25, 9:15 AM" },
-  { id: 7, name: "Dr. Maria Garcia", specialty: "Neurologist", rating: 4.9, nextAvailable: "Dec 28, 4:45 PM" },
-  { id: 8, name: "Dr. Daniel Lee", specialty: "Urologist", rating: 4.7, nextAvailable: "Dec 30, 1:15 PM" },
-  { id: 9, name: "Dr. Amanda Taylor", specialty: "Gynecologist", rating: 4.8, nextAvailable: "Jan 2, 10:45 AM" },
-  { id: 10, name: "Dr. Kevin Martinez", specialty: "Ophthalmologist", rating: 4.9, nextAvailable: "Jan 5, 3:30 PM" },
-];
-
-const MOCK_PRESCRIPTIONS = [
-  { id: 1, doctor: "Dr. Sarah Johnson", medication: "Lisinopril 10mg", date: "Dec 15, 2024", status: "active" },
-  { id: 2, doctor: "Dr. Michael Chen", medication: "Vitamin D3 2000IU", date: "Dec 10, 2024", status: "completed" },
-];
 
 const MORNING_SLOTS = ["09:00 AM", "09:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM"];
 const AFTERNOON_SLOTS = ["12:00 PM", "12:30 PM", "02:00 PM", "02:30 PM", "03:00 PM", "03:30 PM"];

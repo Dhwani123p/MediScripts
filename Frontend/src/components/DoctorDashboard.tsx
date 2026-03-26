@@ -19,45 +19,6 @@ interface DoctorDashboardProps {
   onStartVideoCall?: (roomName?: string) => void;
 }
 
-// ── Mock fallback data ────────────────────────────────────────────────────
-const MOCK_APPOINTMENTS = [
-  { id: 1, patient: "John Smith",    time: "9:00 AM",  type: "video", status: "upcoming",     condition: "Follow-up consultation" },
-  { id: 2, patient: "Sarah Wilson",  time: "10:30 AM", type: "video", status: "in-progress",  condition: "Chest pain evaluation" },
-  { id: 3, patient: "Mike Johnson",  time: "2:00 PM",  type: "video", status: "upcoming",     condition: "Annual physical" },
-  { id: 4, patient: "Alice Brown",   time: "3:30 PM",  type: "video", status: "upcoming",     condition: "Medication review" },
-  { id: 5, patient: "David Lee",     time: "4:00 PM",  type: "video", status: "upcoming",     condition: "Mental health check" },
-  { id: 6, patient: "Mary Wilson",   time: "4:30 PM",  type: "video", status: "upcoming",     condition: "Blood pressure check" },
-  { id: 7, patient: "Tom Garcia",    time: "5:00 PM",  type: "video", status: "upcoming",     condition: "Consultation" },
-  { id: 8, patient: "Jane Miller",   time: "5:30 PM",  type: "video", status: "completed",    condition: "Routine checkup" },
-  { id: 9, patient: "Chris Taylor",  time: "6:00 PM",  type: "video", status: "completed",    condition: "Lab results discussion" },
-  { id: 10, patient: "Lisa Chen",    time: "6:30 PM",  type: "video", status: "completed",    condition: "Follow-up" },
-];
-
-const MOCK_PATIENTS = [
-  { id: 1,  name: "Emma Davis",      age: 34, lastVisit: "2 days ago",  condition: "Hypertension",    status: "stable" },
-  { id: 2,  name: "Robert Chen",     age: 45, lastVisit: "1 week ago",  condition: "Diabetes Type 2", status: "monitoring" },
-  { id: 3,  name: "Lisa Anderson",   age: 28, lastVisit: "3 days ago",  condition: "Anxiety",         status: "improving" },
-  { id: 4,  name: "Michael Brown",   age: 52, lastVisit: "1 week ago",  condition: "Heart Disease",   status: "stable" },
-  { id: 5,  name: "Sarah Miller",    age: 31, lastVisit: "5 days ago",  condition: "Migraine",        status: "improving" },
-  { id: 6,  name: "James Wilson",    age: 67, lastVisit: "2 weeks ago", condition: "Arthritis",       status: "monitoring" },
-  { id: 7,  name: "Jennifer Garcia", age: 29, lastVisit: "4 days ago",  condition: "Allergies",       status: "stable" },
-  { id: 8,  name: "David Martinez",  age: 41, lastVisit: "1 week ago",  condition: "Sleep Apnea",     status: "improving" },
-  { id: 9,  name: "Amanda Lee",      age: 36, lastVisit: "3 days ago",  condition: "Depression",      status: "monitoring" },
-  { id: 10, name: "Kevin Taylor",    age: 58, lastVisit: "1 week ago",  condition: "COPD",            status: "stable" },
-];
-
-const MOCK_PRESCRIPTIONS = [
-  { id: 1,  patient: "John Smith",      medication: "Lisinopril 10mg",    date: "Today",      status: "sent" },
-  { id: 2,  patient: "Sarah Wilson",    medication: "Ibuprofen 400mg",    date: "Yesterday",  status: "filled" },
-  { id: 3,  patient: "Emma Davis",      medication: "Metformin 500mg",    date: "2 days ago", status: "sent" },
-  { id: 4,  patient: "Robert Chen",     medication: "Insulin Glargine",   date: "3 days ago", status: "filled" },
-  { id: 5,  patient: "Lisa Anderson",   medication: "Sertraline 50mg",    date: "4 days ago", status: "sent" },
-  { id: 6,  patient: "Michael Brown",   medication: "Atorvastatin 20mg",  date: "5 days ago", status: "filled" },
-  { id: 7,  patient: "Sarah Miller",    medication: "Sumatriptan 50mg",   date: "6 days ago", status: "sent" },
-  { id: 8,  patient: "James Wilson",    medication: "Naproxen 250mg",     date: "1 week ago", status: "filled" },
-  { id: 9,  patient: "Jennifer Garcia", medication: "Cetirizine 10mg",    date: "1 week ago", status: "sent" },
-  { id: 10, patient: "David Martinez",  medication: "Zolpidem 10mg",      date: "1 week ago", status: "filled" },
-];
 
 const getLoggedInName = () => {
   try {
@@ -103,8 +64,23 @@ export function DoctorDashboard({ onLogout, onNavigateHome, onStartVideoCall }: 
   const [schedSearching,     setSchedSearching]     = useState(false);
   const [schedSubmitting,    setSchedSubmitting]    = useState(false);
 
-  // patients are still mock — no patients table yet
-  const allPatients = MOCK_PATIENTS;
+  // Derive unique patients from real appointments
+  const allPatients = (() => {
+    const seen = new Set<number>();
+    return allAppointments
+      .filter(a => {
+        if (!a.patient_id || seen.has(a.patient_id)) return false;
+        seen.add(a.patient_id);
+        return true;
+      })
+      .map(a => ({
+        id:        a.patient_id,
+        name:      a.patient,
+        lastVisit: a.date,
+        condition: a.condition || "General consultation",
+        status:    a.status    || "scheduled",
+      }));
+  })();
 
   const loadRealData = async () => {
     try {
@@ -123,13 +99,15 @@ export function DoctorDashboard({ onLogout, onNavigateHome, onStartVideoCall }: 
       const apptData = await apptRes.json();
       if (Array.isArray(apptData)) {
         setAllAppointments(apptData.map((a: any) => ({
-          id:        a.id,
-          patient:   a.patient_name      || "Unknown Patient",
-          time:      new Date(a.appointment_date).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-          date:      new Date(a.appointment_date).toLocaleDateString(),
-          type:      a.appointment_type  || "video",
-          status:    a.status            || "scheduled",
-          condition: a.notes             || "General consultation",
+          id:         a.id,
+          patient_id: a.patient_id,
+          patient:    a.patient_name      || "Unknown Patient",
+          patient_email: a.patient_email  || "",
+          time:       new Date(a.appointment_date).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+          date:       new Date(a.appointment_date).toLocaleDateString(),
+          type:       a.appointment_type  || "video",
+          status:     a.status            || "scheduled",
+          condition:  a.notes             || "General consultation",
         })));
       }
 

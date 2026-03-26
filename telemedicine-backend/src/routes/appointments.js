@@ -10,6 +10,7 @@ router.get('/', verifyToken, async (req, res) => {
     const result = await pool.query(
       `SELECT a.*,
         u.full_name  AS patient_name,
+        u.email      AS patient_email,
         d.full_name  AS doctor_name,
         d.specialty  AS doctor_specialty,
         d.consultation_fee
