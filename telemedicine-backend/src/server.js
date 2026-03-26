@@ -1,4 +1,6 @@
+const http    = require('http');
 const express = require('express');
+const { ExpressPeerServer } = require('peer');
 const pool = require('./config/database');
 const cors = require('cors');
 require('dotenv').config({ quiet: true, override: false });
@@ -122,7 +124,13 @@ app.use((err, req, res, next) => {
   });
 });
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+const PORT   = process.env.PORT || 5000;
+const server = http.createServer(app);
+
+// PeerJS signaling server — used for WebRTC video calls
+const peerServer = ExpressPeerServer(server, { debug: false });
+app.use('/peerjs', peerServer);
+
+server.listen(PORT, () => {
   console.log(`✅ Server running on http://localhost:${PORT}`);
 });

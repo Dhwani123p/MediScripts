@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from "react";
+import { API_BASE } from "../lib/config";
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
 import { DashboardHeader } from "./DashboardHeader";
@@ -41,6 +42,26 @@ export function VideoConferencePatient({
   useEffect(() => {
     const doctorPeerId = `ms-doc-${(roomName || "").match(/(\d+)$/)?.[1] ?? "demo"}`;
 
+    const getPeerOptions = () => {
+      try {
+        const u = new URL(API_BASE);
+        return {
+          host:   u.hostname,
+          port:   u.port ? parseInt(u.port) : (u.protocol === 'https:' ? 443 : 80),
+          path:   '/peerjs',
+          secure: u.protocol === 'https:',
+          config: {
+            iceServers: [
+              { urls: 'stun:stun.l.google.com:19302' },
+              { urls: 'stun:stun1.l.google.com:19302' },
+              { urls: 'turn:openrelay.metered.ca:80',  username: 'openrelayproject', credential: 'openrelayproject' },
+              { urls: 'turn:openrelay.metered.ca:443', username: 'openrelayproject', credential: 'openrelayproject' },
+            ],
+          },
+        };
+      } catch { return {}; }
+    };
+
     const startCall = (Peer: any) => {
       setStatus("connecting");
 
@@ -50,7 +71,7 @@ export function VideoConferencePatient({
           localStreamRef.current = stream;
           if (localVideoRef.current) localVideoRef.current.srcObject = stream;
 
-          const peer = new Peer();
+          const peer = new Peer(undefined, getPeerOptions());
           peerRef.current = peer;
 
           peer.on("open", () => {

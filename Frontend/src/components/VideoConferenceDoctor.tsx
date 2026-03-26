@@ -90,9 +90,29 @@ export function VideoConferenceDoctor({
   useEffect(() => {
     let retryTimeout: ReturnType<typeof setTimeout>;
 
+    const getPeerOptions = () => {
+      try {
+        const u = new URL(API_BASE);
+        return {
+          host:   u.hostname,
+          port:   u.port ? parseInt(u.port) : (u.protocol === 'https:' ? 443 : 80),
+          path:   '/peerjs',
+          secure: u.protocol === 'https:',
+          config: {
+            iceServers: [
+              { urls: 'stun:stun.l.google.com:19302' },
+              { urls: 'stun:stun1.l.google.com:19302' },
+              { urls: 'turn:openrelay.metered.ca:80',  username: 'openrelayproject', credential: 'openrelayproject' },
+              { urls: 'turn:openrelay.metered.ca:443', username: 'openrelayproject', credential: 'openrelayproject' },
+            ],
+          },
+        };
+      } catch { return {}; }
+    };
+
     const initializePeer = () => {
       const doctorPeerId = `ms-doc-${getApptId()}`;
-      const peer = new (window as any).Peer(doctorPeerId);
+      const peer = new (window as any).Peer(doctorPeerId, getPeerOptions());
       peerRef.current = peer;
 
       peer.on("open", () => {
