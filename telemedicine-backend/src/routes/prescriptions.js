@@ -32,16 +32,40 @@ router.get('/', verifyToken, async (req, res) => {
 });
 
 // ── POST /api/prescriptions ───────────────────────────────────────────────────
+// Accepts either { patient_id, medication, ... }
+//             or { appointment_id, medication, ... }  ← backend resolves patient
 router.post('/', verifyToken, async (req, res) => {
   try {
-    const { patient_id, medication, dosage, instructions } = req.body;
-    if (!patient_id || !medication) {
-      return res.status(400).json({ error: 'patient_id and medication are required' });
+    let { patient_id, appointment_id, medication, dosage, instructions } = req.body;
+
+    // Resolve patient from appointment if patient_id is missing/zero
+    if ((!patient_id || patient_id === 0) && appointment_id) {
+      const apptRow = await pool.query(
+        'SELECT patient_id FROM appointments WHERE id = $1', [appointment_id]
+      );
+      if (apptRow.rows.length === 0) {
+        return res.status(404).json({ error: 'Appointment not found' });
+      }
+      patient_id = apptRow.rows[0].patient_id;
     }
-    const docResult = await pool.query(
-      'SELECT id FROM doctors WHERE user_id = $1', [req.userId]
-    );
+
+    if (!patient_id || !medication) {
+      return res.status(400).json({ error: 'patient_id (or appointment_id) and medication are required' });
+    }
+
+    // Get or auto-create doctor record for this user
+    let docResult = await pool.query('SELECT id FROM doctors WHERE user_id = $1', [req.userId]);
+    if (docResult.rows.length === 0) {
+      const userRow = await pool.query('SELECT full_name FROM users WHERE id = $1', [req.userId]);
+      const fullName = userRow.rows[0]?.full_name || 'Doctor';
+      docResult = await pool.query(
+        `INSERT INTO doctors (user_id, full_name, specialty, available, created_at)
+         VALUES ($1, $2, 'General Physician', true, NOW()) RETURNING id`,
+        [req.userId, fullName]
+      );
+    }
     const doctor_id = docResult.rows[0]?.id || null;
+
     const result = await pool.query(
       `INSERT INTO prescriptions
         (patient_id, doctor_id, medication, dosage, instructions, status, prescribed_date, created_at)

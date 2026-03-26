@@ -323,7 +323,8 @@ export function VideoConferenceDoctor({
   const savePrescription = async () => {
     const valid = medications.filter((m) => m.medication.trim());
     if (!valid.length) { alert("Please add at least one medication."); return; }
-    if (!resolvedPatientId) {
+    const apptIdNum = parseInt(getApptId()) || null;
+    if (!resolvedPatientId && !apptIdNum) {
       alert("Could not identify patient — please go back to dashboard and try again.");
       return;
     }
@@ -336,10 +337,11 @@ export function VideoConferenceDoctor({
             method:  "POST",
             headers: authHeader(),
             body:    JSON.stringify({
-              patient_id:   resolvedPatientId,
-              medication:   m.medication,
-              dosage:       m.dosage,
-              instructions: m.instructions,
+              patient_id:     resolvedPatientId || undefined,
+              appointment_id: apptIdNum,
+              medication:     m.medication,
+              dosage:         m.dosage,
+              instructions:   m.instructions,
             }),
           }).then((r) => r.json())
         )
