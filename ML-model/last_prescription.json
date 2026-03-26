@@ -1,0 +1,21 @@
+{
+  "transcript": "Paracetamol 650 mg twice daily for 5 days after food",
+  "language": "manual",
+  "prescription": {
+    "drugs": [
+      "Paracetamol"
+    ],
+    "doses": [
+      "650 mg"
+    ],
+    "frequencies": [
+      "twice daily for"
+    ],
+    "durations": [
+      "5 days"
+    ],
+    "routes": [
+      "after food"
+    ]
+  }
+}

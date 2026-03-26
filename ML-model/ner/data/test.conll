@@ -1,0 +1,4421 @@
+Losartan B-DRUG
+20 B-DOSE
+mg I-DOSE
+BD B-FREQ
+1 B-DUR
+month I-DUR
+
+Aspirin B-DRUG
+0.5 B-DOSE
+g I-DOSE
+before B-ROUTE
+meals I-ROUTE
+
+Ipratropium B-DRUG
+2 B-DOSE
+tabs I-DOSE
+with B-ROUTE
+milk I-ROUTE
+
+Itraconazole B-DRUG
+5 B-DOSE
+mg I-DOSE
+subah B-FREQ
+aur I-FREQ
+raat I-FREQ
+ko I-FREQ
+1 B-DUR
+mahine I-DUR
+khali B-ROUTE
+pet I-ROUTE
+pe I-ROUTE
+
+Metformin B-DRUG
+10 B-DOSE
+ml I-DOSE
+in B-FREQ
+the I-FREQ
+morning I-FREQ
+and O
+Torsemide B-DRUG
+650 B-DOSE
+mg I-DOSE
+at B-FREQ
+night I-FREQ
+
+Amoxycillin B-DRUG
+250 B-DOSE
+mg I-DOSE
+din B-FREQ
+mein I-FREQ
+teen I-FREQ
+baar I-FREQ
+10 B-DUR
+din I-DUR
+dudh B-ROUTE
+ke I-ROUTE
+saath I-ROUTE
+
+Azithromycin B-DRUG
+5 B-DOSE
+mg I-DOSE
+har B-FREQ
+chhe I-FREQ
+ghante I-FREQ
+mein I-FREQ
+10 B-DUR
+din I-DUR
+khali B-ROUTE
+pet I-ROUTE
+pe I-ROUTE
+
+Acyclovir B-DRUG
+40 B-DOSE
+mg I-DOSE
+subah B-FREQ
+aur I-FREQ
+raat I-FREQ
+ko I-FREQ
+1 B-DUR
+mahine I-DUR
+dudh B-ROUTE
+ke I-ROUTE
+saath I-ROUTE
+
+Alprazolam B-DRUG
+10 B-DOSE
+mg I-DOSE
+har B-FREQ
+chhe I-FREQ
+ghante I-FREQ
+mein I-FREQ
+3 B-DUR
+din I-DUR
+paani B-ROUTE
+ke I-ROUTE
+saath I-ROUTE
+
+Fluconazole B-DRUG
+2 B-DOSE
+tabs I-DOSE
+har B-FREQ
+chhe I-FREQ
+ghante I-FREQ
+mein I-FREQ
+2 B-DUR
+hafte I-DUR
+khane B-ROUTE
+se I-ROUTE
+pehle I-ROUTE
+
+Ondansetron B-DRUG
+200 B-DOSE
+mg I-DOSE
+in B-FREQ
+the I-FREQ
+morning I-FREQ
+
+Warfarin B-DRUG
+2 B-DOSE
+tabs I-DOSE
+BD B-FREQ
+and O
+Ferrous B-DRUG
+Sulphate I-DRUG
+10 B-DOSE
+mg I-DOSE
+at B-FREQ
+night I-FREQ
+
+Isoniazid B-DRUG
+OD B-FREQ
+3 B-DUR
+months I-DUR
+
+Dexamethasone B-DRUG
+0.5 B-DOSE
+g I-DOSE
+with B-ROUTE
+milk I-ROUTE
+
+Vitamin B-DRUG
+B12 I-DRUG
+250 B-DOSE
+mg I-DOSE
+
+Nimesulide B-DRUG
+650 B-DOSE
+mg I-DOSE
+once B-FREQ
+a I-FREQ
+week I-FREQ
+
+Albendazole B-DRUG
+10 B-DOSE
+mg I-DOSE
+every B-FREQ
+six I-FREQ
+hours I-FREQ
+
+Omeprazole B-DRUG
+2 B-DOSE
+tabs I-DOSE
+
+Ranitidine B-DRUG
+0.5 B-DOSE
+g I-DOSE
+every B-FREQ
+twelve I-FREQ
+hours I-FREQ
+10 B-DUR
+days I-DUR
+before B-ROUTE
+meals I-ROUTE
+
+Insulin B-DRUG
+Regular I-DRUG
+twice B-FREQ
+daily I-FREQ
+7 B-DUR
+days I-DUR
+
+Pregabalin B-DRUG
+200 B-DOSE
+mg I-DOSE
+every B-FREQ
+twelve I-FREQ
+hours I-FREQ
+and O
+Gabapentin B-DRUG
+40 B-DOSE
+mg I-DOSE
+TDS B-FREQ
+
+Pantoprazole B-DRUG
+500 B-DOSE
+mg I-DOSE
+BD B-FREQ
+and O
+Doxycycline B-DRUG
+1 B-DOSE
+g I-DOSE
+in B-FREQ
+the I-FREQ
+morning I-FREQ
+
+Vitamin B-DRUG
+C I-DRUG
+650 B-DOSE
+mg I-DOSE
+every B-FREQ
+eight I-FREQ
+hours I-FREQ
+
+Glibenclamide B-DRUG
+1 B-DOSE
+tab I-DOSE
+
+Insulin B-DRUG
+Regular I-DRUG
+1 B-DOSE
+tab I-DOSE
+with B-ROUTE
+water I-ROUTE
+
+Famotidine B-DRUG
+0.5 B-DOSE
+g I-DOSE
+OD B-FREQ
+
+Famotidine B-DRUG
+40 B-DOSE
+mg I-DOSE
+subah B-FREQ
+ko I-FREQ
+1 B-DUR
+hafte I-DUR
+paani B-ROUTE
+ke I-ROUTE
+saath I-ROUTE
+
+Aspirin B-DRUG
+1 B-DOSE
+tab I-DOSE
+before B-ROUTE
+meals I-ROUTE
+
+Dexamethasone B-DRUG
+500 B-DOSE
+mg I-DOSE
+twice B-FREQ
+a I-FREQ
+week I-FREQ
+also O
+Rabeprazole B-DRUG
+5 B-DOSE
+ml I-DOSE
+in B-FREQ
+the I-FREQ
+morning I-FREQ
+
+Salbutamol B-DRUG
+200 B-DOSE
+mg I-DOSE
+din B-FREQ
+mein I-FREQ
+ek I-FREQ
+baar I-FREQ
+10 B-DUR
+din I-DUR
+paani B-ROUTE
+ke I-ROUTE
+saath I-ROUTE
+
+Methotrexate B-DRUG
+40 B-DOSE
+mg I-DOSE
+after B-ROUTE
+meals I-ROUTE
+
+Zinc B-DRUG
+Sulphate I-DRUG
+5 B-DOSE
+ml I-DOSE
+din B-FREQ
+mein I-FREQ
+teen I-FREQ
+baar I-FREQ
+10 B-DUR
+din I-DUR
+dudh B-ROUTE
+ke I-ROUTE
+saath I-ROUTE
+
+Ranitidine B-DRUG
+650 B-DOSE
+mg I-DOSE
+at B-FREQ
+bedtime I-FREQ
+2 B-DUR
+weeks I-DUR
+on B-ROUTE
+empty I-ROUTE
+stomach I-ROUTE
+
+Lisinopril B-DRUG
+twice B-FREQ
+a I-FREQ
+week I-FREQ
+10 B-DUR
+days I-DUR
+
+Telmisartan B-DRUG
+10 B-DOSE
+ml I-DOSE
+raat B-FREQ
+ko I-FREQ
+2 B-DUR
+hafte I-DUR
+khane B-ROUTE
+se I-ROUTE
+pehle I-ROUTE
+
+ORS B-DRUG
+0.5 B-DOSE
+g I-DOSE
+SOS B-FREQ
+and O
+Torsemide B-DRUG
+650 B-DOSE
+mg I-DOSE
+twice B-FREQ
+a I-FREQ
+week I-FREQ
+
+Budesonide B-DRUG
+650 B-DOSE
+mg I-DOSE
+din B-FREQ
+mein I-FREQ
+teen I-FREQ
+baar I-FREQ
+7 B-DUR
+din I-DUR
+khane B-ROUTE
+ke I-ROUTE
+baad I-ROUTE
+
+Albendazole B-DRUG
+2 B-DOSE
+tabs I-DOSE
+BD B-FREQ
+3 B-DUR
+months I-DUR
+after B-ROUTE
+breakfast I-ROUTE
+
+Zinc B-DRUG
+Sulphate I-DRUG
+every B-FREQ
+six I-FREQ
+hours I-FREQ
+1 B-DUR
+month I-DUR
+
+Metformin B-DRUG
+200 B-DOSE
+mg I-DOSE
+TDS B-FREQ
+
+Rosuvastatin B-DRUG
+1 B-DOSE
+g I-DOSE
+QID B-FREQ
+5 B-DUR
+days I-DUR
+sublingually B-ROUTE
+
+Ivermectin B-DRUG
+100 B-DOSE
+mg I-DOSE
+twice B-FREQ
+daily I-FREQ
+as B-DUR
+directed I-DUR
+
+Aceclofenac B-DRUG
+5 B-DOSE
+mg I-DOSE
+
+Amoxycillin B-DRUG
+250 B-DOSE
+mg I-DOSE
+at B-FREQ
+night I-FREQ
+1 B-DUR
+month I-DUR
+
+Pregabalin B-DRUG
+650 B-DOSE
+mg I-DOSE
+SOS B-FREQ
+14 B-DUR
+days I-DUR
+
+Dexamethasone B-DRUG
+0.5 B-DOSE
+g I-DOSE
+raat B-FREQ
+ko I-FREQ
+5 B-DUR
+din I-DUR
+dudh B-ROUTE
+ke I-ROUTE
+saath I-ROUTE
+
+Loratadine B-DRUG
+1 B-DOSE
+g I-DOSE
+har B-FREQ
+chhe I-FREQ
+ghante I-FREQ
+mein I-FREQ
+10 B-DUR
+din I-DUR
+paani B-ROUTE
+ke I-ROUTE
+saath I-ROUTE
+
+Metronidazole B-DRUG
+QID B-FREQ
+3 B-DUR
+months I-DUR
+
+Gabapentin B-DRUG
+200 B-DOSE
+mg I-DOSE
+SOS B-FREQ
+
+Carbimazole B-DRUG
+100 B-DOSE
+mg I-DOSE
+subah B-FREQ
+aur I-FREQ
+raat I-FREQ
+ko I-FREQ
+10 B-DUR
+din I-DUR
+paani B-ROUTE
+ke I-ROUTE
+saath I-ROUTE
+
+Doxycycline B-DRUG
+5 B-DOSE
+mg I-DOSE
+twice B-FREQ
+a I-FREQ
+day I-FREQ
+2 B-DUR
+weeks I-DUR
+after B-ROUTE
+breakfast I-ROUTE
+
+Glibenclamide B-DRUG
+1 B-DOSE
+g I-DOSE
+at B-FREQ
+night I-FREQ
+
+Ibuprofen B-DRUG
+2 B-DOSE
+tabs I-DOSE
+once B-FREQ
+daily I-FREQ
+
+Ondansetron B-DRUG
+once B-FREQ
+daily I-FREQ
+10 B-DUR
+days I-DUR
+
+Telmisartan B-DRUG
+100 B-DOSE
+mg I-DOSE
+har B-FREQ
+chhe I-FREQ
+ghante I-FREQ
+mein I-FREQ
+2 B-DUR
+hafte I-DUR
+khali B-ROUTE
+pet I-ROUTE
+pe I-ROUTE
+
+Esomeprazole B-DRUG
+100 B-DOSE
+mg I-DOSE
+BD B-FREQ
+10 B-DUR
+days I-DUR
+
+Azithromycin B-DRUG
+40 B-DOSE
+mg I-DOSE
+twice B-FREQ
+daily I-FREQ
+with O
+Dexamethasone B-DRUG
+100 B-DOSE
+mg I-DOSE
+every B-FREQ
+six I-FREQ
+hours I-FREQ
+
+Ciprofloxacin B-DRUG
+1 B-DOSE
+tab I-DOSE
+din B-FREQ
+mein I-FREQ
+do I-FREQ
+baar I-FREQ
+7 B-DUR
+din I-DUR
+khali B-ROUTE
+pet I-ROUTE
+pe I-ROUTE
+
+Simvastatin B-DRUG
+at B-FREQ
+bedtime I-FREQ
+7 B-DUR
+days I-DUR
+
+Methylprednisolone B-DRUG
+every B-FREQ
+eight I-FREQ
+hours I-FREQ
+3 B-DUR
+months I-DUR
+
+Ramipril B-DRUG
+10 B-DOSE
+mg I-DOSE
+once B-FREQ
+daily I-FREQ
+7 B-DUR
+days I-DUR
+
+Folic B-DRUG
+Acid I-DRUG
+TDS B-FREQ
+3 B-DUR
+months I-DUR
+
+Prednisolone B-DRUG
+5 B-DOSE
+ml I-DOSE
+once B-FREQ
+daily I-FREQ
+1 B-DUR
+month I-DUR
+orally B-ROUTE
+
+Alprazolam B-DRUG
+5 B-DOSE
+ml I-DOSE
+at B-FREQ
+night I-FREQ
+
+Clonazepam B-DRUG
+1 B-DOSE
+tab I-DOSE
+every B-FREQ
+eight I-FREQ
+hours I-FREQ
+2 B-DUR
+weeks I-DUR
+
+Telmisartan B-DRUG
+100 B-DOSE
+mg I-DOSE
+twice B-FREQ
+a I-FREQ
+day I-FREQ
+3 B-DUR
+days I-DUR
+
+Pantoprazole B-DRUG
+0.5 B-DOSE
+g I-DOSE
+on B-ROUTE
+empty I-ROUTE
+stomach I-ROUTE
+
+Vitamin B-DRUG
+B12 I-DRUG
+2 B-DOSE
+tabs I-DOSE
+
+Ibuprofen B-DRUG
+10 B-DOSE
+ml I-DOSE
+twice B-FREQ
+daily I-FREQ
+
+Theophylline B-DRUG
+twice B-FREQ
+daily I-FREQ
+as B-DUR
+directed I-DUR
+
+Amitriptyline B-DRUG
+5 B-DOSE
+mg I-DOSE
+OD B-FREQ
+
+Escitalopram B-DRUG
+650 B-DOSE
+mg I-DOSE
+thrice B-FREQ
+daily I-FREQ
+and O
+Escitalopram B-DRUG
+10 B-DOSE
+ml I-DOSE
+twice B-FREQ
+a I-FREQ
+day I-FREQ
+
+Amitriptyline B-DRUG
+every B-FREQ
+twelve I-FREQ
+hours I-FREQ
+14 B-DUR
+days I-DUR
+
+Zinc B-DRUG
+Sulphate I-DRUG
+40 B-DOSE
+mg I-DOSE
+twice B-FREQ
+a I-FREQ
+day I-FREQ
+7 B-DUR
+days I-DUR
+
+Simvastatin B-DRUG
+1 B-DOSE
+tab I-DOSE
+subah B-FREQ
+ko I-FREQ
+10 B-DUR
+din I-DUR
+khane B-ROUTE
+ke I-ROUTE
+baad I-ROUTE
+
+Furosemide B-DRUG
+1 B-DOSE
+g I-DOSE
+in B-FREQ
+the I-FREQ
+morning I-FREQ
+
+Azithromycin B-DRUG
+500 B-DOSE
+mg I-DOSE
+every B-FREQ
+eight I-FREQ
+hours I-FREQ
+
+Vitamin B-DRUG
+C I-DRUG
+650 B-DOSE
+mg I-DOSE
+din B-FREQ
+mein I-FREQ
+teen I-FREQ
+baar I-FREQ
+1 B-DUR
+hafte I-DUR
+dudh B-ROUTE
+ke I-ROUTE
+saath I-ROUTE
+
+ORS B-DRUG
+1 B-DOSE
+tab I-DOSE
+
+Theophylline B-DRUG
+2 B-DOSE
+tabs I-DOSE
+subah B-FREQ
+aur I-FREQ
+raat I-FREQ
+ko I-FREQ
+10 B-DUR
+din I-DUR
+khali B-ROUTE
+pet I-ROUTE
+pe I-ROUTE
+
+Fluconazole B-DRUG
+20 B-DOSE
+mg I-DOSE
+
+Metoprolol B-DRUG
+10 B-DOSE
+ml I-DOSE
+
+Doxycycline B-DRUG
+20 B-DOSE
+mg I-DOSE
+
+Azithromycin B-DRUG
+5 B-DOSE
+mg I-DOSE
+roz B-FREQ
+ek I-FREQ
+baar I-FREQ
+10 B-DUR
+din I-DUR
+khane B-ROUTE
+se I-ROUTE
+pehle I-ROUTE
+
+Albendazole B-DRUG
+10 B-DOSE
+mg I-DOSE
+after B-ROUTE
+meals I-ROUTE
+
+Acyclovir B-DRUG
+200 B-DOSE
+mg I-DOSE
+before B-ROUTE
+meals I-ROUTE
+
+Ferrous B-DRUG
+Sulphate I-DRUG
+10 B-DOSE
+ml I-DOSE
+twice B-FREQ
+a I-FREQ
+week I-FREQ
+14 B-DUR
+days I-DUR
+
+Ipratropium B-DRUG
+40 B-DOSE
+mg I-DOSE
+
+Ibuprofen B-DRUG
+5 B-DOSE
+ml I-DOSE
+SOS B-FREQ
+3 B-DUR
+days I-DUR
+with B-ROUTE
+milk I-ROUTE
+
+Metoprolol B-DRUG
+1 B-DOSE
+tab I-DOSE
+twice B-FREQ
+daily I-FREQ
+with O
+Levocetirizine B-DRUG
+40 B-DOSE
+mg I-DOSE
+twice B-FREQ
+daily I-FREQ
+
+Rabeprazole B-DRUG
+200 B-DOSE
+mg I-DOSE
+
+Montelukast B-DRUG
+1 B-DOSE
+g I-DOSE
+SOS B-FREQ
+and O
+Itraconazole B-DRUG
+100 B-DOSE
+mg I-DOSE
+at B-FREQ
+night I-FREQ
+
+Ranitidine B-DRUG
+20 B-DOSE
+mg I-DOSE
+TDS B-FREQ
+and O
+Lansoprazole B-DRUG
+500 B-DOSE
+mg I-DOSE
+once B-FREQ
+daily I-FREQ
+
+Fexofenadine B-DRUG
+650 B-DOSE
+mg I-DOSE
+
+Doxycycline B-DRUG
+twice B-FREQ
+a I-FREQ
+week I-FREQ
+3 B-DUR
+months I-DUR
+
+Nimesulide B-DRUG
+at B-FREQ
+night I-FREQ
+2 B-DUR
+weeks I-DUR
+
+Hydrochlorothiazide B-DRUG
+1 B-DOSE
+tab I-DOSE
+twice B-FREQ
+daily I-FREQ
+2 B-DUR
+weeks I-DUR
+after B-ROUTE
+food I-ROUTE
+
+Alprazolam B-DRUG
+10 B-DOSE
+mg I-DOSE
+din B-FREQ
+mein I-FREQ
+teen I-FREQ
+baar I-FREQ
+2 B-DUR
+hafte I-DUR
+khali B-ROUTE
+pet I-ROUTE
+pe I-ROUTE
+
+Theophylline B-DRUG
+500 B-DOSE
+mg I-DOSE
+subah B-FREQ
+aur I-FREQ
+raat I-FREQ
+ko I-FREQ
+5 B-DUR
+din I-DUR
+khali B-ROUTE
+pet I-ROUTE
+pe I-ROUTE
+
+Insulin B-DRUG
+Regular I-DRUG
+20 B-DOSE
+mg I-DOSE
+har B-FREQ
+chhe I-FREQ
+ghante I-FREQ
+mein I-FREQ
+5 B-DUR
+din I-DUR
+dudh B-ROUTE
+ke I-ROUTE
+saath I-ROUTE
+
+Gabapentin B-DRUG
+10 B-DOSE
+mg I-DOSE
+twice B-FREQ
+a I-FREQ
+day I-FREQ
+with O
+Ibuprofen B-DRUG
+40 B-DOSE
+mg I-DOSE
+three B-FREQ
+times I-FREQ
+a I-FREQ
+day I-FREQ
+
+Ipratropium B-DRUG
+2 B-DOSE
+tabs I-DOSE
+raat B-FREQ
+ko I-FREQ
+2 B-DUR
+hafte I-DUR
+khali B-ROUTE
+pet I-ROUTE
+pe I-ROUTE
+
+Itraconazole B-DRUG
+1 B-DOSE
+tab I-DOSE
+once B-FREQ
+a I-FREQ
+week I-FREQ
+2 B-DUR
+weeks I-DUR
+
+Methylprednisolone B-DRUG
+40 B-DOSE
+mg I-DOSE
+subah B-FREQ
+aur I-FREQ
+raat I-FREQ
+ko I-FREQ
+7 B-DUR
+din I-DUR
+paani B-ROUTE
+ke I-ROUTE
+saath I-ROUTE
+
+Alprazolam B-DRUG
+10 B-DOSE
+mg I-DOSE
+
+Vitamin B-DRUG
+B12 I-DRUG
+250 B-DOSE
+mg I-DOSE
+at B-FREQ
+night I-FREQ
+14 B-DUR
+days I-DUR
+on B-ROUTE
+empty I-ROUTE
+stomach I-ROUTE
+
+Hydroxychloroquine B-DRUG
+10 B-DOSE
+mg I-DOSE
+in B-FREQ
+the I-FREQ
+morning I-FREQ
+
+Amitriptyline B-DRUG
+500 B-DOSE
+mg I-DOSE
+SOS B-FREQ
+14 B-DUR
+days I-DUR
+with B-ROUTE
+water I-ROUTE
+
+Amlodipine B-DRUG
+10 B-DOSE
+mg I-DOSE
+
+Vitamin B-DRUG
+C I-DRUG
+1 B-DOSE
+tab I-DOSE
+every B-FREQ
+six I-FREQ
+hours I-FREQ
+10 B-DUR
+days I-DUR
+
+Spironolactone B-DRUG
+20 B-DOSE
+mg I-DOSE
+subah B-FREQ
+ko I-FREQ
+1 B-DUR
+mahine I-DUR
+khane B-ROUTE
+ke I-ROUTE
+baad I-ROUTE
+
+Albendazole B-DRUG
+100 B-DOSE
+mg I-DOSE
+twice B-FREQ
+a I-FREQ
+week I-FREQ
+
+Methotrexate B-DRUG
+1 B-DOSE
+tab I-DOSE
+twice B-FREQ
+a I-FREQ
+day I-FREQ
+
+Ipratropium B-DRUG
+250 B-DOSE
+mg I-DOSE
+QID B-FREQ
+also O
+Metronidazole B-DRUG
+1 B-DOSE
+g I-DOSE
+every B-FREQ
+eight I-FREQ
+hours I-FREQ
+
+Enalapril B-DRUG
+10 B-DOSE
+mg I-DOSE
+once B-FREQ
+a I-FREQ
+week I-FREQ
+
+Ciprofloxacin B-DRUG
+5 B-DOSE
+ml I-DOSE
+
+Tramadol B-DRUG
+100 B-DOSE
+mg I-DOSE
+at B-FREQ
+bedtime I-FREQ
+14 B-DUR
+days I-DUR
+with B-ROUTE
+milk I-ROUTE
+
+Doxycycline B-DRUG
+1 B-DOSE
+g I-DOSE
+with B-ROUTE
+milk I-ROUTE
+
+Azithromycin B-DRUG
+2 B-DOSE
+tabs I-DOSE
+at B-FREQ
+bedtime I-FREQ
+
+Clonazepam B-DRUG
+1 B-DOSE
+g I-DOSE
+subah B-FREQ
+aur I-FREQ
+raat I-FREQ
+ko I-FREQ
+5 B-DUR
+din I-DUR
+khane B-ROUTE
+ke I-ROUTE
+baad I-ROUTE
+
+Pyrazinamide B-DRUG
+0.5 B-DOSE
+g I-DOSE
+after B-ROUTE
+breakfast I-ROUTE
+
+Domperidone B-DRUG
+500 B-DOSE
+mg I-DOSE
+subah B-FREQ
+ko I-FREQ
+7 B-DUR
+din I-DUR
+khane B-ROUTE
+ke I-ROUTE
+baad I-ROUTE
+
+Isoniazid B-DRUG
+5 B-DOSE
+mg I-DOSE
+in B-FREQ
+the I-FREQ
+morning I-FREQ
+with O
+Doxycicline B-DRUG
+200 B-DOSE
+mg I-DOSE
+once B-FREQ
+daily I-FREQ
+
+Prednisolone B-DRUG
+5 B-DOSE
+mg I-DOSE
+at B-FREQ
+night I-FREQ
+
+Amlodipine B-DRUG
+40 B-DOSE
+mg I-DOSE
+with B-ROUTE
+water I-ROUTE
+
+Ibuprofen B-DRUG
+200 B-DOSE
+mg I-DOSE
+before B-ROUTE
+breakfast I-ROUTE
+
+Folic B-DRUG
+Acid I-DRUG
+10 B-DOSE
+ml I-DOSE
+din B-FREQ
+mein I-FREQ
+ek I-FREQ
+baar I-FREQ
+3 B-DUR
+din I-DUR
+khali B-ROUTE
+pet I-ROUTE
+pe I-ROUTE
+
+Codeine B-DRUG
+thrice B-FREQ
+daily I-FREQ
+14 B-DUR
+days I-DUR
+
+Hydrochlorothiazide B-DRUG
+40 B-DOSE
+mg I-DOSE
+har B-FREQ
+chhe I-FREQ
+ghante I-FREQ
+mein I-FREQ
+1 B-DUR
+mahine I-DUR
+paani B-ROUTE
+ke I-ROUTE
+saath I-ROUTE
+
+Paracetamol B-DRUG
+20 B-DOSE
+mg I-DOSE
+at B-FREQ
+night I-FREQ
+
+Amoxycillin B-DRUG
+40 B-DOSE
+mg I-DOSE
+TDS B-FREQ
+
+Furosemide B-DRUG
+0.5 B-DOSE
+g I-DOSE
+BD B-FREQ
+as B-DUR
+directed I-DUR
+
+Vitamin B-DRUG
+D3 I-DRUG
+10 B-DOSE
+mg I-DOSE
+sublingually B-ROUTE
+
+Clonazepam B-DRUG
+1 B-DOSE
+g I-DOSE
+twice B-FREQ
+a I-FREQ
+week I-FREQ
+3 B-DUR
+days I-DUR
+
+Dexamethasone B-DRUG
+40 B-DOSE
+mg I-DOSE
+in B-FREQ
+the I-FREQ
+morning I-FREQ
+7 B-DUR
+days I-DUR
+after B-ROUTE
+food I-ROUTE
+
+Montelukast B-DRUG
+100 B-DOSE
+mg I-DOSE
+twice B-FREQ
+a I-FREQ
+day I-FREQ
+and O
+ORS B-DRUG
+5 B-DOSE
+mg I-DOSE
+once B-FREQ
+a I-FREQ
+week I-FREQ
+
+Budesonide B-DRUG
+BD B-FREQ
+1 B-DUR
+week I-DUR
+
+Glimepiride B-DRUG
+650 B-DOSE
+mg I-DOSE
+subah B-FREQ
+ko I-FREQ
+3 B-DUR
+din I-DUR
+dudh B-ROUTE
+ke I-ROUTE
+saath I-ROUTE
+
+Spironolactone B-DRUG
+2 B-DOSE
+tabs I-DOSE
+every B-FREQ
+eight I-FREQ
+hours I-FREQ
+with O
+Telmisartan B-DRUG
+5 B-DOSE
+mg I-DOSE
+twice B-FREQ
+a I-FREQ
+day I-FREQ
+
+Ramipril B-DRUG
+100 B-DOSE
+mg I-DOSE
+at B-FREQ
+night I-FREQ
+and O
+Aspirin B-DRUG
+5 B-DOSE
+ml I-DOSE
+in B-FREQ
+the I-FREQ
+morning I-FREQ
+
+Gabapentin B-DRUG
+200 B-DOSE
+mg I-DOSE
+twice B-FREQ
+a I-FREQ
+day I-FREQ
+
+Gliclazide B-DRUG
+40 B-DOSE
+mg I-DOSE
+every B-FREQ
+twelve I-FREQ
+hours I-FREQ
+
+Nimesulide B-DRUG
+5 B-DOSE
+mg I-DOSE
+
+Bisoprolol B-DRUG
+0.5 B-DOSE
+g I-DOSE
+twice B-FREQ
+daily I-FREQ
+and O
+Pyrazinamide B-DRUG
+200 B-DOSE
+mg I-DOSE
+at B-FREQ
+night I-FREQ
+
+Carbimazole B-DRUG
+5 B-DOSE
+ml I-DOSE
+subah B-FREQ
+ko I-FREQ
+5 B-DUR
+din I-DUR
+dudh B-ROUTE
+ke I-ROUTE
+saath I-ROUTE
+
+Fluconazole B-DRUG
+40 B-DOSE
+mg I-DOSE
+
+Fluconazole B-DRUG
+2 B-DOSE
+tabs I-DOSE
+BD B-FREQ
+with O
+Methylprednisolone B-DRUG
+40 B-DOSE
+mg I-DOSE
+every B-FREQ
+eight I-FREQ
+hours I-FREQ
+
+Rabeprazole B-DRUG
+5 B-DOSE
+ml I-DOSE
+subah B-FREQ
+aur I-FREQ
+raat I-FREQ
+ko I-FREQ
+1 B-DUR
+hafte I-DUR
+dudh B-ROUTE
+ke I-ROUTE
+saath I-ROUTE
+
+Cetirizine B-DRUG
+40 B-DOSE
+mg I-DOSE
+
+Esomeprazole B-DRUG
+QID B-FREQ
+as B-DUR
+directed I-DUR
+
+Ferrous B-DRUG
+Sulphate I-DRUG
+20 B-DOSE
+mg I-DOSE
+every B-FREQ
+six I-FREQ
+hours I-FREQ
+as B-DUR
+directed I-DUR
+
+Clonazepam B-DRUG
+5 B-DOSE
+mg I-DOSE
+
+Paracetamol B-DRUG
+500 B-DOSE
+mg I-DOSE
+twice B-FREQ
+a I-FREQ
+day I-FREQ
+1 B-DUR
+week I-DUR
+
+Vitamin B-DRUG
+C I-DRUG
+200 B-DOSE
+mg I-DOSE
+TDS B-FREQ
+also O
+Atorvastatin B-DRUG
+5 B-DOSE
+mg I-DOSE
+OD B-FREQ
+
+Methotrexate B-DRUG
+20 B-DOSE
+mg I-DOSE
+din B-FREQ
+mein I-FREQ
+ek I-FREQ
+baar I-FREQ
+3 B-DUR
+din I-DUR
+khane B-ROUTE
+se I-ROUTE
+pehle I-ROUTE
+
+Paracetamol B-DRUG
+1 B-DOSE
+tab I-DOSE
+subah B-FREQ
+aur I-FREQ
+raat I-FREQ
+ko I-FREQ
+1 B-DUR
+hafte I-DUR
+khane B-ROUTE
+ke I-ROUTE
+baad I-ROUTE
+
+Ramipril B-DRUG
+1 B-DOSE
+tab I-DOSE
+twice B-FREQ
+a I-FREQ
+week I-FREQ
+with O
+Metoprolol B-DRUG
+5 B-DOSE
+mg I-DOSE
+BD B-FREQ
+
+Amoxycillin B-DRUG
+250 B-DOSE
+mg I-DOSE
+SOS B-FREQ
+
+Torsemide B-DRUG
+200 B-DOSE
+mg I-DOSE
+
+Lisinopril B-DRUG
+250 B-DOSE
+mg I-DOSE
+at B-FREQ
+night I-FREQ
+
+Esomeprazole B-DRUG
+250 B-DOSE
+mg I-DOSE
+before B-ROUTE
+food I-ROUTE
+
+Amoxycillin B-DRUG
+10 B-DOSE
+ml I-DOSE
+
+Amoxycillin B-DRUG
+once B-FREQ
+daily I-FREQ
+3 B-DUR
+months I-DUR
+
+Tramadol B-DRUG
+100 B-DOSE
+mg I-DOSE
+
+Tramadol B-DRUG
+100 B-DOSE
+mg I-DOSE
+at B-FREQ
+night I-FREQ
+and O
+Nimesulide B-DRUG
+200 B-DOSE
+mg I-DOSE
+at B-FREQ
+bedtime I-FREQ
+
+Bisoprolol B-DRUG
+1 B-DOSE
+g I-DOSE
+every B-FREQ
+six I-FREQ
+hours I-FREQ
+1 B-DUR
+week I-DUR
+
+Aceclofenac B-DRUG
+250 B-DOSE
+mg I-DOSE
+orally B-ROUTE
+
+Folic B-DRUG
+Acid I-DRUG
+200 B-DOSE
+mg I-DOSE
+SOS B-FREQ
+7 B-DUR
+days I-DUR
+orally B-ROUTE
+
+Amoxycillin B-DRUG
+1 B-DOSE
+tab I-DOSE
+before B-ROUTE
+meals I-ROUTE
+
+Levocetirizine B-DRUG
+100 B-DOSE
+mg I-DOSE
+every B-FREQ
+eight I-FREQ
+hours I-FREQ
+3 B-DUR
+months I-DUR
+after B-ROUTE
+breakfast I-ROUTE
+
+Lisinopril B-DRUG
+5 B-DOSE
+ml I-DOSE
+raat B-FREQ
+ko I-FREQ
+1 B-DUR
+mahine I-DUR
+paani B-ROUTE
+ke I-ROUTE
+saath I-ROUTE
+
+Fexofenadine B-DRUG
+250 B-DOSE
+mg I-DOSE
+once B-FREQ
+daily I-FREQ
+1 B-DUR
+week I-DUR
+orally B-ROUTE
+
+Lisinopril B-DRUG
+three B-FREQ
+times I-FREQ
+a I-FREQ
+day I-FREQ
+7 B-DUR
+days I-DUR
+
+Glibenclamide B-DRUG
+1 B-DOSE
+g I-DOSE
+subah B-FREQ
+ko I-FREQ
+2 B-DUR
+hafte I-DUR
+khali B-ROUTE
+pet I-ROUTE
+pe I-ROUTE
+
+Albendazole B-DRUG
+5 B-DOSE
+mg I-DOSE
+twice B-FREQ
+a I-FREQ
+day I-FREQ
+
+Salbutamol B-DRUG
+40 B-DOSE
+mg I-DOSE
+orally B-ROUTE
+
+Bisoprolol B-DRUG
+2 B-DOSE
+tabs I-DOSE
+twice B-FREQ
+daily I-FREQ
+
+Rosuvastatin B-DRUG
+20 B-DOSE
+mg I-DOSE
+har B-FREQ
+chhe I-FREQ
+ghante I-FREQ
+mein I-FREQ
+3 B-DUR
+din I-DUR
+dudh B-ROUTE
+ke I-ROUTE
+saath I-ROUTE
+
+Ranitidine B-DRUG
+5 B-DOSE
+mg I-DOSE
+twice B-FREQ
+a I-FREQ
+week I-FREQ
+1 B-DUR
+month I-DUR
+after B-ROUTE
+breakfast I-ROUTE
+
+Clopidogrel B-DRUG
+0.5 B-DOSE
+g I-DOSE
+at B-FREQ
+night I-FREQ
+also O
+Theophylline B-DRUG
+40 B-DOSE
+mg I-DOSE
+three B-FREQ
+times I-FREQ
+a I-FREQ
+day I-FREQ
+
+Nimesulide B-DRUG
+2 B-DOSE
+tabs I-DOSE
+after B-ROUTE
+food I-ROUTE
+
+Insulin B-DRUG
+Regular I-DRUG
+5 B-DOSE
+ml I-DOSE
+subah B-FREQ
+aur I-FREQ
+raat I-FREQ
+ko I-FREQ
+5 B-DUR
+din I-DUR
+khane B-ROUTE
+se I-ROUTE
+pehle I-ROUTE
+
+Domperidone B-DRUG
+every B-FREQ
+twelve I-FREQ
+hours I-FREQ
+14 B-DUR
+days I-DUR
+
+Telmisartan B-DRUG
+every B-FREQ
+six I-FREQ
+hours I-FREQ
+3 B-DUR
+months I-DUR
+
+Rifampicin B-DRUG
+5 B-DOSE
+mg I-DOSE
+sublingually B-ROUTE
+
+Enalapril B-DRUG
+twice B-FREQ
+a I-FREQ
+week I-FREQ
+1 B-DUR
+month I-DUR
+
+Montelukast B-DRUG
+at B-FREQ
+night I-FREQ
+14 B-DUR
+days I-DUR
+
+Metoprolol B-DRUG
+20 B-DOSE
+mg I-DOSE
+har B-FREQ
+chhe I-FREQ
+ghante I-FREQ
+mein I-FREQ
+10 B-DUR
+din I-DUR
+khane B-ROUTE
+ke I-ROUTE
+baad I-ROUTE
+
+Albendazole B-DRUG
+200 B-DOSE
+mg I-DOSE
+SOS B-FREQ
+also O
+Pyrazinamide B-DRUG
+100 B-DOSE
+mg I-DOSE
+twice B-FREQ
+a I-FREQ
+week I-FREQ
+
+Warfarin B-DRUG
+0.5 B-DOSE
+g I-DOSE
+subah B-FREQ
+aur I-FREQ
+raat I-FREQ
+ko I-FREQ
+10 B-DUR
+din I-DUR
+khali B-ROUTE
+pet I-ROUTE
+pe I-ROUTE
+
+Glibenclamide B-DRUG
+0.5 B-DOSE
+g I-DOSE
+three B-FREQ
+times I-FREQ
+a I-FREQ
+day I-FREQ
+1 B-DUR
+week I-DUR
+
+Clotrimazole B-DRUG
+200 B-DOSE
+mg I-DOSE
+QID B-FREQ
+also O
+Gliclazide B-DRUG
+200 B-DOSE
+mg I-DOSE
+once B-FREQ
+daily I-FREQ
+
+Lansoprazole B-DRUG
+10 B-DOSE
+ml I-DOSE
+subah B-FREQ
+ko I-FREQ
+1 B-DUR
+hafte I-DUR
+khane B-ROUTE
+se I-ROUTE
+pehle I-ROUTE
+
+Clotrimazole B-DRUG
+2 B-DOSE
+tabs I-DOSE
+after B-ROUTE
+food I-ROUTE
+
+Montelukast B-DRUG
+5 B-DOSE
+mg I-DOSE
+after B-ROUTE
+meals I-ROUTE
+
+Metformin B-DRUG
+1 B-DOSE
+tab I-DOSE
+twice B-FREQ
+a I-FREQ
+week I-FREQ
+2 B-DUR
+weeks I-DUR
+
+Acyclovir B-DRUG
+500 B-DOSE
+mg I-DOSE
+with B-ROUTE
+milk I-ROUTE
+
+Aspirin B-DRUG
+2 B-DOSE
+tabs I-DOSE
+every B-FREQ
+twelve I-FREQ
+hours I-FREQ
+1 B-DUR
+week I-DUR
+
+Diclofenac B-DRUG
+1 B-DOSE
+tab I-DOSE
+OD B-FREQ
+3 B-DUR
+days I-DUR
+before B-ROUTE
+breakfast I-ROUTE
+
+Omeprazole B-DRUG
+2 B-DOSE
+tabs I-DOSE
+three B-FREQ
+times I-FREQ
+a I-FREQ
+day I-FREQ
+10 B-DUR
+days I-DUR
+
+Mebendazole B-DRUG
+500 B-DOSE
+mg I-DOSE
+BD B-FREQ
+with O
+Gabapentin B-DRUG
+5 B-DOSE
+mg I-DOSE
+at B-FREQ
+night I-FREQ
+
+Prednisolone B-DRUG
+2 B-DOSE
+tabs I-DOSE
+din B-FREQ
+mein I-FREQ
+ek I-FREQ
+baar I-FREQ
+1 B-DUR
+hafte I-DUR
+khane B-ROUTE
+se I-ROUTE
+pehle I-ROUTE
+
+Sertraline B-DRUG
+5 B-DOSE
+mg I-DOSE
+with B-ROUTE
+milk I-ROUTE
+
+Atorvastatin B-DRUG
+1 B-DOSE
+g I-DOSE
+din B-FREQ
+mein I-FREQ
+teen I-FREQ
+baar I-FREQ
+10 B-DUR
+din I-DUR
+khane B-ROUTE
+se I-ROUTE
+pehle I-ROUTE
+
+Insulin B-DRUG
+Regular I-DRUG
+40 B-DOSE
+mg I-DOSE
+
+Pyrazinamide B-DRUG
+1 B-DOSE
+g I-DOSE
+once B-FREQ
+daily I-FREQ
+7 B-DUR
+days I-DUR
+
+Clotrimazole B-DRUG
+once B-FREQ
+a I-FREQ
+week I-FREQ
+10 B-DUR
+days I-DUR
+
+Carbimazole B-DRUG
+500 B-DOSE
+mg I-DOSE
+
+Theophylline B-DRUG
+650 B-DOSE
+mg I-DOSE
+thrice B-FREQ
+daily I-FREQ
+with O
+Enalapril B-DRUG
+2 B-DOSE
+tabs I-DOSE
+OD B-FREQ
+
+Ondansetron B-DRUG
+250 B-DOSE
+mg I-DOSE
+din B-FREQ
+mein I-FREQ
+teen I-FREQ
+baar I-FREQ
+10 B-DUR
+din I-DUR
+dudh B-ROUTE
+ke I-ROUTE
+saath I-ROUTE
+
+Amoxicillin B-DRUG
+0.5 B-DOSE
+g I-DOSE
+subah B-FREQ
+ko I-FREQ
+1 B-DUR
+mahine I-DUR
+khane B-ROUTE
+se I-ROUTE
+pehle I-ROUTE
+
+Esomeprazole B-DRUG
+0.5 B-DOSE
+g I-DOSE
+OD B-FREQ
+
+Alprazolam B-DRUG
+1 B-DOSE
+g I-DOSE
+three B-FREQ
+times I-FREQ
+a I-FREQ
+day I-FREQ
+
+Itraconazole B-DRUG
+once B-FREQ
+daily I-FREQ
+5 B-DUR
+days I-DUR
+
+Oseltamivir B-DRUG
+10 B-DOSE
+mg I-DOSE
+
+Azithromycin B-DRUG
+500 B-DOSE
+mg I-DOSE
+once B-FREQ
+daily I-FREQ
+with O
+Vitamin B-DRUG
+D3 I-DRUG
+20 B-DOSE
+mg I-DOSE
+once B-FREQ
+daily I-FREQ
+
+Famotidine B-DRUG
+in B-FREQ
+the I-FREQ
+morning I-FREQ
+1 B-DUR
+week I-DUR
+
+Ipratropium B-DRUG
+10 B-DOSE
+ml I-DOSE
+at B-FREQ
+night I-FREQ
+and O
+Ethambutol B-DRUG
+1 B-DOSE
+tab I-DOSE
+BD B-FREQ
+
+Theophylline B-DRUG
+1 B-DOSE
+tab I-DOSE
+once B-FREQ
+daily I-FREQ
+
+Atorvasatin B-DRUG
+200 B-DOSE
+mg I-DOSE
+every B-FREQ
+six I-FREQ
+hours I-FREQ
+as B-DUR
+directed I-DUR
+with B-ROUTE
+water I-ROUTE
+
+Famotidine B-DRUG
+2 B-DOSE
+tabs I-DOSE
+before B-ROUTE
+food I-ROUTE
+
+Rabeprazole B-DRUG
+200 B-DOSE
+mg I-DOSE
+raat B-FREQ
+ko I-FREQ
+1 B-DUR
+hafte I-DUR
+khane B-ROUTE
+ke I-ROUTE
+baad I-ROUTE
+
+Ibuprofen B-DRUG
+5 B-DOSE
+mg I-DOSE
+every B-FREQ
+six I-FREQ
+hours I-FREQ
+14 B-DUR
+days I-DUR
+after B-ROUTE
+breakfast I-ROUTE
+
+Warfarin B-DRUG
+100 B-DOSE
+mg I-DOSE
+BD B-FREQ
+
+Hydroxychloroquine B-DRUG
+200 B-DOSE
+mg I-DOSE
+QID B-FREQ
+also O
+Nimesulide B-DRUG
+1 B-DOSE
+tab I-DOSE
+BD B-FREQ
+
+Doxycycline B-DRUG
+1 B-DOSE
+g I-DOSE
+in B-FREQ
+the I-FREQ
+morning I-FREQ
+1 B-DUR
+month I-DUR
+before B-ROUTE
+food I-ROUTE
+
+Hydroxychloroquine B-DRUG
+1 B-DOSE
+tab I-DOSE
+thrice B-FREQ
+daily I-FREQ
+5 B-DUR
+days I-DUR
+before B-ROUTE
+food I-ROUTE
+
+Furosemide B-DRUG
+5 B-DOSE
+ml I-DOSE
+after B-ROUTE
+breakfast I-ROUTE
+
+Amlodipine B-DRUG
+20 B-DOSE
+mg I-DOSE
+before B-ROUTE
+breakfast I-ROUTE
+
+Calcium B-DRUG
+Carbonate I-DRUG
+100 B-DOSE
+mg I-DOSE
+every B-FREQ
+twelve I-FREQ
+hours I-FREQ
+7 B-DUR
+days I-DUR
+sublingually B-ROUTE
+
+Hydrochlorothiazide B-DRUG
+40 B-DOSE
+mg I-DOSE
+after B-ROUTE
+meals I-ROUTE
+
+Budesonide B-DRUG
+500 B-DOSE
+mg I-DOSE
+
+Ethambutol B-DRUG
+1 B-DOSE
+tab I-DOSE
+once B-FREQ
+a I-FREQ
+week I-FREQ
+1 B-DUR
+month I-DUR
+before B-ROUTE
+breakfast I-ROUTE
+
+Alprazolam B-DRUG
+5 B-DOSE
+ml I-DOSE
+
+Fluconazole B-DRUG
+500 B-DOSE
+mg I-DOSE
+raat B-FREQ
+ko I-FREQ
+1 B-DUR
+hafte I-DUR
+khali B-ROUTE
+pet I-ROUTE
+pe I-ROUTE
+
+Clotrimazole B-DRUG
+500 B-DOSE
+mg I-DOSE
+once B-FREQ
+daily I-FREQ
+
+Escitalopram B-DRUG
+650 B-DOSE
+mg I-DOSE
+BD B-FREQ
+also O
+Simvastatin B-DRUG
+10 B-DOSE
+mg I-DOSE
+three B-FREQ
+times I-FREQ
+a I-FREQ
+day I-FREQ
+
+Pantoprazole B-DRUG
+100 B-DOSE
+mg I-DOSE
+subah B-FREQ
+ko I-FREQ
+10 B-DUR
+din I-DUR
+khali B-ROUTE
+pet I-ROUTE
+pe I-ROUTE
+
+Hydroxychloroquine B-DRUG
+10 B-DOSE
+ml I-DOSE
+before B-ROUTE
+breakfast I-ROUTE
+
+Pantoprazole B-DRUG
+650 B-DOSE
+mg I-DOSE
+once B-FREQ
+daily I-FREQ
+5 B-DUR
+days I-DUR
+orally B-ROUTE
+
+Budesonide B-DRUG
+40 B-DOSE
+mg I-DOSE
+QID B-FREQ
+
+Ondansetron B-DRUG
+2 B-DOSE
+tabs I-DOSE
+every B-FREQ
+twelve I-FREQ
+hours I-FREQ
+5 B-DUR
+days I-DUR
+
+Omeprazole B-DRUG
+2 B-DOSE
+tabs I-DOSE
+twice B-FREQ
+a I-FREQ
+week I-FREQ
+also O
+Rabeprazole B-DRUG
+40 B-DOSE
+mg I-DOSE
+TDS B-FREQ
+
+Levothyroxine B-DRUG
+200 B-DOSE
+mg I-DOSE
+roz B-FREQ
+ek I-FREQ
+baar I-FREQ
+2 B-DUR
+hafte I-DUR
+khane B-ROUTE
+se I-ROUTE
+pehle I-ROUTE
+
+Vitamin B-DRUG
+C I-DRUG
+twice B-FREQ
+a I-FREQ
+week I-FREQ
+as B-DUR
+directed I-DUR
+
+Pregabalin B-DRUG
+2 B-DOSE
+tabs I-DOSE
+thrice B-FREQ
+daily I-FREQ
+with O
+Dexamethasone B-DRUG
+20 B-DOSE
+mg I-DOSE
+in B-FREQ
+the I-FREQ
+morning I-FREQ
+
+Rosuvastatin B-DRUG
+10 B-DOSE
+ml I-DOSE
+before B-ROUTE
+food I-ROUTE
+
+Salbutamol B-DRUG
+40 B-DOSE
+mg I-DOSE
+BD B-FREQ
+
+Oseltamivir B-DRUG
+0.5 B-DOSE
+g I-DOSE
+twice B-FREQ
+daily I-FREQ
+as B-DUR
+directed I-DUR
+
+Fexofenadine B-DRUG
+BD B-FREQ
+5 B-DUR
+days I-DUR
+
+Clonazepam B-DRUG
+twice B-FREQ
+daily I-FREQ
+5 B-DUR
+days I-DUR
+
+Cetirizine B-DRUG
+2 B-DOSE
+tabs I-DOSE
+before B-ROUTE
+meals I-ROUTE
+
+Insulin B-DRUG
+Regular I-DRUG
+500 B-DOSE
+mg I-DOSE
+every B-FREQ
+six I-FREQ
+hours I-FREQ
+14 B-DUR
+days I-DUR
+on B-ROUTE
+empty I-ROUTE
+stomach I-ROUTE
+
+Fluconazole B-DRUG
+650 B-DOSE
+mg I-DOSE
+twice B-FREQ
+a I-FREQ
+week I-FREQ
+and O
+Isoniazid B-DRUG
+200 B-DOSE
+mg I-DOSE
+BD B-FREQ
+
+Ipratropium B-DRUG
+650 B-DOSE
+mg I-DOSE
+raat B-FREQ
+ko I-FREQ
+5 B-DUR
+din I-DUR
+khane B-ROUTE
+se I-ROUTE
+pehle I-ROUTE
+
+Nimesulide B-DRUG
+0.5 B-DOSE
+g I-DOSE
+every B-FREQ
+eight I-FREQ
+hours I-FREQ
+
+Escitalopram B-DRUG
+1 B-DOSE
+tab I-DOSE
+subah B-FREQ
+ko I-FREQ
+3 B-DUR
+din I-DUR
+khali B-ROUTE
+pet I-ROUTE
+pe I-ROUTE
+
+Ethambutol B-DRUG
+10 B-DOSE
+mg I-DOSE
+subah B-FREQ
+aur I-FREQ
+raat I-FREQ
+ko I-FREQ
+1 B-DUR
+hafte I-DUR
+khane B-ROUTE
+ke I-ROUTE
+baad I-ROUTE
+
+Enalapril B-DRUG
+2 B-DOSE
+tabs I-DOSE
+thrice B-FREQ
+daily I-FREQ
+also O
+Paracitomol B-DRUG
+5 B-DOSE
+ml I-DOSE
+every B-FREQ
+six I-FREQ
+hours I-FREQ
+
+Ibuprofen B-DRUG
+every B-FREQ
+six I-FREQ
+hours I-FREQ
+3 B-DUR
+months I-DUR
+
+Rabeprazole B-DRUG
+5 B-DOSE
+mg I-DOSE
+before B-ROUTE
+breakfast I-ROUTE
+
+Amlodipine B-DRUG
+0.5 B-DOSE
+g I-DOSE
+every B-FREQ
+eight I-FREQ
+hours I-FREQ
+1 B-DUR
+week I-DUR
+
+Theophylline B-DRUG
+5 B-DOSE
+mg I-DOSE
+once B-FREQ
+daily I-FREQ
+and O
+Ipratropium B-DRUG
+500 B-DOSE
+mg I-DOSE
+twice B-FREQ
+a I-FREQ
+day I-FREQ
+
+Tramadol B-DRUG
+5 B-DOSE
+ml I-DOSE
+OD B-FREQ
+3 B-DUR
+months I-DUR
+
+Insulin B-DRUG
+Glargine I-DRUG
+650 B-DOSE
+mg I-DOSE
+once B-FREQ
+a I-FREQ
+week I-FREQ
+as B-DUR
+directed I-DUR
+after B-ROUTE
+meals I-ROUTE
+
+Cefixime B-DRUG
+250 B-DOSE
+mg I-DOSE
+
+Alprazolam B-DRUG
+250 B-DOSE
+mg I-DOSE
+
+Ibuprofen B-DRUG
+1 B-DOSE
+g I-DOSE
+after B-ROUTE
+food I-ROUTE
+
+Folic B-DRUG
+Acid I-DRUG
+2 B-DOSE
+tabs I-DOSE
+on B-ROUTE
+empty I-ROUTE
+stomach I-ROUTE
+
+Rosuvastatin B-DRUG
+250 B-DOSE
+mg I-DOSE
+har B-FREQ
+chhe I-FREQ
+ghante I-FREQ
+mein I-FREQ
+5 B-DUR
+din I-DUR
+khane B-ROUTE
+se I-ROUTE
+pehle I-ROUTE
+
+Levocetirizine B-DRUG
+BD B-FREQ
+1 B-DUR
+week I-DUR
+
+Fluconazole B-DRUG
+650 B-DOSE
+mg I-DOSE
+SOS B-FREQ
+3 B-DUR
+days I-DUR
+
+Metformin B-DRUG
+5 B-DOSE
+ml I-DOSE
+thrice B-FREQ
+daily I-FREQ
+also O
+Ibuprofen B-DRUG
+1 B-DOSE
+tab I-DOSE
+twice B-FREQ
+a I-FREQ
+week I-FREQ
+
+Levothyroxine B-DRUG
+40 B-DOSE
+mg I-DOSE
+OD B-FREQ
+14 B-DUR
+days I-DUR
+
+Ethambutol B-DRUG
+2 B-DOSE
+tabs I-DOSE
+
+Ipratropium B-DRUG
+10 B-DOSE
+mg I-DOSE
+on B-ROUTE
+empty I-ROUTE
+stomach I-ROUTE
+
+Clotrimazole B-DRUG
+10 B-DOSE
+ml I-DOSE
+at B-FREQ
+night I-FREQ
+3 B-DUR
+months I-DUR
+
+Amoxycillin B-DRUG
+100 B-DOSE
+mg I-DOSE
+subah B-FREQ
+ko I-FREQ
+10 B-DUR
+din I-DUR
+khali B-ROUTE
+pet I-ROUTE
+pe I-ROUTE
+
+Paracetamol B-DRUG
+1 B-DOSE
+tab I-DOSE
+
+Amlodipine B-DRUG
+10 B-DOSE
+ml I-DOSE
+
+Metformin B-DRUG
+20 B-DOSE
+mg I-DOSE
+at B-FREQ
+bedtime I-FREQ
+and O
+ORS B-DRUG
+1 B-DOSE
+tab I-DOSE
+in B-FREQ
+the I-FREQ
+morning I-FREQ
+
+Ramipril B-DRUG
+20 B-DOSE
+mg I-DOSE
+raat B-FREQ
+ko I-FREQ
+3 B-DUR
+din I-DUR
+khane B-ROUTE
+se I-ROUTE
+pehle I-ROUTE
+
+Diclofenac B-DRUG
+1 B-DOSE
+g I-DOSE
+once B-FREQ
+a I-FREQ
+week I-FREQ
+5 B-DUR
+days I-DUR
+
+Diclofenac B-DRUG
+10 B-DOSE
+ml I-DOSE
+TDS B-FREQ
+
+Rabeprazole B-DRUG
+1 B-DOSE
+tab I-DOSE
+raat B-FREQ
+ko I-FREQ
+10 B-DUR
+din I-DUR
+dudh B-ROUTE
+ke I-ROUTE
+saath I-ROUTE
+
+Losartan B-DRUG
+20 B-DOSE
+mg I-DOSE
+subah B-FREQ
+ko I-FREQ
+5 B-DUR
+din I-DUR
+khane B-ROUTE
+se I-ROUTE
+pehle I-ROUTE
+
+Ferrous B-DRUG
+Sulphate I-DRUG
+10 B-DOSE
+mg I-DOSE
+SOS B-FREQ
+and O
+Vitamin B-DRUG
+D3 I-DRUG
+1 B-DOSE
+g I-DOSE
+OD B-FREQ
+
+Famotidine B-DRUG
+10 B-DOSE
+mg I-DOSE
+twice B-FREQ
+a I-FREQ
+day I-FREQ
+1 B-DUR
+week I-DUR
+
+Lisinopril B-DRUG
+in B-FREQ
+the I-FREQ
+morning I-FREQ
+3 B-DUR
+months I-DUR
+
+Rabeprazole B-DRUG
+500 B-DOSE
+mg I-DOSE
+
+Tramadol B-DRUG
+650 B-DOSE
+mg I-DOSE
+twice B-FREQ
+a I-FREQ
+day I-FREQ
+with O
+Vitamin B-DRUG
+D3 I-DRUG
+100 B-DOSE
+mg I-DOSE
+twice B-FREQ
+a I-FREQ
+week I-FREQ
+
+Ivermectin B-DRUG
+5 B-DOSE
+ml I-DOSE
+at B-FREQ
+night I-FREQ
+and O
+Ferrous B-DRUG
+Sulphate I-DRUG
+1 B-DOSE
+g I-DOSE
+every B-FREQ
+eight I-FREQ
+hours I-FREQ
+
+Clotrimazole B-DRUG
+2 B-DOSE
+tabs I-DOSE
+every B-FREQ
+six I-FREQ
+hours I-FREQ
+10 B-DUR
+days I-DUR
+
+Clopidogrel B-DRUG
+5 B-DOSE
+ml I-DOSE
+OD B-FREQ
+and O
+ORS B-DRUG
+40 B-DOSE
+mg I-DOSE
+OD B-FREQ
+
+Amlodipine B-DRUG
+10 B-DOSE
+mg I-DOSE
+three B-FREQ
+times I-FREQ
+a I-FREQ
+day I-FREQ
+with O
+Enalapril B-DRUG
+5 B-DOSE
+mg I-DOSE
+at B-FREQ
+bedtime I-FREQ
+
+Ethambutol B-DRUG
+40 B-DOSE
+mg I-DOSE
+at B-FREQ
+night I-FREQ
+
+Fluconazole B-DRUG
+5 B-DOSE
+mg I-DOSE
+once B-FREQ
+a I-FREQ
+week I-FREQ
+also O
+Ramipril B-DRUG
+250 B-DOSE
+mg I-DOSE
+every B-FREQ
+eight I-FREQ
+hours I-FREQ
+
+Salbutamol B-DRUG
+5 B-DOSE
+ml I-DOSE
+din B-FREQ
+mein I-FREQ
+teen I-FREQ
+baar I-FREQ
+7 B-DUR
+din I-DUR
+khane B-ROUTE
+ke I-ROUTE
+baad I-ROUTE
+
+Escitalopram B-DRUG
+650 B-DOSE
+mg I-DOSE
+thrice B-FREQ
+daily I-FREQ
+and O
+Enalapril B-DRUG
+10 B-DOSE
+ml I-DOSE
+three B-FREQ
+times I-FREQ
+a I-FREQ
+day I-FREQ
+
+Diclofenac B-DRUG
+1 B-DOSE
+tab I-DOSE
+QID B-FREQ
+and O
+Ipratropium B-DRUG
+500 B-DOSE
+mg I-DOSE
+TDS B-FREQ
+
+Gliclazide B-DRUG
+650 B-DOSE
+mg I-DOSE
+
+Pregabalin B-DRUG
+650 B-DOSE
+mg I-DOSE
+din B-FREQ
+mein I-FREQ
+teen I-FREQ
+baar I-FREQ
+10 B-DUR
+din I-DUR
+khali B-ROUTE
+pet I-ROUTE
+pe I-ROUTE
+
+Ramipril B-DRUG
+5 B-DOSE
+ml I-DOSE
+din B-FREQ
+mein I-FREQ
+teen I-FREQ
+baar I-FREQ
+1 B-DUR
+mahine I-DUR
+khane B-ROUTE
+se I-ROUTE
+pehle I-ROUTE
+
+Pregabalin B-DRUG
+1 B-DOSE
+tab I-DOSE
+in B-FREQ
+the I-FREQ
+morning I-FREQ
+with O
+Ipratropium B-DRUG
+40 B-DOSE
+mg I-DOSE
+in B-FREQ
+the I-FREQ
+morning I-FREQ
+
+Montelukast B-DRUG
+5 B-DOSE
+mg I-DOSE
+
+Nimesulide B-DRUG
+20 B-DOSE
+mg I-DOSE
+once B-FREQ
+a I-FREQ
+week I-FREQ
+
+Ivermectin B-DRUG
+100 B-DOSE
+mg I-DOSE
+every B-FREQ
+twelve I-FREQ
+hours I-FREQ
+10 B-DUR
+days I-DUR
+
+Ethambutol B-DRUG
+5 B-DOSE
+mg I-DOSE
+three B-FREQ
+times I-FREQ
+a I-FREQ
+day I-FREQ
+and O
+Levocetirizine B-DRUG
+5 B-DOSE
+mg I-DOSE
+in B-FREQ
+the I-FREQ
+morning I-FREQ
+
+Carbimazole B-DRUG
+5 B-DOSE
+mg I-DOSE
+twice B-FREQ
+daily I-FREQ
+3 B-DUR
+months I-DUR
+
+Amitriptyline B-DRUG
+5 B-DOSE
+mg I-DOSE
+
+Ipratropium B-DRUG
+0.5 B-DOSE
+g I-DOSE
+
+Calcium B-DRUG
+Carbonate I-DRUG
+650 B-DOSE
+mg I-DOSE
+raat B-FREQ
+ko I-FREQ
+5 B-DUR
+din I-DUR
+khane B-ROUTE
+ke I-ROUTE
+baad I-ROUTE
+
+Rabeprazole B-DRUG
+250 B-DOSE
+mg I-DOSE
+every B-FREQ
+six I-FREQ
+hours I-FREQ
+with O
+Hydrochlorothiazide B-DRUG
+2 B-DOSE
+tabs I-DOSE
+once B-FREQ
+a I-FREQ
+week I-FREQ
+
+Albendazole B-DRUG
+QID B-FREQ
+14 B-DUR
+days I-DUR
+
+Metoprolol B-DRUG
+200 B-DOSE
+mg I-DOSE
+roz B-FREQ
+ek I-FREQ
+baar I-FREQ
+7 B-DUR
+din I-DUR
+khane B-ROUTE
+se I-ROUTE
+pehle I-ROUTE
+
+Pantoprazole B-DRUG
+once B-FREQ
+daily I-FREQ
+2 B-DUR
+weeks I-DUR
+
+Losartan B-DRUG
+1 B-DOSE
+tab I-DOSE
+twice B-FREQ
+a I-FREQ
+day I-FREQ
+also O
+Itraconazole B-DRUG
+1 B-DOSE
+tab I-DOSE
+twice B-FREQ
+a I-FREQ
+week I-FREQ
+
+Clonazepam B-DRUG
+100 B-DOSE
+mg I-DOSE
+twice B-FREQ
+a I-FREQ
+day I-FREQ
+1 B-DUR
+month I-DUR
+before B-ROUTE
+meals I-ROUTE
+
+Azithromycin B-DRUG
+1 B-DOSE
+g I-DOSE
+
+Acyclovir B-DRUG
+10 B-DOSE
+mg I-DOSE
+at B-FREQ
+night I-FREQ
+2 B-DUR
+weeks I-DUR
+before B-ROUTE
+meals I-ROUTE
+
+Escitalopram B-DRUG
+at B-FREQ
+night I-FREQ
+10 B-DUR
+days I-DUR
+
+Albendazole B-DRUG
+20 B-DOSE
+mg I-DOSE
+sublingually B-ROUTE
+
+Doxycycline B-DRUG
+20 B-DOSE
+mg I-DOSE
+twice B-FREQ
+a I-FREQ
+week I-FREQ
+1 B-DUR
+week I-DUR
+
+Atorvastatin B-DRUG
+200 B-DOSE
+mg I-DOSE
+
+Montelukast B-DRUG
+0.5 B-DOSE
+g I-DOSE
+
+Ferrous B-DRUG
+Sulphate I-DRUG
+10 B-DOSE
+mg I-DOSE
+once B-FREQ
+a I-FREQ
+week I-FREQ
+with O
+Warfarin B-DRUG
+200 B-DOSE
+mg I-DOSE
+QID B-FREQ
+
+Pregabalin B-DRUG
+10 B-DOSE
+ml I-DOSE
+after B-ROUTE
+breakfast I-ROUTE
+
+Alprazolam B-DRUG
+20 B-DOSE
+mg I-DOSE
+OD B-FREQ
+1 B-DUR
+month I-DUR
+
+Ramipril B-DRUG
+OD B-FREQ
+10 B-DUR
+days I-DUR
+
+Tramadol B-DRUG
+every B-FREQ
+eight I-FREQ
+hours I-FREQ
+10 B-DUR
+days I-DUR
+
+Levothyroxine B-DRUG
+5 B-DOSE
+ml I-DOSE
+twice B-FREQ
+a I-FREQ
+week I-FREQ
+14 B-DUR
+days I-DUR
+with B-ROUTE
+milk I-ROUTE
+
+Cefixime B-DRUG
+1 B-DOSE
+tab I-DOSE
+before B-ROUTE
+breakfast I-ROUTE
+
+Rabeprazole B-DRUG
+0.5 B-DOSE
+g I-DOSE
+every B-FREQ
+six I-FREQ
+hours I-FREQ
+1 B-DUR
+month I-DUR
+
+Isoniazid B-DRUG
+40 B-DOSE
+mg I-DOSE
+TDS B-FREQ
+with O
+Tramadol B-DRUG
+2 B-DOSE
+tabs I-DOSE
+TDS B-FREQ
+
+Itraconazole B-DRUG
+BD B-FREQ
+1 B-DUR
+week I-DUR
+
+Spironolactone B-DRUG
+5 B-DOSE
+ml I-DOSE
+twice B-FREQ
+daily I-FREQ
+7 B-DUR
+days I-DUR
+
+Paracetamol B-DRUG
+0.5 B-DOSE
+g I-DOSE
+raat B-FREQ
+ko I-FREQ
+3 B-DUR
+din I-DUR
+paani B-ROUTE
+ke I-ROUTE
+saath I-ROUTE
+
+Atorvastatin B-DRUG
+5 B-DOSE
+ml I-DOSE
+every B-FREQ
+eight I-FREQ
+hours I-FREQ
+1 B-DUR
+week I-DUR
+after B-ROUTE
+breakfast I-ROUTE
+
+Torsemide B-DRUG
+200 B-DOSE
+mg I-DOSE
+
+Pantoprazole B-DRUG
+every B-FREQ
+twelve I-FREQ
+hours I-FREQ
+2 B-DUR
+weeks I-DUR
+
+Methotrexate B-DRUG
+250 B-DOSE
+mg I-DOSE
+din B-FREQ
+mein I-FREQ
+do I-FREQ
+baar I-FREQ
+1 B-DUR
+mahine I-DUR
+khali B-ROUTE
+pet I-ROUTE
+pe I-ROUTE
+
+Ivermectin B-DRUG
+twice B-FREQ
+a I-FREQ
+day I-FREQ
+3 B-DUR
+months I-DUR
+
+Doxycycline B-DRUG
+10 B-DOSE
+ml I-DOSE
+
+Folic B-DRUG
+Acid I-DRUG
+20 B-DOSE
+mg I-DOSE
+at B-FREQ
+night I-FREQ
+1 B-DUR
+week I-DUR
+
+Rabeprazole B-DRUG
+650 B-DOSE
+mg I-DOSE
+three B-FREQ
+times I-FREQ
+a I-FREQ
+day I-FREQ
+with O
+Doxycycline B-DRUG
+1 B-DOSE
+tab I-DOSE
+once B-FREQ
+daily I-FREQ
+
+Atenolol B-DRUG
+5 B-DOSE
+mg I-DOSE
+once B-FREQ
+a I-FREQ
+week I-FREQ
+
+Methylprednisolone B-DRUG
+0.5 B-DOSE
+g I-DOSE
+three B-FREQ
+times I-FREQ
+a I-FREQ
+day I-FREQ
+as B-DUR
+directed I-DUR
+after B-ROUTE
+meals I-ROUTE
+
+Salbutamol B-DRUG
+650 B-DOSE
+mg I-DOSE
+with B-ROUTE
+water I-ROUTE
+
+Metformin B-DRUG
+1 B-DOSE
+g I-DOSE
+twice B-FREQ
+a I-FREQ
+day I-FREQ
+
+Vitamin B-DRUG
+D3 I-DRUG
+20 B-DOSE
+mg I-DOSE
+once B-FREQ
+daily I-FREQ
+3 B-DUR
+days I-DUR
+on B-ROUTE
+empty I-ROUTE
+stomach I-ROUTE
+
+Furosemide B-DRUG
+5 B-DOSE
+mg I-DOSE
+in B-FREQ
+the I-FREQ
+morning I-FREQ
+
+Furosemide B-DRUG
+20 B-DOSE
+mg I-DOSE
+on B-ROUTE
+empty I-ROUTE
+stomach I-ROUTE
+
+Glibenclamide B-DRUG
+500 B-DOSE
+mg I-DOSE
+twice B-FREQ
+a I-FREQ
+day I-FREQ
+2 B-DUR
+weeks I-DUR
+
+Warfarin B-DRUG
+TDS B-FREQ
+7 B-DUR
+days I-DUR
+
+Levocetirizine B-DRUG
+20 B-DOSE
+mg I-DOSE
+thrice B-FREQ
+daily I-FREQ
+
+Budesonide B-DRUG
+20 B-DOSE
+mg I-DOSE
+har B-FREQ
+chhe I-FREQ
+ghante I-FREQ
+mein I-FREQ
+2 B-DUR
+hafte I-DUR
+khane B-ROUTE
+se I-ROUTE
+pehle I-ROUTE
+
+Zinc B-DRUG
+Sulphate I-DRUG
+650 B-DOSE
+mg I-DOSE
+roz B-FREQ
+ek I-FREQ
+baar I-FREQ
+5 B-DUR
+din I-DUR
+khane B-ROUTE
+se I-ROUTE
+pehle I-ROUTE
+
+Ipratropium B-DRUG
+650 B-DOSE
+mg I-DOSE
+har B-FREQ
+chhe I-FREQ
+ghante I-FREQ
+mein I-FREQ
+1 B-DUR
+hafte I-DUR
+khali B-ROUTE
+pet I-ROUTE
+pe I-ROUTE
+
+Clopidogrel B-DRUG
+200 B-DOSE
+mg I-DOSE
+before B-ROUTE
+meals I-ROUTE
+
+Clopidogrel B-DRUG
+SOS B-FREQ
+3 B-DUR
+days I-DUR
+
+Cefixime B-DRUG
+250 B-DOSE
+mg I-DOSE
+before B-ROUTE
+meals I-ROUTE
+
+Spironolactone B-DRUG
+5 B-DOSE
+ml I-DOSE
+twice B-FREQ
+a I-FREQ
+week I-FREQ
+5 B-DUR
+days I-DUR
+
+Amoxycillin B-DRUG
+5 B-DOSE
+mg I-DOSE
+once B-FREQ
+daily I-FREQ
+
+Doxycycline B-DRUG
+250 B-DOSE
+mg I-DOSE
+din B-FREQ
+mein I-FREQ
+ek I-FREQ
+baar I-FREQ
+10 B-DUR
+din I-DUR
+khali B-ROUTE
+pet I-ROUTE
+pe I-ROUTE
+
+Vitamin B-DRUG
+D3 I-DRUG
+10 B-DOSE
+mg I-DOSE
+every B-FREQ
+eight I-FREQ
+hours I-FREQ
+7 B-DUR
+days I-DUR
+
+Aspirin B-DRUG
+20 B-DOSE
+mg I-DOSE
+twice B-FREQ
+a I-FREQ
+week I-FREQ
+
+Fluconazole B-DRUG
+0.5 B-DOSE
+g I-DOSE
+QID B-FREQ
+2 B-DUR
+weeks I-DUR
+
+Doxycycline B-DRUG
+40 B-DOSE
+mg I-DOSE
+SOS B-FREQ
+as B-DUR
+directed I-DUR
+
+Enalapril B-DRUG
+10 B-DOSE
+mg I-DOSE
+raat B-FREQ
+ko I-FREQ
+1 B-DUR
+mahine I-DUR
+khane B-ROUTE
+se I-ROUTE
+pehle I-ROUTE
+
+Ibuprofen B-DRUG
+650 B-DOSE
+mg I-DOSE
+every B-FREQ
+twelve I-FREQ
+hours I-FREQ
+14 B-DUR
+days I-DUR
+
+Amoxycillin B-DRUG
+100 B-DOSE
+mg I-DOSE
+at B-FREQ
+night I-FREQ
+7 B-DUR
+days I-DUR
+
+Prednisolone B-DRUG
+10 B-DOSE
+ml I-DOSE
+at B-FREQ
+night I-FREQ
+1 B-DUR
+month I-DUR
+
+Fexofenadine B-DRUG
+2 B-DOSE
+tabs I-DOSE
+every B-FREQ
+six I-FREQ
+hours I-FREQ
+1 B-DUR
+week I-DUR
+before B-ROUTE
+food I-ROUTE
+
+Aspirin B-DRUG
+200 B-DOSE
+mg I-DOSE
+har B-FREQ
+chhe I-FREQ
+ghante I-FREQ
+mein I-FREQ
+2 B-DUR
+hafte I-DUR
+khane B-ROUTE
+ke I-ROUTE
+baad I-ROUTE
+
+Warfarin B-DRUG
+40 B-DOSE
+mg I-DOSE
+din B-FREQ
+mein I-FREQ
+teen I-FREQ
+baar I-FREQ
+10 B-DUR
+din I-DUR
+dudh B-ROUTE
+ke I-ROUTE
+saath I-ROUTE
+
+Simvastatin B-DRUG
+500 B-DOSE
+mg I-DOSE
+orally B-ROUTE
+
+Loratadine B-DRUG
+1 B-DOSE
+g I-DOSE
+QID B-FREQ
+5 B-DUR
+days I-DUR
+
+Telmisartan B-DRUG
+40 B-DOSE
+mg I-DOSE
+raat B-FREQ
+ko I-FREQ
+3 B-DUR
+din I-DUR
+paani B-ROUTE
+ke I-ROUTE
+saath I-ROUTE
+
+Ondansetron B-DRUG
+10 B-DOSE
+ml I-DOSE
+after B-ROUTE
+food I-ROUTE
+
+Metformin B-DRUG
+10 B-DOSE
+ml I-DOSE
+twice B-FREQ
+a I-FREQ
+day I-FREQ
+3 B-DUR
+months I-DUR
+with B-ROUTE
+water I-ROUTE
+
+Torsemide B-DRUG
+20 B-DOSE
+mg I-DOSE
+
+Vitamin B-DRUG
+B12 I-DRUG
+at B-FREQ
+bedtime I-FREQ
+1 B-DUR
+month I-DUR
+
+Losartan B-DRUG
+0.5 B-DOSE
+g I-DOSE
+at B-FREQ
+night I-FREQ
+also O
+Itraconazole B-DRUG
+10 B-DOSE
+mg I-DOSE
+once B-FREQ
+a I-FREQ
+week I-FREQ
+
+Pyrazinamide B-DRUG
+100 B-DOSE
+mg I-DOSE
+subah B-FREQ
+ko I-FREQ
+7 B-DUR
+din I-DUR
+khane B-ROUTE
+ke I-ROUTE
+baad I-ROUTE
+
+Paracetamol B-DRUG
+20 B-DOSE
+mg I-DOSE
+raat B-FREQ
+ko I-FREQ
+10 B-DUR
+din I-DUR
+khali B-ROUTE
+pet I-ROUTE
+pe I-ROUTE
+
+Lisinopril B-DRUG
+5 B-DOSE
+ml I-DOSE
+din B-FREQ
+mein I-FREQ
+teen I-FREQ
+baar I-FREQ
+10 B-DUR
+din I-DUR
+khali B-ROUTE
+pet I-ROUTE
+pe I-ROUTE
+
+Rabeprazole B-DRUG
+500 B-DOSE
+mg I-DOSE
+raat B-FREQ
+ko I-FREQ
+7 B-DUR
+din I-DUR
+khali B-ROUTE
+pet I-ROUTE
+pe I-ROUTE
+
+Telmisartan B-DRUG
+1 B-DOSE
+g I-DOSE
+subah B-FREQ
+aur I-FREQ
+raat I-FREQ
+ko I-FREQ
+10 B-DUR
+din I-DUR
+khane B-ROUTE
+ke I-ROUTE
+baad I-ROUTE
+
+Clotrimazole B-DRUG
+2 B-DOSE
+tabs I-DOSE
+din B-FREQ
+mein I-FREQ
+do I-FREQ
+baar I-FREQ
+7 B-DUR
+din I-DUR
+khali B-ROUTE
+pet I-ROUTE
+pe I-ROUTE
+
+Doxycycline B-DRUG
+5 B-DOSE
+ml I-DOSE
+thrice B-FREQ
+daily I-FREQ
+with O
+Enalapril B-DRUG
+500 B-DOSE
+mg I-DOSE
+three B-FREQ
+times I-FREQ
+a I-FREQ
+day I-FREQ
+
+Ramipril B-DRUG
+250 B-DOSE
+mg I-DOSE
+once B-FREQ
+a I-FREQ
+week I-FREQ
+with O
+Gliclazide B-DRUG
+20 B-DOSE
+mg I-DOSE
+QID B-FREQ
+
+Losartan B-DRUG
+0.5 B-DOSE
+g I-DOSE
+din B-FREQ
+mein I-FREQ
+do I-FREQ
+baar I-FREQ
+3 B-DUR
+din I-DUR
+paani B-ROUTE
+ke I-ROUTE
+saath I-ROUTE
+
+Famotidine B-DRUG
+20 B-DOSE
+mg I-DOSE
+subah B-FREQ
+ko I-FREQ
+1 B-DUR
+mahine I-DUR
+khali B-ROUTE
+pet I-ROUTE
+pe I-ROUTE
+
+Clopidogrel B-DRUG
+2 B-DOSE
+tabs I-DOSE
+BD B-FREQ
+and O
+Gliclazide B-DRUG
+5 B-DOSE
+ml I-DOSE
+three B-FREQ
+times I-FREQ
+a I-FREQ
+day I-FREQ
+
+Fluconazole B-DRUG
+1 B-DOSE
+g I-DOSE
+har B-FREQ
+chhe I-FREQ
+ghante I-FREQ
+mein I-FREQ
+5 B-DUR
+din I-DUR
+khane B-ROUTE
+ke I-ROUTE
+baad I-ROUTE
+
+Warfarin B-DRUG
+650 B-DOSE
+mg I-DOSE
+at B-FREQ
+bedtime I-FREQ
+3 B-DUR
+months I-DUR
+with B-ROUTE
+milk I-ROUTE
+
+Torsemide B-DRUG
+650 B-DOSE
+mg I-DOSE
+OD B-FREQ
+
+Isoniazid B-DRUG
+250 B-DOSE
+mg I-DOSE
+twice B-FREQ
+a I-FREQ
+week I-FREQ
+
+Insulin B-DRUG
+Glargine I-DRUG
+TDS B-FREQ
+1 B-DUR
+week I-DUR
+
+Insulin B-DRUG
+Glargine I-DRUG
+10 B-DOSE
+ml I-DOSE
+har B-FREQ
+chhe I-FREQ
+ghante I-FREQ
+mein I-FREQ
+3 B-DUR
+din I-DUR
+khane B-ROUTE
+ke I-ROUTE
+baad I-ROUTE
+
+Warfarin B-DRUG
+0.5 B-DOSE
+g I-DOSE
+twice B-FREQ
+a I-FREQ
+week I-FREQ
+with O
+Montelukast B-DRUG
+2 B-DOSE
+tabs I-DOSE
+TDS B-FREQ
+
+Codeine B-DRUG
+40 B-DOSE
+mg I-DOSE
+din B-FREQ
+mein I-FREQ
+do I-FREQ
+baar I-FREQ
+10 B-DUR
+din I-DUR
+paani B-ROUTE
+ke I-ROUTE
+saath I-ROUTE
+
+Hydrochlorothiazide B-DRUG
+once B-FREQ
+a I-FREQ
+week I-FREQ
+5 B-DUR
+days I-DUR
+
+Oseltamivir B-DRUG
+5 B-DOSE
+ml I-DOSE
+once B-FREQ
+daily I-FREQ
+2 B-DUR
+weeks I-DUR
+after B-ROUTE
+breakfast I-ROUTE
+
+Sertraline B-DRUG
+1 B-DOSE
+g I-DOSE
+
+Salbutamol B-DRUG
+250 B-DOSE
+mg I-DOSE
+
+Enalapril B-DRUG
+650 B-DOSE
+mg I-DOSE
+har B-FREQ
+chhe I-FREQ
+ghante I-FREQ
+mein I-FREQ
+3 B-DUR
+din I-DUR
+dudh B-ROUTE
+ke I-ROUTE
+saath I-ROUTE
+
+Oseltamivir B-DRUG
+10 B-DOSE
+mg I-DOSE
+before B-ROUTE
+breakfast I-ROUTE
+
+Nimesulide B-DRUG
+40 B-DOSE
+mg I-DOSE
+
+Montelukast B-DRUG
+650 B-DOSE
+mg I-DOSE
+
+Telmisartan B-DRUG
+0.5 B-DOSE
+g I-DOSE
+after B-ROUTE
+food I-ROUTE
+
+Rabeprazole B-DRUG
+20 B-DOSE
+mg I-DOSE
+
+Vitamin B-DRUG
+D3 I-DRUG
+250 B-DOSE
+mg I-DOSE
+raat B-FREQ
+ko I-FREQ
+2 B-DUR
+hafte I-DUR
+khali B-ROUTE
+pet I-ROUTE
+pe I-ROUTE
+
+Pyrazinamide B-DRUG
+0.5 B-DOSE
+g I-DOSE
+SOS B-FREQ
+1 B-DUR
+week I-DUR
+orally B-ROUTE
+
+Sertraline B-DRUG
+20 B-DOSE
+mg I-DOSE
+at B-FREQ
+bedtime I-FREQ
+
+Losartan B-DRUG
+20 B-DOSE
+mg I-DOSE
+every B-FREQ
+twelve I-FREQ
+hours I-FREQ
+
+Pregabalin B-DRUG
+40 B-DOSE
+mg I-DOSE
+BD B-FREQ
+
+Methylprednisolone B-DRUG
+5 B-DOSE
+mg I-DOSE
+twice B-FREQ
+a I-FREQ
+day I-FREQ
+
+Amlodipine B-DRUG
+500 B-DOSE
+mg I-DOSE
+every B-FREQ
+eight I-FREQ
+hours I-FREQ
+and O
+Clotrimazole B-DRUG
+500 B-DOSE
+mg I-DOSE
+TDS B-FREQ
+
+Domperidone B-DRUG
+QID B-FREQ
+14 B-DUR
+days I-DUR
+
+Rifampicin B-DRUG
+1 B-DOSE
+g I-DOSE
+once B-FREQ
+a I-FREQ
+week I-FREQ
+7 B-DUR
+days I-DUR
+sublingually B-ROUTE
+
+Itraconazole B-DRUG
+every B-FREQ
+eight I-FREQ
+hours I-FREQ
+5 B-DUR
+days I-DUR
+
+Paracetamol B-DRUG
+once B-FREQ
+a I-FREQ
+week I-FREQ
+5 B-DUR
+days I-DUR
+
+Escitalopram B-DRUG
+200 B-DOSE
+mg I-DOSE
+din B-FREQ
+mein I-FREQ
+ek I-FREQ
+baar I-FREQ
+5 B-DUR
+din I-DUR
+khali B-ROUTE
+pet I-ROUTE
+pe I-ROUTE
+
+Amoxycillin B-DRUG
+20 B-DOSE
+mg I-DOSE
+in B-FREQ
+the I-FREQ
+morning I-FREQ
+
+Diclofenac B-DRUG
+in B-FREQ
+the I-FREQ
+morning I-FREQ
+3 B-DUR
+days I-DUR
+
+Pregabalin B-DRUG
+2 B-DOSE
+tabs I-DOSE
+din B-FREQ
+mein I-FREQ
+ek I-FREQ
+baar I-FREQ
+2 B-DUR
+hafte I-DUR
+khali B-ROUTE
+pet I-ROUTE
+pe I-ROUTE
+
+Sertraline B-DRUG
+20 B-DOSE
+mg I-DOSE
+
+Cetirizine B-DRUG
+500 B-DOSE
+mg I-DOSE
+SOS B-FREQ
+and O
+Sertraline B-DRUG
+10 B-DOSE
+mg I-DOSE
+twice B-FREQ
+a I-FREQ
+week I-FREQ
+
+Gabapentin B-DRUG
+500 B-DOSE
+mg I-DOSE
+thrice B-FREQ
+daily I-FREQ
+
+Hydrochlorothiazide B-DRUG
+20 B-DOSE
+mg I-DOSE
+BD B-FREQ
+
+Losartan B-DRUG
+1 B-DOSE
+g I-DOSE
+every B-FREQ
+eight I-FREQ
+hours I-FREQ
+
+Carbimazole B-DRUG
+1 B-DOSE
+tab I-DOSE
+subah B-FREQ
+ko I-FREQ
+1 B-DUR
+mahine I-DUR
+khane B-ROUTE
+ke I-ROUTE
+baad I-ROUTE
+
+Ethambutol B-DRUG
+0.5 B-DOSE
+g I-DOSE
+every B-FREQ
+eight I-FREQ
+hours I-FREQ
+3 B-DUR
+months I-DUR
+after B-ROUTE
+food I-ROUTE
+
+Insulin B-DRUG
+Regular I-DRUG
+1 B-DOSE
+tab I-DOSE
+before B-ROUTE
+food I-ROUTE
+
+Ranitidine B-DRUG
+thrice B-FREQ
+daily I-FREQ
+1 B-DUR
+month I-DUR
+
+Amoxicillin B-DRUG
+650 B-DOSE
+mg I-DOSE
+
+Ethambutol B-DRUG
+40 B-DOSE
+mg I-DOSE
+sublingually B-ROUTE
+
+Lisinopril B-DRUG
+QID B-FREQ
+2 B-DUR
+weeks I-DUR
+
+Alprazolam B-DRUG
+twice B-FREQ
+a I-FREQ
+day I-FREQ
+7 B-DUR
+days I-DUR
+
+Fluconazole B-DRUG
+650 B-DOSE
+mg I-DOSE
+once B-FREQ
+a I-FREQ
+week I-FREQ
+10 B-DUR
+days I-DUR
+on B-ROUTE
+empty I-ROUTE
+stomach I-ROUTE
+
+Montelukast B-DRUG
+OD B-FREQ
+7 B-DUR
+days I-DUR
+
+Methylprednisolone B-DRUG
+500 B-DOSE
+mg I-DOSE
+subah B-FREQ
+ko I-FREQ
+7 B-DUR
+din I-DUR
+khali B-ROUTE
+pet I-ROUTE
+pe I-ROUTE
+
+Codeine B-DRUG
+650 B-DOSE
+mg I-DOSE
+din B-FREQ
+mein I-FREQ
+teen I-FREQ
+baar I-FREQ
+2 B-DUR
+hafte I-DUR
+khane B-ROUTE
+se I-ROUTE
+pehle I-ROUTE
+
+Vitamin B-DRUG
+B12 I-DRUG
+2 B-DOSE
+tabs I-DOSE
+three B-FREQ
+times I-FREQ
+a I-FREQ
+day I-FREQ
+and O
+Doxycicline B-DRUG
+650 B-DOSE
+mg I-DOSE
+every B-FREQ
+six I-FREQ
+hours I-FREQ
+
+Ethambutol B-DRUG
+in B-FREQ
+the I-FREQ
+morning I-FREQ
+14 B-DUR
+days I-DUR
+
+Pyrazinamide B-DRUG
+250 B-DOSE
+mg I-DOSE
+
+Rosuvastatin B-DRUG
+20 B-DOSE
+mg I-DOSE
+every B-FREQ
+eight I-FREQ
+hours I-FREQ
+
+Paracitomol B-DRUG
+1 B-DOSE
+tab I-DOSE
+in B-FREQ
+the I-FREQ
+morning I-FREQ
+with O
+Esomeprazole B-DRUG
+1 B-DOSE
+g I-DOSE
+twice B-FREQ
+a I-FREQ
+week I-FREQ
+
+Hydroxychloroquine B-DRUG
+20 B-DOSE
+mg I-DOSE
+three B-FREQ
+times I-FREQ
+a I-FREQ
+day I-FREQ
+3 B-DUR
+months I-DUR
+orally B-ROUTE
+
+Nimesulide B-DRUG
+250 B-DOSE
+mg I-DOSE
+TDS B-FREQ
+
+Salbutamol B-DRUG
+1 B-DOSE
+tab I-DOSE
+sublingually B-ROUTE
+
+Ivermectin B-DRUG
+10 B-DOSE
+mg I-DOSE
+roz B-FREQ
+ek I-FREQ
+baar I-FREQ
+10 B-DUR
+din I-DUR
+khali B-ROUTE
+pet I-ROUTE
+pe I-ROUTE
+
+Hydroxychloroquine B-DRUG
+250 B-DOSE
+mg I-DOSE
+din B-FREQ
+mein I-FREQ
+teen I-FREQ
+baar I-FREQ
+1 B-DUR
+hafte I-DUR
+dudh B-ROUTE
+ke I-ROUTE
+saath I-ROUTE
+
+Amlodipine B-DRUG
+1 B-DOSE
+tab I-DOSE
+every B-FREQ
+eight I-FREQ
+hours I-FREQ
+and O
+Famotidine B-DRUG
+0.5 B-DOSE
+g I-DOSE
+TDS B-FREQ
+
+Nimesulide B-DRUG
+20 B-DOSE
+mg I-DOSE
+every B-FREQ
+twelve I-FREQ
+hours I-FREQ
+with O
+Salbutamol B-DRUG
+1 B-DOSE
+g I-DOSE
+three B-FREQ
+times I-FREQ
+a I-FREQ
+day I-FREQ
+
+Furosemide B-DRUG
+20 B-DOSE
+mg I-DOSE
+twice B-FREQ
+a I-FREQ
+week I-FREQ
+1 B-DUR
+month I-DUR
+with B-ROUTE
+milk I-ROUTE
+
+Methotrexate B-DRUG
+10 B-DOSE
+mg I-DOSE
+subah B-FREQ
+aur I-FREQ
+raat I-FREQ
+ko I-FREQ
+1 B-DUR
+hafte I-DUR
+dudh B-ROUTE
+ke I-ROUTE
+saath I-ROUTE
+
+Glibenclamide B-DRUG
+5 B-DOSE
+mg I-DOSE
+
+Methylprednisolone B-DRUG
+650 B-DOSE
+mg I-DOSE
+twice B-FREQ
+a I-FREQ
+week I-FREQ
+2 B-DUR
+weeks I-DUR
+orally B-ROUTE
+
+Pantoprazole B-DRUG
+100 B-DOSE
+mg I-DOSE
+raat B-FREQ
+ko I-FREQ
+7 B-DUR
+din I-DUR
+khane B-ROUTE
+ke I-ROUTE
+baad I-ROUTE
+
+Loratadine B-DRUG
+40 B-DOSE
+mg I-DOSE
+before B-ROUTE
+breakfast I-ROUTE
+
+Sertraline B-DRUG
+10 B-DOSE
+ml I-DOSE
+TDS B-FREQ
+with O
+Lansoprazole B-DRUG
+1 B-DOSE
+g I-DOSE
+in B-FREQ
+the I-FREQ
+morning I-FREQ
+
+Calcium B-DRUG
+Carbonate I-DRUG
+40 B-DOSE
+mg I-DOSE
+after B-ROUTE
+breakfast I-ROUTE
+
+Pregabalin B-DRUG
+40 B-DOSE
+mg I-DOSE
+at B-FREQ
+night I-FREQ
+as B-DUR
+directed I-DUR
+
+Vitamin B-DRUG
+C I-DRUG
+2 B-DOSE
+tabs I-DOSE
+every B-FREQ
+eight I-FREQ
+hours I-FREQ
+also O
+Montelukast B-DRUG
+500 B-DOSE
+mg I-DOSE
+at B-FREQ
+night I-FREQ
+
+Fluconazole B-DRUG
+200 B-DOSE
+mg I-DOSE
+din B-FREQ
+mein I-FREQ
+do I-FREQ
+baar I-FREQ
+3 B-DUR
+din I-DUR
+khane B-ROUTE
+ke I-ROUTE
+baad I-ROUTE
+
+Ivermectin B-DRUG
+40 B-DOSE
+mg I-DOSE
+twice B-FREQ
+a I-FREQ
+day I-FREQ
+also O
+Hydroxychloroquine B-DRUG
+100 B-DOSE
+mg I-DOSE
+QID B-FREQ
+
+Atenolol B-DRUG
+1 B-DOSE
+g I-DOSE
+raat B-FREQ
+ko I-FREQ
+10 B-DUR
+din I-DUR
+khane B-ROUTE
+ke I-ROUTE
+baad I-ROUTE
+
+Zinc B-DRUG
+Sulphate I-DRUG
+40 B-DOSE
+mg I-DOSE
+OD B-FREQ
+with O
+Glimepiride B-DRUG
+40 B-DOSE
+mg I-DOSE
+every B-FREQ
+eight I-FREQ
+hours I-FREQ
+
+Domperidone B-DRUG
+twice B-FREQ
+a I-FREQ
+week I-FREQ
+1 B-DUR
+month I-DUR
+
+Hydroxychloroquine B-DRUG
+10 B-DOSE
+ml I-DOSE
+twice B-FREQ
+a I-FREQ
+day I-FREQ
+with O
+Tramadol B-DRUG
+250 B-DOSE
+mg I-DOSE
+twice B-FREQ
+a I-FREQ
+day I-FREQ
+
+Dexamethasone B-DRUG
+10 B-DOSE
+ml I-DOSE
+twice B-FREQ
+a I-FREQ
+week I-FREQ
+also O
+Fluconazole B-DRUG
+0.5 B-DOSE
+g I-DOSE
+at B-FREQ
+night I-FREQ
+
+Salbutamol B-DRUG
+20 B-DOSE
+mg I-DOSE
+din B-FREQ
+mein I-FREQ
+do I-FREQ
+baar I-FREQ
+7 B-DUR
+din I-DUR
+paani B-ROUTE
+ke I-ROUTE
+saath I-ROUTE
+
+Levocetirizine B-DRUG
+10 B-DOSE
+ml I-DOSE
+after B-ROUTE
+food I-ROUTE
+
+Pyrazinamide B-DRUG
+1 B-DOSE
+tab I-DOSE
+once B-FREQ
+a I-FREQ
+week I-FREQ
+3 B-DUR
+days I-DUR
+
+Torsemide B-DRUG
+250 B-DOSE
+mg I-DOSE
+subah B-FREQ
+aur I-FREQ
+raat I-FREQ
+ko I-FREQ
+5 B-DUR
+din I-DUR
+khane B-ROUTE
+ke I-ROUTE
+baad I-ROUTE
+
+Paracetamol B-DRUG
+0.5 B-DOSE
+g I-DOSE
+din B-FREQ
+mein I-FREQ
+do I-FREQ
+baar I-FREQ
+1 B-DUR
+hafte I-DUR
+khane B-ROUTE
+ke I-ROUTE
+baad I-ROUTE
+
+Azithromycin B-DRUG
+once B-FREQ
+a I-FREQ
+week I-FREQ
+1 B-DUR
+month I-DUR
+
+Amoxycillin B-DRUG
+650 B-DOSE
+mg I-DOSE
+at B-FREQ
+bedtime I-FREQ
+as B-DUR
+directed I-DUR
+
+Atorvastatin B-DRUG
+20 B-DOSE
+mg I-DOSE
+raat B-FREQ
+ko I-FREQ
+1 B-DUR
+hafte I-DUR
+paani B-ROUTE
+ke I-ROUTE
+saath I-ROUTE
+
+Levothyroxine B-DRUG
+250 B-DOSE
+mg I-DOSE
+
+Vitamin B-DRUG
+B12 I-DRUG
+5 B-DOSE
+ml I-DOSE
+once B-FREQ
+a I-FREQ
+week I-FREQ
+1 B-DUR
+week I-DUR
+orally B-ROUTE
+
+ORS B-DRUG
+10 B-DOSE
+mg I-DOSE
+raat B-FREQ
+ko I-FREQ
+1 B-DUR
+hafte I-DUR
+paani B-ROUTE
+ke I-ROUTE
+saath I-ROUTE
+
+Zinc B-DRUG
+Sulphate I-DRUG
+650 B-DOSE
+mg I-DOSE
+
+Enalapril B-DRUG
+once B-FREQ
+a I-FREQ
+week I-FREQ
+3 B-DUR
+days I-DUR
+
+Rifampicin B-DRUG
+650 B-DOSE
+mg I-DOSE
+orally B-ROUTE
+
+Pantaprazole B-DRUG
+250 B-DOSE
+mg I-DOSE
+twice B-FREQ
+a I-FREQ
+day I-FREQ
+2 B-DUR
+weeks I-DUR
+
+Aceclofenac B-DRUG
+5 B-DOSE
+mg I-DOSE
+subah B-FREQ
+ko I-FREQ
+2 B-DUR
+hafte I-DUR
+dudh B-ROUTE
+ke I-ROUTE
+saath I-ROUTE
+
+Lisinopril B-DRUG
+100 B-DOSE
+mg I-DOSE
+har B-FREQ
+chhe I-FREQ
+ghante I-FREQ
+mein I-FREQ
+2 B-DUR
+hafte I-DUR
+khane B-ROUTE
+se I-ROUTE
+pehle I-ROUTE
+
+Warfarin B-DRUG
+500 B-DOSE
+mg I-DOSE
+once B-FREQ
+daily I-FREQ
+3 B-DUR
+days I-DUR
+
+Methotrexate B-DRUG
+2 B-DOSE
+tabs I-DOSE
+every B-FREQ
+six I-FREQ
+hours I-FREQ
+2 B-DUR
+weeks I-DUR
+sublingually B-ROUTE
+
+Nimesulide B-DRUG
+200 B-DOSE
+mg I-DOSE
+din B-FREQ
+mein I-FREQ
+ek I-FREQ
+baar I-FREQ
+1 B-DUR
+hafte I-DUR
+khane B-ROUTE
+ke I-ROUTE
+baad I-ROUTE
+
+Loratadine B-DRUG
+5 B-DOSE
+mg I-DOSE
+in B-FREQ
+the I-FREQ
+morning I-FREQ
+and O
+Ibuprofen B-DRUG
+200 B-DOSE
+mg I-DOSE
+once B-FREQ
+daily I-FREQ
+
+Ibuprofen B-DRUG
+5 B-DOSE
+mg I-DOSE
+twice B-FREQ
+a I-FREQ
+week I-FREQ
+1 B-DUR
+month I-DUR
+
+Calcium B-DRUG
+Carbonate I-DRUG
+10 B-DOSE
+ml I-DOSE
+three B-FREQ
+times I-FREQ
+a I-FREQ
+day I-FREQ
+also O
+Azithromysin B-DRUG
+1 B-DOSE
+g I-DOSE
+OD B-FREQ
+
+Clopidogrel B-DRUG
+0.5 B-DOSE
+g I-DOSE
+three B-FREQ
+times I-FREQ
+a I-FREQ
+day I-FREQ
+
+Escitalopram B-DRUG
+20 B-DOSE
+mg I-DOSE
+subah B-FREQ
+ko I-FREQ
+1 B-DUR
+hafte I-DUR
+khali B-ROUTE
+pet I-ROUTE
+pe I-ROUTE
+
+Ivermectin B-DRUG
+20 B-DOSE
+mg I-DOSE
+once B-FREQ
+a I-FREQ
+week I-FREQ
+also O
+Alprazolam B-DRUG
+20 B-DOSE
+mg I-DOSE
+once B-FREQ
+daily I-FREQ
+
+Torsemide B-DRUG
+100 B-DOSE
+mg I-DOSE
+

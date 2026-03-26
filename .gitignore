@@ -1,0 +1,34 @@
+# Claude Code session data — never commit
+.claude/
+
+# Dependencies
+node_modules/
+Frontend/node_modules/
+telemedicine-backend/node_modules/
+
+# Environment files — NEVER commit these (contain DB passwords, JWT secrets)
+.env
+.env.local
+Frontend/.env
+Frontend/.env.local
+telemedicine-backend/.env
+
+# Build output
+Frontend/build/
+Frontend/dist/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+mediscript_env/
+.venv/
+ML-model/__pycache__/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*

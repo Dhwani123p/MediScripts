@@ -1,6 +1,7 @@
 Paracetamol
 Ibuprofen
 Amoxicillin
+Amoxycillin
 Azithromycin
 Ciprofloxacin
 Doxycycline
@@ -9,21 +10,27 @@ Cefixime
 Cetirizine
 Levocetirizine
 Loratadine
+Fexofenadine
 Pantoprazole
 Omeprazole
 Rabeprazole
 Esomeprazole
+Lansoprazole
 Metformin
 Glimepiride
 Gliclazide
-Insulin
+Glibenclamide
+Insulin Glargine
+Insulin Regular
 Amlodipine
 Losartan
 Telmisartan
 Enalapril
 Ramipril
+Lisinopril
 Metoprolol
 Atenolol
+Bisoprolol
 Atorvastatin
 Rosuvastatin
 Simvastatin
@@ -33,20 +40,52 @@ Warfarin
 Furosemide
 Hydrochlorothiazide
 Spironolactone
+Torsemide
 Salbutamol
 Budesonide
 Montelukast
 Theophylline
+Ipratropium
 Domperidone
 Ondansetron
 Ranitidine
 Famotidine
 Diclofenac
 Aceclofenac
+Nimesulide
 Tramadol
-Vitamin
-Calcium
-Iron
-Folic
-Zinc
+Codeine
+Pregabalin
+Gabapentin
+Vitamin B12
+Vitamin D3
+Vitamin C
+Calcium Carbonate
+Ferrous Sulphate
+Folic Acid
+Zinc Sulphate
 ORS
+Methotrexate
+Hydroxychloroquine
+Prednisolone
+Dexamethasone
+Methylprednisolone
+Amitriptyline
+Sertraline
+Escitalopram
+Alprazolam
+Clonazepam
+Levothyroxine
+Carbimazole
+Rifampicin
+Isoniazid
+Pyrazinamide
+Ethambutol
+Fluconazole
+Itraconazole
+Clotrimazole
+Acyclovir
+Oseltamivir
+Ivermectin
+Albendazole
+Mebendazole
