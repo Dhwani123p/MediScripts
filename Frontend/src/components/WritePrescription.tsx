@@ -53,12 +53,17 @@ export function WritePrescription({ onClose }: WritePrescriptionProps) {
           const seen = new Set<number>();
           const unique = data
             .filter((a: any) => {
-              if (seen.has(a.patient_id)) return false;
+              if (!a.patient_id || seen.has(a.patient_id)) return false;
               seen.add(a.patient_id);
               return true;
             })
             .map((a: any) => ({ id: a.patient_id, name: a.patient_name || "Unknown Patient" }));
           setPatients(unique);
+          // Auto-select if only one patient
+          if (unique.length === 1) {
+            setPatientId(String(unique[0].id));
+            setPatientName(unique[0].name);
+          }
         }
       } catch {}
     };
@@ -298,6 +303,12 @@ export function WritePrescription({ onClose }: WritePrescriptionProps) {
               <div>
                 <Label className="text-sm font-medium text-gray-700 mb-2 block">
                   Select Patient *
+                  {!patientId && patients.length > 0 && (
+                    <span className="ml-2 text-xs font-normal text-amber-500">← tap to select</span>
+                  )}
+                  {patientId && (
+                    <span className="ml-2 text-xs font-normal text-green-600">✓ Selected</span>
+                  )}
                 </Label>
                 {patients.length === 0 ? (
                   <div className="border rounded-xl p-4 bg-gray-50 text-center">
