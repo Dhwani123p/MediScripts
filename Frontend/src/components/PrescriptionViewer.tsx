@@ -200,7 +200,19 @@ export function PrescriptionViewer({ prescriptionId, onClose }: PrescriptionView
   useEffect(() => {
     fetch(`${API_BASE}/prescriptions/${prescriptionId}`, { headers: authHeader() })
       .then((r) => r.json())
-      .then((d) => { setData(d); setLoading(false); })
+      .then((d) => {
+        setLoading(false);
+        if (d.error) { setError(d.error); return; }
+        // Fetch patient health profile to enrich the prescription
+        if (d.patient_id) {
+          fetch(`${API_BASE}/health-profile/patient/${d.patient_id}`, { headers: authHeader() })
+            .then(r => r.json())
+            .then(hp => { setData({ ...d, healthProfile: hp.error ? null : hp }); })
+            .catch(() => setData(d));
+        } else {
+          setData(d);
+        }
+      })
       .catch(() => { setError("Failed to load prescription"); setLoading(false); });
   }, [prescriptionId]);
 
@@ -278,10 +290,39 @@ export function PrescriptionViewer({ prescriptionId, onClose }: PrescriptionView
               </div>
 
               {/* Patient */}
-              <div className="border border-teal-200 rounded-xl p-4">
-                <p className="text-xs uppercase tracking-widest text-[#008080] font-semibold mb-1">Patient</p>
+              <div className="border border-teal-200 rounded-xl p-4 space-y-2">
+                <p className="text-xs uppercase tracking-widest text-[#008080] font-semibold">Patient</p>
                 <p className="font-semibold text-[#1a3a5c] text-base">{data.patient_name || "Patient"}</p>
-                {data.patient_email && <p className="text-xs text-gray-500 mt-0.5">{data.patient_email}</p>}
+                {data.patient_email && <p className="text-xs text-gray-500">{data.patient_email}</p>}
+                {data.healthProfile && (
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-2 text-xs text-gray-600">
+                    {data.healthProfile.age && (
+                      <div><span className="font-semibold text-gray-700">Age:</span> {data.healthProfile.age} yrs</div>
+                    )}
+                    {data.healthProfile.gender && (
+                      <div><span className="font-semibold text-gray-700">Gender:</span> {data.healthProfile.gender}</div>
+                    )}
+                    {data.healthProfile.blood_group && (
+                      <div>
+                        <span className="font-semibold text-gray-700">Blood Group:</span>{" "}
+                        <span className="text-red-600 font-bold">{data.healthProfile.blood_group}</span>
+                      </div>
+                    )}
+                    {data.healthProfile.weight_kg && (
+                      <div><span className="font-semibold text-gray-700">Weight:</span> {data.healthProfile.weight_kg} kg</div>
+                    )}
+                  </div>
+                )}
+                {data.healthProfile?.allergies && (
+                  <div className="bg-red-50 border border-red-200 rounded-lg px-3 py-1.5 text-xs text-red-700 mt-1">
+                    <strong>⚠️ Known Allergies:</strong> {data.healthProfile.allergies}
+                  </div>
+                )}
+                {data.healthProfile?.chronic_conditions && (
+                  <div className="text-xs text-gray-600 mt-1">
+                    <span className="font-semibold">Chronic Conditions:</span> {data.healthProfile.chronic_conditions}
+                  </div>
+                )}
               </div>
 
               {/* Medications */}

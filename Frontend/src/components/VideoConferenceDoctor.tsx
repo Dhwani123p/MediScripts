@@ -60,6 +60,10 @@ export function VideoConferenceDoctor({
   const [resolvedPatientId,   setResolvedPatientId]   = useState<number | null>(patientId ?? null);
   const [resolvedPatientName, setResolvedPatientName] = useState<string>(propPatientName);
 
+  // ── Patient health profile (shown to doctor during call) ─────────────────
+  const [patientProfile,    setPatientProfile]    = useState<any>(null);
+  const [showPatientPanel,  setShowPatientPanel]  = useState(false);
+
   // ── Call controls ────────────────────────────────────────────────────────
   const [isMuted,       setIsMuted]       = useState(false);
   const [isCameraOff,   setIsCameraOff]   = useState(false);
@@ -104,6 +108,13 @@ export function VideoConferenceDoctor({
         if (match) {
           setResolvedPatientId(match.patient_id);
           setResolvedPatientName(match.patient_name || "Patient");
+          // Fetch patient health profile
+          if (match.patient_id) {
+            fetch(`${API}/health-profile/patient/${match.patient_id}`, { headers: authHeader() })
+              .then(r => r.json())
+              .then(p => { if (!p.error) setPatientProfile(p); })
+              .catch(() => {});
+          }
         }
       })
       .catch(() => {});
@@ -390,6 +401,96 @@ export function VideoConferenceDoctor({
                   <p className="text-gray-500 text-sm">Redirecting…</p>
                 </motion.div>
               ) : (
+                {/* ── Patient Health Panel ── */}
+                {patientProfile && (
+                  <Card className="border-blue-200 bg-blue-50">
+                    <CardHeader className="pb-2">
+                      <div className="flex items-center justify-between">
+                        <CardTitle className="text-sm font-semibold text-blue-800 flex items-center gap-2">
+                          <span>👤</span> Patient: {patientProfile.full_name || resolvedPatientName}
+                          {patientProfile.age && <span className="font-normal">· {patientProfile.age} yrs</span>}
+                          {patientProfile.gender && <span className="font-normal">· {patientProfile.gender}</span>}
+                          {patientProfile.blood_group && (
+                            <span className="bg-red-100 text-red-700 text-xs px-2 py-0.5 rounded-full font-bold">
+                              {patientProfile.blood_group}
+                            </span>
+                          )}
+                        </CardTitle>
+                        <button
+                          onClick={() => setShowPatientPanel(v => !v)}
+                          className="text-xs text-blue-600 hover:underline"
+                        >
+                          {showPatientPanel ? "Hide details" : "Show full history"}
+                        </button>
+                      </div>
+                      {/* Always-visible: allergies warning */}
+                      {patientProfile.allergies && (
+                        <div className="mt-2 bg-red-50 border border-red-200 rounded-lg px-3 py-2 text-xs text-red-700">
+                          <strong>⚠️ Allergies:</strong> {patientProfile.allergies}
+                        </div>
+                      )}
+                    </CardHeader>
+
+                    {showPatientPanel && (
+                      <CardContent className="pt-0 space-y-3 text-xs text-blue-900">
+                        <div className="grid grid-cols-2 gap-3">
+                          {patientProfile.height_cm && (
+                            <div><span className="font-semibold">Height:</span> {patientProfile.height_cm} cm</div>
+                          )}
+                          {patientProfile.weight_kg && (
+                            <div><span className="font-semibold">Weight:</span> {patientProfile.weight_kg} kg</div>
+                          )}
+                        </div>
+                        {patientProfile.chronic_conditions && (
+                          <div>
+                            <p className="font-semibold mb-0.5">Chronic Conditions:</p>
+                            <p className="text-blue-800">{patientProfile.chronic_conditions}</p>
+                          </div>
+                        )}
+                        {patientProfile.current_medications && (
+                          <div>
+                            <p className="font-semibold mb-0.5">Current Medications:</p>
+                            <p className="text-blue-800">{patientProfile.current_medications}</p>
+                          </div>
+                        )}
+                        {patientProfile.past_surgeries && (
+                          <div>
+                            <p className="font-semibold mb-0.5">Past Surgeries:</p>
+                            <p className="text-blue-800">{patientProfile.past_surgeries}</p>
+                          </div>
+                        )}
+                        {patientProfile.family_history && (
+                          <div>
+                            <p className="font-semibold mb-0.5">Family History:</p>
+                            <p className="text-blue-800">{patientProfile.family_history}</p>
+                          </div>
+                        )}
+                        {patientProfile.prescriptions?.length > 0 && (
+                          <div>
+                            <p className="font-semibold mb-1">Previous Prescriptions ({patientProfile.prescriptions.length}):</p>
+                            <div className="space-y-1 max-h-36 overflow-y-auto">
+                              {patientProfile.prescriptions.map((p: any, i: number) => (
+                                <div key={i} className="bg-white rounded px-2 py-1.5 border border-blue-100">
+                                  <span className="font-medium">{p.medication}</span>
+                                  {p.dosage && <span className="text-gray-500"> · {p.dosage}</span>}
+                                  {p.instructions && <span className="text-gray-500"> · {p.instructions}</span>}
+                                  <span className="float-right text-gray-400">
+                                    {new Date(p.prescribed_date).toLocaleDateString()}
+                                  </span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                        {(!patientProfile.chronic_conditions && !patientProfile.current_medications &&
+                          !patientProfile.past_surgeries && !patientProfile.prescriptions?.length) && (
+                          <p className="text-blue-500 italic">No detailed medical history on file.</p>
+                        )}
+                      </CardContent>
+                    )}
+                  </Card>
+                )}
+
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2 flex-wrap">

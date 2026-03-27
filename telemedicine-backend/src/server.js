@@ -69,10 +69,30 @@ const runMigrations = async () => {
       )
     `);
     // Indexes (safe to run repeatedly)
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS health_profiles (
+        id                      SERIAL PRIMARY KEY,
+        user_id                 INT REFERENCES users(id) ON DELETE CASCADE UNIQUE,
+        date_of_birth           DATE,
+        gender                  TEXT,
+        blood_group             TEXT,
+        height_cm               NUMERIC(5,1),
+        weight_kg               NUMERIC(5,1),
+        allergies               TEXT,
+        current_medications     TEXT,
+        chronic_conditions      TEXT,
+        past_surgeries          TEXT,
+        family_history          TEXT,
+        emergency_contact_name  TEXT,
+        emergency_contact_phone TEXT,
+        updated_at              TIMESTAMPTZ DEFAULT NOW()
+      )
+    `);
     await pool.query(`CREATE INDEX IF NOT EXISTS idx_appointments_patient  ON appointments(patient_id)`);
     await pool.query(`CREATE INDEX IF NOT EXISTS idx_appointments_doctor   ON appointments(doctor_id)`);
     await pool.query(`CREATE INDEX IF NOT EXISTS idx_prescriptions_patient ON prescriptions(patient_id)`);
     await pool.query(`CREATE INDEX IF NOT EXISTS idx_doctors_specialty     ON doctors(specialty)`);
+    await pool.query(`CREATE INDEX IF NOT EXISTS idx_health_profiles_user  ON health_profiles(user_id)`);
     console.log('✅ Database tables verified/created');
   } catch (err) {
     console.error('❌ Migration error:', err.message);
@@ -85,7 +105,8 @@ const authRoutes = require('./routes/auth');
 const doctorRoutes = require('./routes/doctors');
 const appointmentRoutes = require('./routes/appointments');
 const userRoutes = require('./routes/users');
-const prescriptionRoutes = require('./routes/prescriptions');
+const prescriptionRoutes  = require('./routes/prescriptions');
+const healthProfileRoutes = require('./routes/health-profile');
 const app = express();
 
 // Middleware
@@ -109,7 +130,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/doctors', doctorRoutes);
 app.use('/api/appointments', appointmentRoutes);
 app.use('/api/users', userRoutes);
-app.use('/api/prescriptions', prescriptionRoutes);
+app.use('/api/prescriptions',  prescriptionRoutes);
+app.use('/api/health-profile', healthProfileRoutes);
 // Health check
 app.get('/api/health', (req, res) => {
   res.json({ message: 'Server is running!' });
