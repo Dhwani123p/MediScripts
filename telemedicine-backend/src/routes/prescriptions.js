@@ -14,13 +14,19 @@ const upload = multer({
 const router = express.Router();
 
 // ── GET /api/prescriptions ────────────────────────────────────────────────────
+// Patient → their own prescriptions (patient_id = user id)
+// Doctor  → prescriptions they wrote  (doctor.user_id = user id)
 router.get('/', verifyToken, async (req, res) => {
   try {
     const result = await pool.query(
-      `SELECT p.*, d.full_name AS doctor_name
-       FROM prescriptions p
-       LEFT JOIN doctors d ON d.id = p.doctor_id
-       WHERE p.patient_id = $1
+      `SELECT p.*,
+              u.full_name AS patient_name,
+              d.full_name AS doctor_name
+       FROM   prescriptions p
+       LEFT JOIN users    u ON u.id = p.patient_id
+       LEFT JOIN doctors  d ON d.id = p.doctor_id
+       WHERE  p.patient_id = $1
+          OR  d.user_id    = $1
        ORDER BY p.prescribed_date DESC`,
       [req.userId]
     );

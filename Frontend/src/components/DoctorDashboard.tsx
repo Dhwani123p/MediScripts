@@ -114,7 +114,7 @@ export function DoctorDashboard({ onLogout, onNavigateHome, onStartVideoCall }: 
       // prescriptions
       const presRes  = await fetch(`${API}/prescriptions`, { headers: authHeader() });
       const presData = await presRes.json();
-      if (Array.isArray(presData) && presData.length > 0) {
+      if (Array.isArray(presData)) {
         setAllPrescriptions(presData.map((p: any) => ({
           id:         p.id,
           patient:    p.patient_name || "Unknown Patient",
