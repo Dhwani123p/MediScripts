@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { API_BASE } from "../lib/config";
+import { PrescriptionViewer } from "./PrescriptionViewer";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Badge } from "./ui/badge";
@@ -322,6 +323,7 @@ export function PatientDashboard({ onLogout, onNavigateHome, onStartVideoCall }:
   const [userName, setUserName]                       = useState(getLoggedInName());
   const [bookingMsg, setBookingMsg]                   = useState("");
   const [selectedDoctor, setSelectedDoctor]           = useState<any>(null);
+  const [viewPrescriptionId, setViewPrescriptionId]   = useState<number|null>(null);
 
   const loadRealData = async () => {
     try {
@@ -455,6 +457,14 @@ export function PatientDashboard({ onLogout, onNavigateHome, onStartVideoCall }:
           />
         )}
       </AnimatePresence>
+
+      {/* Prescription Viewer */}
+      {viewPrescriptionId && (
+        <PrescriptionViewer
+          prescriptionId={viewPrescriptionId}
+          onClose={() => setViewPrescriptionId(null)}
+        />
+      )}
 
       {/* Header */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-40">
@@ -623,7 +633,7 @@ export function PatientDashboard({ onLogout, onNavigateHome, onStartVideoCall }:
                         </div>
                         <div className="flex items-center space-x-2">
                           <Badge variant={p.status === "active" ? "default" : "secondary"}>{p.status}</Badge>
-                          <Button size="sm" variant="outline"><Download className="w-4 h-4 mr-2" />PDF</Button>
+                          <Button size="sm" variant="outline" onClick={() => setViewPrescriptionId(p.id)}><Download className="w-4 h-4 mr-1" />PDF</Button>
                         </div>
                       </div>
                     ))}

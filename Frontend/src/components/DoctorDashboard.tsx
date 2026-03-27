@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { API_BASE } from "../lib/config";
 import { WritePrescription } from "./WritePrescription";
+import { PrescriptionViewer } from "./PrescriptionViewer";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Badge } from "./ui/badge";
@@ -52,6 +53,7 @@ export function DoctorDashboard({ onLogout, onNavigateHome, onStartVideoCall }: 
   const [doctorName, setDoctorName]                   = useState(getLoggedInName());
   const [toastMsg, setToastMsg]                       = useState("");
   const [showPrescriptionModal, setShowPrescriptionModal] = useState(false);
+  const [viewPrescriptionId,   setViewPrescriptionId]    = useState<number|null>(null);
 
   // ── Schedule modal state ─────────────────────────────────────────────────
   const [showScheduleModal,  setShowScheduleModal]  = useState(false);
@@ -239,12 +241,20 @@ export function DoctorDashboard({ onLogout, onNavigateHome, onStartVideoCall }: 
   return (
     <div className="min-h-screen bg-gray-50">
 
-      {/* Prescription Modal */}
+      {/* Write Prescription Modal */}
       <AnimatePresence>
         {showPrescriptionModal && (
           <WritePrescription onClose={() => { setShowPrescriptionModal(false); loadRealData(); }} />
         )}
       </AnimatePresence>
+
+      {/* View Prescription Modal */}
+      {viewPrescriptionId && (
+        <PrescriptionViewer
+          prescriptionId={viewPrescriptionId}
+          onClose={() => setViewPrescriptionId(null)}
+        />
+      )}
 
       {/* Schedule New Appointment Modal */}
       <AnimatePresence>
@@ -744,7 +754,7 @@ export function DoctorDashboard({ onLogout, onNavigateHome, onStartVideoCall }: 
                           </div>
                           <div className="flex items-center space-x-2">
                             <Badge variant={prescription.status === "sent" ? "default" : "secondary"}>{prescription.status}</Badge>
-                            <Button size="sm" variant="outline"><Eye className="w-4 h-4" />View Details</Button>
+                            <Button size="sm" variant="outline" onClick={() => setViewPrescriptionId(prescription.id)}><Eye className="w-4 h-4 mr-1" />View</Button>
                           </div>
                         </div>
                       ))}

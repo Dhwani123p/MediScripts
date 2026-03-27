@@ -37,6 +37,36 @@ router.get('/', verifyToken, async (req, res) => {
   }
 });
 
+// ── GET /api/prescriptions/:id — full prescription detail ─────────────────────
+router.get('/:id', verifyToken, async (req, res) => {
+  try {
+    const result = await pool.query(
+      `SELECT p.*,
+              u.full_name     AS patient_name,
+              u.email         AS patient_email,
+              u.phone         AS patient_phone,
+              d.full_name     AS doctor_name,
+              d.specialty     AS doctor_specialty,
+              d.hospital      AS doctor_hospital,
+              d.location      AS doctor_location,
+              d.qualification AS doctor_qualification,
+              d.experience    AS doctor_experience
+       FROM   prescriptions p
+       LEFT JOIN users   u ON u.id = p.patient_id
+       LEFT JOIN doctors d ON d.id = p.doctor_id
+       WHERE  p.id = $1
+         AND  (p.patient_id = $2 OR d.user_id = $2)`,
+      [req.params.id, req.userId]
+    );
+    if (result.rows.length === 0)
+      return res.status(404).json({ error: 'Prescription not found' });
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.error('GET /prescriptions/:id error:', error.message);
+    res.status(500).json({ error: 'Failed to fetch prescription' });
+  }
+});
+
 // ── POST /api/prescriptions ───────────────────────────────────────────────────
 // Accepts either { patient_id, medication, ... }
 //             or { appointment_id, medication, ... }  ← backend resolves patient
