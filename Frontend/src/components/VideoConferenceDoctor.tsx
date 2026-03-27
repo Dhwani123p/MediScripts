@@ -108,12 +108,14 @@ export function VideoConferenceDoctor({
         if (match) {
           setResolvedPatientId(match.patient_id);
           setResolvedPatientName(match.patient_name || "Patient");
-          // Fetch patient health profile
+          // Fetch patient health profile + reports
           if (match.patient_id) {
-            fetch(`${API}/health-profile/patient/${match.patient_id}`, { headers: authHeader() })
-              .then(r => r.json())
-              .then(p => { if (!p.error) setPatientProfile(p); })
-              .catch(() => {});
+            Promise.all([
+              fetch(`${API}/health-profile/patient/${match.patient_id}`, { headers: authHeader() }).then(r => r.json()),
+              fetch(`${API}/health-profile/patient/${match.patient_id}/reports`, { headers: authHeader() }).then(r => r.json()),
+            ]).then(([p, rpts]) => {
+              if (!p.error) setPatientProfile({ ...p, reports: Array.isArray(rpts) ? rpts : [] });
+            }).catch(() => {});
           }
         }
       })
@@ -486,6 +488,30 @@ export function VideoConferenceDoctor({
                         {(!patientProfile.chronic_conditions && !patientProfile.current_medications &&
                           !patientProfile.past_surgeries && !patientProfile.prescriptions?.length) && (
                           <p className="text-blue-500 italic">No detailed medical history on file.</p>
+                        )}
+                        {/* Patient Reports */}
+                        {patientProfile.reports?.length > 0 && (
+                          <div>
+                            <p className="font-semibold mb-1">Uploaded Reports ({patientProfile.reports.length}):</p>
+                            <div className="space-y-1 max-h-40 overflow-y-auto">
+                              {patientProfile.reports.map((r: any) => (
+                                <div key={r.id} className="flex items-center justify-between bg-white rounded px-2 py-1.5 border border-blue-100">
+                                  <div className="min-w-0">
+                                    <span className="font-medium text-xs truncate block">{r.file_name}</span>
+                                    <span className="text-gray-400 text-xs">{r.report_type} · {new Date(r.uploaded_at).toLocaleDateString()}</span>
+                                  </div>
+                                  <button
+                                    className="text-[#008080] hover:underline text-xs flex-shrink-0 ml-2"
+                                    onClick={() => {
+                                      fetch(`${API}/health-profile/reports/${r.id}/doctor-view`, { headers: authHeader() })
+                                        .then(res => res.blob())
+                                        .then(blob => window.open(URL.createObjectURL(blob), "_blank"));
+                                    }}
+                                  >View</button>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
                         )}
                       </CardContent>
                     )}

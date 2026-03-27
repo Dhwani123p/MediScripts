@@ -88,11 +88,25 @@ const runMigrations = async () => {
         updated_at              TIMESTAMPTZ DEFAULT NOW()
       )
     `);
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS medical_reports (
+        id          SERIAL PRIMARY KEY,
+        user_id     INT REFERENCES users(id) ON DELETE CASCADE,
+        file_name   TEXT NOT NULL,
+        file_data   TEXT NOT NULL,
+        file_type   TEXT,
+        report_type TEXT DEFAULT 'General',
+        notes       TEXT,
+        file_size   INT,
+        uploaded_at TIMESTAMPTZ DEFAULT NOW()
+      )
+    `);
     await pool.query(`CREATE INDEX IF NOT EXISTS idx_appointments_patient  ON appointments(patient_id)`);
     await pool.query(`CREATE INDEX IF NOT EXISTS idx_appointments_doctor   ON appointments(doctor_id)`);
     await pool.query(`CREATE INDEX IF NOT EXISTS idx_prescriptions_patient ON prescriptions(patient_id)`);
     await pool.query(`CREATE INDEX IF NOT EXISTS idx_doctors_specialty     ON doctors(specialty)`);
     await pool.query(`CREATE INDEX IF NOT EXISTS idx_health_profiles_user  ON health_profiles(user_id)`);
+    await pool.query(`CREATE INDEX IF NOT EXISTS idx_medical_reports_user  ON medical_reports(user_id)`);
     console.log('✅ Database tables verified/created');
   } catch (err) {
     console.error('❌ Migration error:', err.message);
