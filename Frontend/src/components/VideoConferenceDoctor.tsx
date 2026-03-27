@@ -401,6 +401,7 @@ export function VideoConferenceDoctor({
                   <p className="text-gray-500 text-sm">Redirecting…</p>
                 </motion.div>
               ) : (
+                <>
                 {/* ── Patient Health Panel ── */}
                 {patientProfile && (
                   <Card className="border-blue-200 bg-blue-50">
@@ -598,6 +599,7 @@ export function VideoConferenceDoctor({
                     </div>
                   </CardContent>
                 </Card>
+                </>
               )}
             </motion.div>
           </div>
