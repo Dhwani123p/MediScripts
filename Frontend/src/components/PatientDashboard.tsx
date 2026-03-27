@@ -421,8 +421,8 @@ export function PatientDashboard({ onLogout, onNavigateHome, onStartVideoCall }:
 
   const upcomingCount        = appointments.filter((a: any) => ["scheduled","upcoming","confirmed"].includes(a.status)).length;
   const upcomingAppointments = appointments.slice(0, 2);
-  const myDoctors            = doctors.slice(0, 2);
-  const filteredDoctors      = myDoctors.filter(
+  const myDoctors       = doctors.slice(0, 3);
+  const filteredDoctors = doctors.filter(
     (d) => d.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
            d.specialty.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -607,15 +607,36 @@ export function PatientDashboard({ onLogout, onNavigateHome, onStartVideoCall }:
                   <CardContent className="space-y-4">
                     <div className="relative">
                       <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                      <input type="text" placeholder="Search by specialty, name, or condition..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#008080]" />
+                      <input
+                        type="text"
+                        placeholder="Search by specialty, name, or condition..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onKeyDown={(e) => { if (e.key === "Enter" && searchQuery.trim()) setActiveSection("doctors"); }}
+                        className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#008080]"
+                      />
                     </div>
                     <div className="grid grid-cols-2 gap-3">
                       {["Cardiology","Dermatology","Pediatrics","Neurology"].map((specialty) => (
-                        <Button key={specialty} variant="outline" className="justify-start border-[#008080]/20 hover:bg-[#008080]/10">
+                        <Button
+                          key={specialty}
+                          variant="outline"
+                          className="justify-start border-[#008080]/20 hover:bg-[#008080]/10"
+                          onClick={() => { setSearchQuery(specialty); setActiveSection("doctors"); }}
+                        >
                           <Heart className="w-4 h-4 mr-2 text-[#008080]" />{specialty}
                         </Button>
                       ))}
                     </div>
+                    {searchQuery && (
+                      <Button
+                        className="w-full bg-[#008080] hover:bg-[#008080]/90 text-white"
+                        onClick={() => setActiveSection("doctors")}
+                      >
+                        <Search className="w-4 h-4 mr-2" />
+                        Search "{searchQuery}" — View {filteredDoctors.length} doctor{filteredDoctors.length !== 1 ? "s" : ""}
+                      </Button>
+                    )}
                   </CardContent>
                 </Card>
 
@@ -732,19 +753,25 @@ export function PatientDashboard({ onLogout, onNavigateHome, onStartVideoCall }:
                 <h1 className="text-3xl">Find Doctors</h1>
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                  <input type="text" placeholder="Search doctors..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#008080]" />
+                  <input type="text" placeholder="Search doctors..." value={searchQuery} onChange={(e) => { setSearchQuery(e.target.value); setDoctorsPage(1); }} className="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#008080]" />
                 </div>
               </div>
               <Card>
-                <CardHeader><CardTitle>Available Doctors ({doctors.length})</CardTitle></CardHeader>
+                <CardHeader>
+                  <CardTitle>
+                    {searchQuery
+                      ? `Results for "${searchQuery}" (${filteredDoctors.length})`
+                      : `Available Doctors (${doctors.length})`}
+                  </CardTitle>
+                </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    {paginateData(
-                      doctors.filter((d) =>
-                        d.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                        d.specialty.toLowerCase().includes(searchQuery.toLowerCase())
-                      ), doctorsPage
-                    ).map((doctor) => (
+                    {filteredDoctors.length === 0 ? (
+                      <p className="text-sm text-gray-400 text-center py-8">
+                        No doctors found for "{searchQuery}". Try a different search term.
+                      </p>
+                    ) : null}
+                    {paginateData(filteredDoctors, doctorsPage).map((doctor) => (
                       <div key={doctor.id} className="flex items-center justify-between p-4 border rounded-lg">
                         <div className="flex items-center space-x-4">
                           <Avatar>
@@ -776,7 +803,7 @@ export function PatientDashboard({ onLogout, onNavigateHome, onStartVideoCall }:
                       </div>
                     ))}
                   </div>
-                  {renderPagination(doctorsPage, getTotalPages(doctors.length), setDoctorsPage)}
+                  {renderPagination(doctorsPage, getTotalPages(filteredDoctors.length), setDoctorsPage)}
                 </CardContent>
               </Card>
             </div>
