@@ -72,7 +72,7 @@ router.get('/:id', verifyToken, async (req, res) => {
 //             or { appointment_id, medication, ... }  ← backend resolves patient
 router.post('/', verifyToken, async (req, res) => {
   try {
-    let { patient_id, appointment_id, medication, dosage, instructions } = req.body;
+    let { patient_id, appointment_id, medication, dosage, instructions, diagnosis, medications_json } = req.body;
 
     // Resolve patient from appointment if patient_id is missing/zero
     if ((!patient_id || patient_id === 0) && appointment_id) {
@@ -104,10 +104,10 @@ router.post('/', verifyToken, async (req, res) => {
 
     const result = await pool.query(
       `INSERT INTO prescriptions
-        (patient_id, doctor_id, medication, dosage, instructions, status, prescribed_date, created_at)
-       VALUES ($1, $2, $3, $4, $5, 'active', NOW(), NOW())
+        (patient_id, doctor_id, medication, dosage, instructions, diagnosis, medications_json, status, prescribed_date, created_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, 'active', NOW(), NOW())
        RETURNING *`,
-      [patient_id, doctor_id, medication, dosage || '', instructions || '']
+      [patient_id, doctor_id, medication, dosage || '', instructions || '', diagnosis || null, medications_json || null]
     );
     res.status(201).json(result.rows[0]);
   } catch (error) {

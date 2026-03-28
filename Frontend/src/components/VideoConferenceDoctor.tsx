@@ -79,6 +79,9 @@ export function VideoConferenceDoctor({
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef   = useRef<Blob[]>([]);
 
+  // ── Quick notes (during call → pre-filled as diagnosis) ─────────────────
+  const [quickNotes, setQuickNotes] = useState("");
+
   // ── Prescription form ────────────────────────────────────────────────────
   const [diagnosis,   setDiagnosis]   = useState("");
   const [medications, setMedications] = useState<MedLine[]>([
@@ -223,6 +226,8 @@ export function VideoConferenceDoctor({
     callRef.current?.close();
     peerRef.current?.destroy();
     if (isRecording) mediaRecorderRef.current?.stop();
+    // Pre-fill diagnosis from quick notes taken during the call
+    if (quickNotes.trim()) setDiagnosis(quickNotes.trim());
     setShowPrescription(true);
   };
 
@@ -344,26 +349,29 @@ export function VideoConferenceDoctor({
 
     setIsSaving(true);
     try {
-      const results = await Promise.all(
-        valid.map((m) =>
-          fetch(`${API}/prescriptions`, {
-            method:  "POST",
-            headers: authHeader(),
-            body:    JSON.stringify({
-              patient_id:     resolvedPatientId || undefined,
-              appointment_id: apptIdNum,
-              medication:     m.medication,
-              dosage:         m.dosage,
-              instructions:   m.instructions,
-            }),
-          }).then((r) => r.json())
-        )
+      // Save ALL medicines as ONE prescription record
+      const medicationsJson = JSON.stringify(
+        valid.map((m) => ({ name: m.medication, dosage: m.dosage, instructions: m.instructions }))
       );
-      if (results.every((r) => r.id)) {
+      const res = await fetch(`${API}/prescriptions`, {
+        method:  "POST",
+        headers: authHeader(),
+        body:    JSON.stringify({
+          patient_id:      resolvedPatientId || undefined,
+          appointment_id:  apptIdNum,
+          medication:      valid[0].medication,           // first med as summary field
+          dosage:          valid.map((m) => m.dosage).filter(Boolean).join("; "),
+          instructions:    valid.map((m) => m.instructions).filter(Boolean).join("; "),
+          diagnosis:       diagnosis || undefined,
+          medications_json: medicationsJson,              // full list as JSON
+        }),
+      });
+      const data = await res.json();
+      if (data.id) {
         setSaved(true);
         setTimeout(onEndCall, 2000);
       } else {
-        alert("Some prescriptions failed to save — please try again.");
+        alert("Failed to save prescription — " + (data.error || "please try again."));
       }
     } catch {
       alert("Could not connect to server.");
@@ -404,120 +412,6 @@ export function VideoConferenceDoctor({
                 </motion.div>
               ) : (
                 <>
-                {/* ── Patient Health Panel ── */}
-                {patientProfile && (
-                  <Card className="border-blue-200 bg-blue-50">
-                    <CardHeader className="pb-2">
-                      <div className="flex items-center justify-between">
-                        <CardTitle className="text-sm font-semibold text-blue-800 flex items-center gap-2">
-                          <span>👤</span> Patient: {patientProfile.full_name || resolvedPatientName}
-                          {patientProfile.age && <span className="font-normal">· {patientProfile.age} yrs</span>}
-                          {patientProfile.gender && <span className="font-normal">· {patientProfile.gender}</span>}
-                          {patientProfile.blood_group && (
-                            <span className="bg-red-100 text-red-700 text-xs px-2 py-0.5 rounded-full font-bold">
-                              {patientProfile.blood_group}
-                            </span>
-                          )}
-                        </CardTitle>
-                        <button
-                          onClick={() => setShowPatientPanel(v => !v)}
-                          className="text-xs text-blue-600 hover:underline"
-                        >
-                          {showPatientPanel ? "Hide details" : "Show full history"}
-                        </button>
-                      </div>
-                      {/* Always-visible: allergies warning */}
-                      {patientProfile.allergies && (
-                        <div className="mt-2 bg-red-50 border border-red-200 rounded-lg px-3 py-2 text-xs text-red-700">
-                          <strong>⚠️ Allergies:</strong> {patientProfile.allergies}
-                        </div>
-                      )}
-                    </CardHeader>
-
-                    {showPatientPanel && (
-                      <CardContent className="pt-0 space-y-3 text-xs text-blue-900">
-                        <div className="grid grid-cols-2 gap-3">
-                          {patientProfile.height_cm && (
-                            <div><span className="font-semibold">Height:</span> {patientProfile.height_cm} cm</div>
-                          )}
-                          {patientProfile.weight_kg && (
-                            <div><span className="font-semibold">Weight:</span> {patientProfile.weight_kg} kg</div>
-                          )}
-                        </div>
-                        {patientProfile.chronic_conditions && (
-                          <div>
-                            <p className="font-semibold mb-0.5">Chronic Conditions:</p>
-                            <p className="text-blue-800">{patientProfile.chronic_conditions}</p>
-                          </div>
-                        )}
-                        {patientProfile.current_medications && (
-                          <div>
-                            <p className="font-semibold mb-0.5">Current Medications:</p>
-                            <p className="text-blue-800">{patientProfile.current_medications}</p>
-                          </div>
-                        )}
-                        {patientProfile.past_surgeries && (
-                          <div>
-                            <p className="font-semibold mb-0.5">Past Surgeries:</p>
-                            <p className="text-blue-800">{patientProfile.past_surgeries}</p>
-                          </div>
-                        )}
-                        {patientProfile.family_history && (
-                          <div>
-                            <p className="font-semibold mb-0.5">Family History:</p>
-                            <p className="text-blue-800">{patientProfile.family_history}</p>
-                          </div>
-                        )}
-                        {patientProfile.prescriptions?.length > 0 && (
-                          <div>
-                            <p className="font-semibold mb-1">Previous Prescriptions ({patientProfile.prescriptions.length}):</p>
-                            <div className="space-y-1 max-h-36 overflow-y-auto">
-                              {patientProfile.prescriptions.map((p: any, i: number) => (
-                                <div key={i} className="bg-white rounded px-2 py-1.5 border border-blue-100">
-                                  <span className="font-medium">{p.medication}</span>
-                                  {p.dosage && <span className="text-gray-500"> · {p.dosage}</span>}
-                                  {p.instructions && <span className="text-gray-500"> · {p.instructions}</span>}
-                                  <span className="float-right text-gray-400">
-                                    {new Date(p.prescribed_date).toLocaleDateString()}
-                                  </span>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                        {(!patientProfile.chronic_conditions && !patientProfile.current_medications &&
-                          !patientProfile.past_surgeries && !patientProfile.prescriptions?.length) && (
-                          <p className="text-blue-500 italic">No detailed medical history on file.</p>
-                        )}
-                        {/* Patient Reports */}
-                        {patientProfile.reports?.length > 0 && (
-                          <div>
-                            <p className="font-semibold mb-1">Uploaded Reports ({patientProfile.reports.length}):</p>
-                            <div className="space-y-1 max-h-40 overflow-y-auto">
-                              {patientProfile.reports.map((r: any) => (
-                                <div key={r.id} className="flex items-center justify-between bg-white rounded px-2 py-1.5 border border-blue-100">
-                                  <div className="min-w-0">
-                                    <span className="font-medium text-xs truncate block">{r.file_name}</span>
-                                    <span className="text-gray-400 text-xs">{r.report_type} · {new Date(r.uploaded_at).toLocaleDateString()}</span>
-                                  </div>
-                                  <button
-                                    className="text-[#008080] hover:underline text-xs flex-shrink-0 ml-2"
-                                    onClick={() => {
-                                      fetch(`${API}/health-profile/reports/${r.id}/doctor-view`, { headers: authHeader() })
-                                        .then(res => res.blob())
-                                        .then(blob => window.open(URL.createObjectURL(blob), "_blank"));
-                                    }}
-                                  >View</button>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                      </CardContent>
-                    )}
-                  </Card>
-                )}
-
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2 flex-wrap">
@@ -841,26 +735,121 @@ export function VideoConferenceDoctor({
                 </CardContent>
               </Card>
 
-              {/* Quick Notes */}
+              {/* Quick Notes — wired to diagnosis on prescription form */}
               <Card>
                 <CardHeader>
                   <CardTitle className="text-sm">Quick Notes</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <Textarea
-                    placeholder="Quick notes during consultation…"
-                    className="min-h-[100px] text-sm"
+                    placeholder="Symptoms, observations… (auto-fills Diagnosis field)"
+                    className="min-h-[90px] text-sm"
+                    value={quickNotes}
+                    onChange={(e) => setQuickNotes(e.target.value)}
                   />
+                  <p className="text-xs text-gray-400 mt-1">Will pre-fill the Diagnosis box in the prescription form.</p>
                 </CardContent>
               </Card>
 
-              {/* Patient History */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-sm">Patient History</CardTitle>
+              {/* Patient History — full health profile during call */}
+              <Card className={patientProfile ? "border-blue-200" : ""}>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm flex items-center justify-between">
+                    <span>👤 Patient History</span>
+                    {patientProfile && (
+                      <button
+                        onClick={() => setShowPatientPanel(v => !v)}
+                        className="text-xs text-blue-500 hover:underline font-normal"
+                      >
+                        {showPatientPanel ? "Collapse" : "Expand"}
+                      </button>
+                    )}
+                  </CardTitle>
                 </CardHeader>
-                <CardContent className="text-sm text-gray-600">
-                  <p className="italic">Ask patient for allergies and current medications.</p>
+                <CardContent className="pt-0 text-xs space-y-2">
+                  {!patientProfile ? (
+                    <p className="text-gray-400 italic">Loading patient profile…</p>
+                  ) : (
+                    <>
+                      {/* Always visible: key vitals */}
+                      <div className="flex flex-wrap gap-2">
+                        {patientProfile.gender && <span className="bg-blue-50 text-blue-700 px-2 py-0.5 rounded">{patientProfile.gender}</span>}
+                        {patientProfile.blood_group && <span className="bg-red-50 text-red-700 px-2 py-0.5 rounded font-bold">{patientProfile.blood_group}</span>}
+                        {patientProfile.weight_kg && <span className="bg-gray-100 text-gray-700 px-2 py-0.5 rounded">{patientProfile.weight_kg} kg</span>}
+                        {patientProfile.height_cm && <span className="bg-gray-100 text-gray-700 px-2 py-0.5 rounded">{patientProfile.height_cm} cm</span>}
+                      </div>
+                      {/* Always visible: allergies warning */}
+                      {patientProfile.allergies && (
+                        <div className="bg-red-50 border border-red-200 rounded px-2 py-1.5 text-red-700">
+                          <strong>⚠️ Allergies:</strong> {patientProfile.allergies}
+                        </div>
+                      )}
+                      {!patientProfile.allergies && (
+                        <p className="text-gray-400 text-xs">No known allergies on file.</p>
+                      )}
+
+                      {/* Expanded details */}
+                      {showPatientPanel && (
+                        <div className="space-y-2 pt-1 border-t border-blue-100 mt-1">
+                          {patientProfile.chronic_conditions && (
+                            <div><span className="font-semibold text-gray-700">Chronic:</span> {patientProfile.chronic_conditions}</div>
+                          )}
+                          {patientProfile.current_medications && (
+                            <div><span className="font-semibold text-gray-700">Current Meds:</span> {patientProfile.current_medications}</div>
+                          )}
+                          {patientProfile.past_surgeries && (
+                            <div><span className="font-semibold text-gray-700">Surgeries:</span> {patientProfile.past_surgeries}</div>
+                          )}
+                          {patientProfile.family_history && (
+                            <div><span className="font-semibold text-gray-700">Family:</span> {patientProfile.family_history}</div>
+                          )}
+                          {/* Previous Prescriptions */}
+                          {patientProfile.prescriptions?.length > 0 && (
+                            <div>
+                              <p className="font-semibold text-gray-700 mb-1">Past Prescriptions:</p>
+                              <div className="space-y-1 max-h-32 overflow-y-auto">
+                                {patientProfile.prescriptions.map((p: any, i: number) => (
+                                  <div key={i} className="bg-white rounded px-2 py-1 border border-blue-100">
+                                    <span className="font-medium">{p.medication}</span>
+                                    {p.dosage && <span className="text-gray-500"> · {p.dosage}</span>}
+                                    <span className="float-right text-gray-400">{new Date(p.prescribed_date).toLocaleDateString()}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                          {/* Uploaded Reports */}
+                          {patientProfile.reports?.length > 0 && (
+                            <div>
+                              <p className="font-semibold text-gray-700 mb-1">Reports ({patientProfile.reports.length}):</p>
+                              <div className="space-y-1 max-h-28 overflow-y-auto">
+                                {patientProfile.reports.map((r: any) => (
+                                  <div key={r.id} className="flex items-center justify-between bg-white rounded px-2 py-1 border border-blue-100">
+                                    <div className="min-w-0 mr-2">
+                                      <span className="font-medium truncate block">{r.file_name}</span>
+                                      <span className="text-gray-400">{r.report_type} · {new Date(r.uploaded_at).toLocaleDateString()}</span>
+                                    </div>
+                                    <button
+                                      className="text-[#008080] hover:underline flex-shrink-0"
+                                      onClick={() => {
+                                        fetch(`${API}/health-profile/reports/${r.id}/doctor-view`, { headers: authHeader() })
+                                          .then(res => res.blob())
+                                          .then(blob => window.open(URL.createObjectURL(blob), "_blank"));
+                                      }}
+                                    >View</button>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                          {!patientProfile.chronic_conditions && !patientProfile.current_medications &&
+                           !patientProfile.past_surgeries && !patientProfile.prescriptions?.length && (
+                            <p className="text-gray-400 italic">No detailed history on file.</p>
+                          )}
+                        </div>
+                      )}
+                    </>
+                  )}
                 </CardContent>
               </Card>
             </div>

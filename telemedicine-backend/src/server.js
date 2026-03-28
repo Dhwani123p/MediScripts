@@ -107,6 +107,9 @@ const runMigrations = async () => {
     await pool.query(`CREATE INDEX IF NOT EXISTS idx_doctors_specialty     ON doctors(specialty)`);
     await pool.query(`CREATE INDEX IF NOT EXISTS idx_health_profiles_user  ON health_profiles(user_id)`);
     await pool.query(`CREATE INDEX IF NOT EXISTS idx_medical_reports_user  ON medical_reports(user_id)`);
+    // Add diagnosis + medications_json columns if not already present (safe to run repeatedly)
+    await pool.query(`ALTER TABLE prescriptions ADD COLUMN IF NOT EXISTS diagnosis TEXT`);
+    await pool.query(`ALTER TABLE prescriptions ADD COLUMN IF NOT EXISTS medications_json TEXT`);
     console.log('✅ Database tables verified/created');
   } catch (err) {
     console.error('❌ Migration error:', err.message);

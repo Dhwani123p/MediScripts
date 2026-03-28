@@ -51,8 +51,24 @@ function buildPrintHTML(p: any): string {
   const spec    = p.doctor_specialty  || "General Physician";
   const hosp    = p.doctor_hospital   || p.doctor_location || "MediScript Clinic";
   const patient = p.patient_name      || "Patient";
-  const dosage  = p.dosage            || "—";
-  const instr   = p.instructions      || "—";
+  const hp      = p.healthProfile;
+
+  // Parse all medications — use medications_json if available
+  let meds: { name: string; dosage: string; instructions: string }[] = [];
+  if (p.medications_json) {
+    try { meds = JSON.parse(p.medications_json); } catch { meds = []; }
+  }
+  if (!meds.length) {
+    meds = [{ name: p.medication, dosage: p.dosage || "—", instructions: p.instructions || "—" }];
+  }
+
+  const medsRows = meds.map((m, i) => `
+    <tr>
+      <td>${i + 1}</td>
+      <td class="med-name">${m.name}</td>
+      <td>${m.dosage || "—"}</td>
+      <td>${m.instructions || "—"}</td>
+    </tr>`).join("");
 
   return `<!DOCTYPE html><html><head><meta charset="utf-8"/>
 <title>Prescription ${rxId}</title>
@@ -127,7 +143,20 @@ function buildPrintHTML(p: any): string {
     <h4>Patient</h4>
     <p>${patient}</p>
     ${p.patient_email ? `<div style="font-size:12px;color:#555;margin-top:2px;">${p.patient_email}</div>` : ""}
+    ${hp ? `<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;font-size:11px;">
+      ${hp.gender ? `<span style="background:#e8f4f4;border-radius:4px;padding:2px 6px;">${hp.gender}</span>` : ""}
+      ${hp.blood_group ? `<span style="background:#fee2e2;color:#b91c1c;font-weight:700;border-radius:4px;padding:2px 6px;">${hp.blood_group}</span>` : ""}
+      ${hp.weight_kg ? `<span style="background:#f0fdf4;border-radius:4px;padding:2px 6px;">${hp.weight_kg} kg</span>` : ""}
+      ${hp.height_cm ? `<span style="background:#f0fdf4;border-radius:4px;padding:2px 6px;">${hp.height_cm} cm</span>` : ""}
+    </div>` : ""}
+    ${hp?.allergies ? `<div style="background:#fef2f2;border:1px solid #fca5a5;border-radius:6px;padding:6px 10px;margin-top:6px;font-size:11px;color:#b91c1c;"><strong>⚠️ Allergies:</strong> ${hp.allergies}</div>` : ""}
+    ${hp?.chronic_conditions ? `<div style="font-size:11px;color:#555;margin-top:4px;"><strong>Chronic:</strong> ${hp.chronic_conditions}</div>` : ""}
   </div>
+
+  ${p.diagnosis ? `<div style="background:#f0f9f9;border:1px solid #a7d7d7;border-radius:8px;padding:10px 14px;margin-bottom:16px;">
+    <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#008080;font-weight:600;margin-bottom:4px;">Diagnosis</div>
+    <div style="font-size:13px;color:#1a3a5c;">${p.diagnosis}</div>
+  </div>` : ""}
 
   <!-- Rx symbol + medications -->
   <div class="rx-symbol">℞</div>
@@ -141,12 +170,7 @@ function buildPrintHTML(p: any): string {
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>1</td>
-        <td class="med-name">${p.medication}</td>
-        <td>${dosage}</td>
-        <td>${instr}</td>
-      </tr>
+      ${medsRows}
     </tbody>
   </table>
 
@@ -325,30 +349,51 @@ export function PrescriptionViewer({ prescriptionId, onClose }: PrescriptionView
                 )}
               </div>
 
-              {/* Medications */}
-              <div>
-                <p className="text-3xl font-black text-[#008080] mb-3">℞</p>
-                <div className="rounded-xl overflow-hidden border border-gray-200">
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="bg-[#008080] text-white">
-                        <th className="py-2 px-3 text-left font-semibold">#</th>
-                        <th className="py-2 px-3 text-left font-semibold">Medication</th>
-                        <th className="py-2 px-3 text-left font-semibold">Dosage & Frequency</th>
-                        <th className="py-2 px-3 text-left font-semibold">Instructions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr className="border-b border-gray-100">
-                        <td className="py-3 px-3 text-gray-500">1</td>
-                        <td className="py-3 px-3 font-semibold text-[#1a3a5c]">{data.medication}</td>
-                        <td className="py-3 px-3">{data.dosage || "—"}</td>
-                        <td className="py-3 px-3">{data.instructions || "—"}</td>
-                      </tr>
-                    </tbody>
-                  </table>
+              {/* Diagnosis */}
+              {data.diagnosis && (
+                <div className="bg-teal-50 border border-teal-200 rounded-xl px-4 py-3">
+                  <p className="text-xs uppercase tracking-widest text-[#008080] font-semibold mb-1">Diagnosis</p>
+                  <p className="text-sm text-[#1a3a5c]">{data.diagnosis}</p>
                 </div>
-              </div>
+              )}
+
+              {/* Medications — parse all from medications_json */}
+              {(() => {
+                let meds: { name: string; dosage: string; instructions: string }[] = [];
+                if (data.medications_json) {
+                  try { meds = JSON.parse(data.medications_json); } catch { meds = []; }
+                }
+                if (!meds.length) {
+                  meds = [{ name: data.medication, dosage: data.dosage || "—", instructions: data.instructions || "—" }];
+                }
+                return (
+                  <div>
+                    <p className="text-3xl font-black text-[#008080] mb-3">℞</p>
+                    <div className="rounded-xl overflow-hidden border border-gray-200">
+                      <table className="w-full text-sm">
+                        <thead>
+                          <tr className="bg-[#008080] text-white">
+                            <th className="py-2 px-3 text-left font-semibold">#</th>
+                            <th className="py-2 px-3 text-left font-semibold">Medication</th>
+                            <th className="py-2 px-3 text-left font-semibold">Dosage & Frequency</th>
+                            <th className="py-2 px-3 text-left font-semibold">Instructions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {meds.map((m, i) => (
+                            <tr key={i} className="border-b border-gray-100 last:border-0">
+                              <td className="py-3 px-3 text-gray-500">{i + 1}</td>
+                              <td className="py-3 px-3 font-semibold text-[#1a3a5c]">{m.name}</td>
+                              <td className="py-3 px-3">{m.dosage || "—"}</td>
+                              <td className="py-3 px-3">{m.instructions || "—"}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                );
+              })()}
 
               {/* Digital Signature */}
               <div className="flex justify-end pt-4">
