@@ -227,11 +227,18 @@ export function PrescriptionViewer({ prescriptionId, onClose }: PrescriptionView
       .then((d) => {
         setLoading(false);
         if (d.error) { setError(d.error); return; }
-        // Fetch patient health profile to enrich the prescription
+        // Fetch patient health profile — works for both doctors and the patient themselves
         if (d.patient_id) {
           fetch(`${API_BASE}/health-profile/patient/${d.patient_id}`, { headers: authHeader() })
             .then(r => r.json())
-            .then(hp => { setData({ ...d, healthProfile: hp.error ? null : hp }); })
+            .then(hp => {
+              if (!hp.error) { setData({ ...d, healthProfile: hp }); return; }
+              // Fallback: patient viewing their own — try self endpoint
+              fetch(`${API_BASE}/health-profile`, { headers: authHeader() })
+                .then(r => r.json())
+                .then(own => setData({ ...d, healthProfile: own.error ? null : own }))
+                .catch(() => setData(d));
+            })
             .catch(() => setData(d));
         } else {
           setData(d);
@@ -270,8 +277,8 @@ export function PrescriptionViewer({ prescriptionId, onClose }: PrescriptionView
           </div>
         </div>
 
-        {/* Body */}
-        <div className="overflow-y-auto flex-1 p-6">
+        {/* Body — scrollable for long prescriptions */}
+        <div className="overflow-y-auto flex-1 p-6 scroll-smooth" style={{ scrollbarWidth: "thin", scrollbarColor: "#008080 #f0f9f9" }}>
           {loading && (
             <div className="flex items-center justify-center py-16">
               <Loader2 className="w-8 h-8 animate-spin text-[#008080]" />
@@ -369,8 +376,8 @@ export function PrescriptionViewer({ prescriptionId, onClose }: PrescriptionView
                 return (
                   <div>
                     <p className="text-3xl font-black text-[#008080] mb-3">℞</p>
-                    <div className="rounded-xl overflow-hidden border border-gray-200">
-                      <table className="w-full text-sm">
+                    <div className="rounded-xl border border-gray-200 overflow-auto max-h-72" style={{ scrollbarWidth: "thin" }}>
+                      <table className="w-full text-sm min-w-[500px]">
                         <thead>
                           <tr className="bg-[#008080] text-white">
                             <th className="py-2 px-3 text-left font-semibold">#</th>

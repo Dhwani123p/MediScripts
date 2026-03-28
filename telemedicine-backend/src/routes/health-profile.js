@@ -71,15 +71,19 @@ router.put('/', verifyToken, async (req, res) => {
   }
 });
 
-// ── GET /api/health-profile/patient/:userId — doctor views patient profile ─
+// ── GET /api/health-profile/patient/:userId — doctor OR the patient themselves ─
 router.get('/patient/:userId', verifyToken, async (req, res) => {
   try {
-    // Verify requester is a doctor
-    const docCheck = await pool.query(
-      "SELECT id FROM users WHERE id = $1 AND role = 'doctor'", [req.userId]
-    );
-    if (docCheck.rows.length === 0) {
-      return res.status(403).json({ error: 'Only doctors can view patient profiles' });
+    const targetId = parseInt(req.params.userId);
+    // Allow: doctor viewing any patient, OR patient viewing their own profile
+    const isSelf = req.userId === targetId;
+    if (!isSelf) {
+      const docCheck = await pool.query(
+        "SELECT id FROM users WHERE id = $1 AND role = 'doctor'", [req.userId]
+      );
+      if (docCheck.rows.length === 0) {
+        return res.status(403).json({ error: 'Access denied' });
+      }
     }
 
     const [profileRes, userRes, presRes] = await Promise.all([
