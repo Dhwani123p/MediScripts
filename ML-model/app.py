@@ -1,22 +1,23 @@
 """
 MediScript — Hugging Face Space entry point  (Docker SDK)
-Serves two things on port 7860:
-  • GET  /          → Gradio UI  (audio + text tabs, English & Hinglish)
-  • POST /api/predict → REST JSON API  { text } → { medicines, raw }
+Serves on port 7860:
+  • GET  /          → Simple HTML demo UI
+  • POST /api/predict       → REST: { text }  → { medicines, raw }
+  • POST /api/process-audio → REST: audio file → { transcript, medicines, raw }
 
-The /api/predict endpoint is consumed by the telemedicine backend
-to auto-fill editable prescription forms.
+Models are loaded at module-import time (before uvicorn starts serving),
+which is the correct pattern — uvicorn then binds the port immediately
+after the import and health checks pass without timeout.
 """
 
 import os
 import sys
 import tempfile
 
-import gradio as gr
 import torch
 import whisper
 from fastapi import FastAPI, UploadFile, File
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, HTMLResponse
 from pydantic import BaseModel
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -26,42 +27,38 @@ from ner.model.NER_2 import load_model, predict_from_text
 
 NER_MODEL_PATH = os.path.join(BASE_DIR, "ner", "model", "mediscript_ner.pt")
 
-# ── Load models once at startup ───────────────────────────────────────────────
+# ── Load models once at startup (module-level, runs before uvicorn serves) ────
 _device = "cuda" if torch.cuda.is_available() else "cpu"
-print(f"[MediScript] Loading models on {_device} …")
+print(f"[MediScript] Loading models on {_device} …", flush=True)
 
-_whisper    = whisper.load_model("base")
-_ner, _vocab, _id2label = load_model(NER_MODEL_PATH, _device)
+_whisper                    = whisper.load_model("base")
+_ner, _vocab, _id2label     = load_model(NER_MODEL_PATH, _device)
 
-print("[MediScript] Models ready.")
+print("[MediScript] Models ready.", flush=True)
 
 
-# ── Shared helpers ────────────────────────────────────────────────────────────
+# ── FastAPI app ────────────────────────────────────────────────────────────────
+
+app = FastAPI(title="MediScript NER API", version="2.0.0")
+
+
+# ── Helpers ───────────────────────────────────────────────────────────────────
 
 def _run_ner(text: str) -> dict:
     return predict_from_text(text, _ner, _vocab, _id2label, _device)
 
 
-def _group_entities(raw: dict) -> list[dict]:
-    """
-    Zip flat entity lists into per-medicine dicts using index alignment.
-    drugs[i] is paired with doses[i], frequencies[i], durations[i], routes[i].
-    This works because the BIO tagger emits entities in the order they appear
-    in the sentence, so drug 0 always precedes dose 0, etc.
-
-    Each medicine dict includes a 'confidence' sub-object with per-field scores
-    (0.0–1.0) derived from the CRF emission softmax probabilities.
-    """
+def _group_entities(raw: dict) -> list:
     drugs  = raw.get("drugs",       [])
-    doses  = raw.get("doses",        [])
-    freqs  = raw.get("frequencies",  [])
-    durs   = raw.get("durations",    [])
-    routes = raw.get("routes",       [])
+    doses  = raw.get("doses",       [])
+    freqs  = raw.get("frequencies", [])
+    durs   = raw.get("durations",   [])
+    routes = raw.get("routes",      [])
     conf   = raw.get("confidence_scores", {})
 
     def _score(key, i):
-        scores = conf.get(key, [])
-        return scores[i] if i < len(scores) else None
+        s = conf.get(key, [])
+        return s[i] if i < len(s) else None
 
     n = max(len(drugs), 1)
     return [
@@ -83,71 +80,23 @@ def _group_entities(raw: dict) -> list[dict]:
     ]
 
 
-def _format_md(raw: dict) -> str:
-    rows = [
-        ("Drug(s)",   raw.get("drugs",       [])),
-        ("Dose(s)",   raw.get("doses",        [])),
-        ("Frequency", raw.get("frequencies",  [])),
-        ("Duration",  raw.get("durations",    [])),
-        ("Route",     raw.get("routes",       [])),
-    ]
-    return "\n\n".join(
-        f"**{lbl}:** {', '.join(vals) if vals else '—'}"
-        for lbl, vals in rows
-    )
-
-
-# ── Gradio handlers ───────────────────────────────────────────────────────────
-
-def run_audio(audio_path):
-    if audio_path is None:
-        return "", "No audio provided."
-    asr_result = _whisper.transcribe(
-        audio_path, language=None, fp16=False, temperature=0
-    )
-    transcript = asr_result["text"].strip()
-    if not transcript:
-        return "", "No speech detected — please try again."
-    raw = _run_ner(transcript)
-    return transcript, _format_md(raw)
-
-
-def run_text(text: str):
-    text = text.strip()
-    if not text:
-        return "Please enter a prescription."
-    raw = _run_ner(text)
-    return _format_md(raw)
-
-
-# ── FastAPI (REST) ────────────────────────────────────────────────────────────
-
-fapi = FastAPI(title="MediScript NER API", version="1.0.0")
-
+# ── REST Endpoints ────────────────────────────────────────────────────────────
 
 class PredictRequest(BaseModel):
     text: str
 
 
-@fapi.post("/api/predict")
+@app.post("/api/predict")
 async def predict(req: PredictRequest):
     """
-    Extract prescription entities from a text string.
-
-    Request body : { "text": "Paracetamol 650 mg twice daily for 5 days" }
-    Response     : {
-        "medicines": [{ "drug", "dose", "frequency", "duration", "route",
-                        "confidence": {"drug": 0.94, "dose": 0.87, ...} }, …],
-        "raw": { "drugs": […], "doses": […], …,
-                 "confidence_scores": {"drugs": [0.94], "doses": [0.87], …} }
-    }
-    Supports English and Hindi (Hinglish) input.
-    Multiple medicines in one sentence are split into separate objects.
+    Extract prescription entities from text.
+    Request : { "text": "Paracetamol 650 mg twice daily for 5 days after food" }
+    Response: { "medicines": [{drug,dose,frequency,duration,route,confidence}],
+                "raw": {drugs,doses,...,confidence_scores} }
     """
     text = req.text.strip()
     if not text:
         return JSONResponse({"error": "text is required"}, status_code=400)
-
     raw = _run_ner(text)
     return {
         "medicines": _group_entities(raw),
@@ -155,19 +104,11 @@ async def predict(req: PredictRequest):
     }
 
 
-@fapi.post("/api/process-audio")
+@app.post("/api/process-audio")
 async def process_audio(file: UploadFile = File(...)):
     """
-    Transcribe an audio recording with Whisper, then extract prescription
-    entities with the BiLSTM-CRF NER model.
-
-    Accepts any format ffmpeg can decode: webm, wav, mp3, m4a, ogg …
-    Returns:
-      {
-        "transcript": "…",
-        "medicines":  [{ "drug", "dose", "frequency", "duration", "route" }, …],
-        "raw":        { "drugs": […], … }
-      }
+    Transcribe audio (webm/wav/mp3/m4a) with Whisper then run NER.
+    Returns: { transcript, medicines, raw }
     """
     suffix = os.path.splitext(file.filename or "audio.wav")[1] or ".wav"
     with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
@@ -175,10 +116,10 @@ async def process_audio(file: UploadFile = File(...)):
         tmp_path = tmp.name
 
     try:
-        result_asr = _whisper.transcribe(
+        result = _whisper.transcribe(
             tmp_path, language=None, fp16=False, temperature=0
         )
-        transcript = result_asr["text"].strip()
+        transcript = result["text"].strip()
     finally:
         os.unlink(tmp_path)
 
@@ -193,61 +134,79 @@ async def process_audio(file: UploadFile = File(...)):
     }
 
 
-# ── Gradio UI ─────────────────────────────────────────────────────────────────
+# ── Health check ──────────────────────────────────────────────────────────────
 
-EXAMPLES = [
-    # English
-    "Paracetamol 650 mg twice daily for 5 days after food",
-    "Azithromycin 250 mg OD for 3 days on empty stomach",
-    "Pantoprazole 40 mg once daily before breakfast for 2 weeks",
-    # Hindi (Hinglish)
-    "Ramipril 5 mg subah ko 1 mahine paani ke saath",
-    "Ibuprofen 200 mg raat ko 7 din khali pet pe",
-    # Multi-medicine
-    "Rosuvastatin 40 mg SOS and Loratadine 200 mg twice a day",
-    "Paracetamol 650 mg twice daily for 5 days and Azithromycin 500 mg OD for 3 days",
-]
-
-with gr.Blocks(title="MediScript") as demo:
-
-    gr.Markdown(
-        """
-# 💊 MediScript
-### AI-powered prescription entity extractor
-Extracts **drug names · doses · frequencies · durations · routes** from spoken or typed prescriptions.
-Supports **English** and **Hindi (Hinglish)** — detects **multiple medicines** in one sentence.
-        """
-    )
-
-    with gr.Tab("🎙️ Audio"):
-        gr.Markdown("Upload a WAV / MP3 / M4A recording of a spoken prescription.")
-        audio_in  = gr.Audio(type="filepath", label="Prescription audio")
-        audio_btn = gr.Button("Extract", variant="primary")
-        audio_transcript = gr.Textbox(label="Transcript", interactive=False)
-        audio_out = gr.Markdown(label="Extracted entities")
-        audio_btn.click(
-            run_audio,
-            inputs=audio_in,
-            outputs=[audio_transcript, audio_out],
-        )
-
-    with gr.Tab("⌨️  Text"):
-        gr.Markdown(
-            "Type or paste a prescription (English or Hinglish). "
-            "Multiple medicines separated by **and** are all extracted."
-        )
-        text_in  = gr.Textbox(
-            label="Prescription text",
-            placeholder="e.g. Ibuprofen 400 mg raat ko 5 din khane ke baad "
-                        "and Pantoprazole 40 mg subah OD",
-            lines=3,
-        )
-        text_btn = gr.Button("Extract", variant="primary")
-        text_out = gr.Markdown(label="Extracted entities")
-        text_btn.click(run_text, inputs=text_in, outputs=text_out)
-
-        gr.Examples(examples=EXAMPLES, inputs=text_in, label="Examples")
+@app.get("/health")
+async def health():
+    return {"status": "ok"}
 
 
-# Mount Gradio onto FastAPI — the combined ASGI app is what uvicorn serves
-app = gr.mount_gradio_app(fapi, demo, path="/")
+# ── Simple HTML Demo UI ───────────────────────────────────────────────────────
+
+@app.get("/", response_class=HTMLResponse)
+async def index():
+    return """<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>MediScript NER</title>
+<style>
+  body{font-family:system-ui,sans-serif;max-width:720px;margin:40px auto;padding:20px;color:#1a1a2e}
+  h1{color:#008080}
+  textarea{width:100%;height:90px;border:1px solid #ccc;border-radius:8px;padding:10px;font-size:14px;resize:vertical;box-sizing:border-box}
+  button{background:#008080;color:#fff;border:none;border-radius:8px;padding:10px 24px;cursor:pointer;font-size:14px;margin-top:8px}
+  button:hover{background:#006666}
+  pre{background:#f4f4f4;border-radius:8px;padding:16px;white-space:pre-wrap;font-size:13px;min-height:60px}
+  .examples{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+  .ex{background:#e0f2f1;border:1px solid #008080;border-radius:6px;padding:6px 10px;cursor:pointer;font-size:12px;color:#008080}
+  .ex:hover{background:#b2dfdb}
+</style>
+</head>
+<body>
+<h1>MediScript NER API</h1>
+<p>AI prescription entity extractor — BiLSTM-CRF NER · OpenAI Whisper ASR</p>
+<p>Extracts <strong>drug · dose · frequency · duration · route</strong> from English or Hindi (Hinglish) text.
+Confidence scores (HIGH / MED / LOW) shown for each field.</p>
+
+<h3>Try it</h3>
+<div class="examples">
+  <span class="ex" onclick="fill(this)">Paracetamol 650 mg twice daily for 5 days after food</span>
+  <span class="ex" onclick="fill(this)">Azithromycin 250 mg OD for 3 days on empty stomach</span>
+  <span class="ex" onclick="fill(this)">Ramipril 5 mg subah ko 1 mahine paani ke saath</span>
+  <span class="ex" onclick="fill(this)">Paracetamol 650 mg twice daily for 5 days and Azithromycin 500 mg OD for 3 days</span>
+</div>
+<textarea id="inp" placeholder="Type a prescription sentence…"></textarea>
+<button onclick="extract()">Extract entities</button>
+
+<h3>Result</h3>
+<pre id="out">—</pre>
+
+<script>
+function fill(el){document.getElementById('inp').value=el.textContent}
+async function extract(){
+  const text=document.getElementById('inp').value.trim();
+  if(!text)return;
+  document.getElementById('out').textContent='Extracting…';
+  try{
+    const r=await fetch('/api/predict',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text})});
+    const d=await r.json();
+    if(d.error){document.getElementById('out').textContent='Error: '+d.error;return}
+    let out='';
+    d.medicines.forEach((m,i)=>{
+      if(d.medicines.length>1)out+='[Medicine '+(i+1)+']\n';
+      const c=m.confidence||{};
+      const tag=s=>s==null?'':s>=0.85?' [HIGH '+Math.round(s*100)+'%]':s>=0.65?' [MED '+Math.round(s*100)+'%]':'  [LOW '+Math.round(s*100)+'%] ⚠';
+      out+='Drug      : '+m.drug+tag(c.drug)+'\n';
+      out+='Dose      : '+m.dose+tag(c.dose)+'\n';
+      out+='Frequency : '+m.frequency+tag(c.frequency)+'\n';
+      out+='Duration  : '+m.duration+tag(c.duration)+'\n';
+      out+='Route     : '+m.route+tag(c.route)+'\n';
+      if(i<d.medicines.length-1)out+='\n';
+    });
+    document.getElementById('out').textContent=out;
+  }catch(e){document.getElementById('out').textContent='Error: '+e.message}
+}
+</script>
+</body>
+</html>"""

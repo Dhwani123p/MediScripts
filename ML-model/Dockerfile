@@ -17,7 +17,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the rest of the project
 COPY --chown=appuser:appuser . .
 
+# Pre-download Whisper "base" model into the image so startup is instant
+# and no internet download is needed at runtime
 USER appuser
+RUN python -c "import whisper; whisper.load_model('base'); print('Whisper base model cached.')"
 
 EXPOSE 7860
 
