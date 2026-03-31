@@ -48,12 +48,20 @@ def _group_entities(raw: dict) -> list[dict]:
     drugs[i] is paired with doses[i], frequencies[i], durations[i], routes[i].
     This works because the BIO tagger emits entities in the order they appear
     in the sentence, so drug 0 always precedes dose 0, etc.
+
+    Each medicine dict includes a 'confidence' sub-object with per-field scores
+    (0.0–1.0) derived from the CRF emission softmax probabilities.
     """
     drugs  = raw.get("drugs",       [])
     doses  = raw.get("doses",        [])
     freqs  = raw.get("frequencies",  [])
     durs   = raw.get("durations",    [])
     routes = raw.get("routes",       [])
+    conf   = raw.get("confidence_scores", {})
+
+    def _score(key, i):
+        scores = conf.get(key, [])
+        return scores[i] if i < len(scores) else None
 
     n = max(len(drugs), 1)
     return [
@@ -63,6 +71,13 @@ def _group_entities(raw: dict) -> list[dict]:
             "frequency": freqs[i]  if i < len(freqs)  else "",
             "duration":  durs[i]   if i < len(durs)   else "",
             "route":     routes[i] if i < len(routes) else "",
+            "confidence": {
+                "drug":      _score("drugs",       i),
+                "dose":      _score("doses",       i),
+                "frequency": _score("frequencies", i),
+                "duration":  _score("durations",   i),
+                "route":     _score("routes",      i),
+            },
         }
         for i in range(n)
     ]
@@ -121,8 +136,10 @@ async def predict(req: PredictRequest):
 
     Request body : { "text": "Paracetamol 650 mg twice daily for 5 days" }
     Response     : {
-        "medicines": [{ "drug", "dose", "frequency", "duration", "route" }, …],
-        "raw": { "drugs": […], "doses": […], … }
+        "medicines": [{ "drug", "dose", "frequency", "duration", "route",
+                        "confidence": {"drug": 0.94, "dose": 0.87, ...} }, …],
+        "raw": { "drugs": […], "doses": […], …,
+                 "confidence_scores": {"drugs": [0.94], "doses": [0.87], …} }
     }
     Supports English and Hindi (Hinglish) input.
     Multiple medicines in one sentence are split into separate objects.

@@ -8,6 +8,16 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { X, FileText, Plus, Trash2, CheckCircle2, Sparkles, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 
+/** Small inline badge showing AI confidence for a filled field. */
+function ConfBadge({ score }: { score: number }) {
+  const pct = Math.round(score * 100);
+  if (score >= 0.85)
+    return <span className="ml-1 text-[10px] font-semibold text-green-600 bg-green-50 border border-green-200 rounded px-1 py-0.5">HIGH {pct}%</span>;
+  if (score >= 0.65)
+    return <span className="ml-1 text-[10px] font-semibold text-amber-500 bg-amber-50 border border-amber-200 rounded px-1 py-0.5">MED {pct}%</span>;
+  return <span className="ml-1 text-[10px] font-semibold text-red-500 bg-red-50 border border-red-200 rounded px-1 py-0.5">LOW {pct}% ⚠</span>;
+}
+
 interface WritePrescriptionProps {
   onClose: () => void;
 }
@@ -37,11 +47,13 @@ export function WritePrescription({ onClose }: WritePrescriptionProps) {
   const [toastMsg, setToastMsg]         = useState("");
 
   // ── AI Assist state ────────────────────────────────────────────────────────
-  const [aiOpen, setAiOpen]       = useState(false);
-  const [aiText, setAiText]       = useState("");
-  const [aiLoading, setAiLoading] = useState(false);
-  const [aiError, setAiError]     = useState("");
-  const [aiSuccess, setAiSuccess] = useState("");
+  const [aiOpen, setAiOpen]           = useState(false);
+  const [aiText, setAiText]           = useState("");
+  const [aiLoading, setAiLoading]     = useState(false);
+  const [aiError, setAiError]         = useState("");
+  const [aiSuccess, setAiSuccess]     = useState("");
+  // medId → per-field confidence from ML (cleared when user edits the field)
+  const [aiConfidence, setAiConfidence] = useState<Record<number, any>>({});
 
   // Load patients who have appointments with this doctor
   useEffect(() => {
@@ -106,7 +118,14 @@ export function WritePrescription({ onClose }: WritePrescriptionProps) {
         instructions: [m.duration, m.route].filter(Boolean).join(", "),
       }));
 
+      // Store per-field confidence so UI can show colored badges
+      const newConf: Record<number, any> = {};
+      filled.forEach((med, i) => {
+        if (medicines[i]?.confidence) newConf[med.id] = medicines[i].confidence;
+      });
+
       setMedications(filled);
+      setAiConfidence(newConf);
       setAiSuccess(`✅ ${filled.length} medicine(s) extracted — review and edit below.`);
       setAiText("");
     } catch {
@@ -126,8 +145,40 @@ export function WritePrescription({ onClose }: WritePrescriptionProps) {
     setMedications(medications.filter((m) => m.id !== id));
   };
 
+  // Map UI field → which ML confidence keys to clear when user edits
+  const CONF_KEYS: Partial<Record<keyof MedLine, string[]>> = {
+    medication:   ["drug"],
+    dosage:       ["dose", "frequency"],
+    instructions: ["duration", "route"],
+  };
+
   const updateMed = (id: number, field: keyof MedLine, value: string) => {
     setMedications(medications.map((m) => (m.id === id ? { ...m, [field]: value } : m)));
+    // Clear the relevant ML confidence keys so the badge disappears
+    const keys = CONF_KEYS[field];
+    if (keys && aiConfidence[id]) {
+      setAiConfidence((prev) => {
+        const updated = { ...prev[id] };
+        keys.forEach((k) => delete updated[k]);
+        return { ...prev, [id]: updated };
+      });
+    }
+  };
+
+  // Returns the display confidence (0–1) for a given UI field of a medication row.
+  const getFieldConf = (medId: number, field: "medication" | "dosage" | "instructions"): number | null => {
+    const c = aiConfidence[medId];
+    if (!c) return null;
+    if (field === "medication") return c.drug ?? null;
+    if (field === "dosage") {
+      const vals = [c.dose, c.frequency].filter((v): v is number => v != null);
+      return vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : null;
+    }
+    if (field === "instructions") {
+      const vals = [c.duration, c.route].filter((v): v is number => v != null);
+      return vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : null;
+    }
+    return null;
   };
 
   // ── Submit ─────────────────────────────────────────────────────────────────
@@ -385,8 +436,11 @@ export function WritePrescription({ onClose }: WritePrescriptionProps) {
 
                       <div className="grid grid-cols-2 gap-3">
                         <div>
-                          <Label className="text-xs text-gray-500 mb-1 block">
+                          <Label className="text-xs text-gray-500 mb-1 flex items-center">
                             Medicine Name *
+                            {getFieldConf(med.id, "medication") !== null && (
+                              <ConfBadge score={getFieldConf(med.id, "medication")!} />
+                            )}
                           </Label>
                           <Input
                             placeholder="e.g. Paracetamol"
@@ -396,8 +450,11 @@ export function WritePrescription({ onClose }: WritePrescriptionProps) {
                           />
                         </div>
                         <div>
-                          <Label className="text-xs text-gray-500 mb-1 block">
+                          <Label className="text-xs text-gray-500 mb-1 flex items-center">
                             Dosage &amp; Frequency
+                            {getFieldConf(med.id, "dosage") !== null && (
+                              <ConfBadge score={getFieldConf(med.id, "dosage")!} />
+                            )}
                           </Label>
                           <Input
                             placeholder="e.g. 650 mg, twice daily"
@@ -409,8 +466,11 @@ export function WritePrescription({ onClose }: WritePrescriptionProps) {
                       </div>
 
                       <div>
-                        <Label className="text-xs text-gray-500 mb-1 block">
+                        <Label className="text-xs text-gray-500 mb-1 flex items-center">
                           Instructions
+                          {getFieldConf(med.id, "instructions") !== null && (
+                            <ConfBadge score={getFieldConf(med.id, "instructions")!} />
+                          )}
                         </Label>
                         <Input
                           placeholder="e.g. for 5 days, after food"

@@ -57,16 +57,49 @@ def record_from_mic(max_duration=MAX_DURATION):
 # Pretty printer
 # ─────────────────────────────────────────────
 
+_GREEN  = "\033[32m"
+_YELLOW = "\033[33m"
+_RED    = "\033[31m"
+_RESET  = "\033[0m"
+
+
+def _conf_tag(score: float) -> str:
+    """Returns an ANSI-colored confidence label for a single score."""
+    if score >= 0.85:
+        return f"{_GREEN}[HIGH  {score:.2f}]{_RESET}"
+    elif score >= 0.65:
+        return f"{_YELLOW}[MED   {score:.2f}]{_RESET}"
+    else:
+        return f"{_RED}[LOW   {score:.2f}]  ← review recommended{_RESET}"
+
+
 def print_prescription(result):
-    print("\n" + "=" * 50)
-    print("       EXTRACTED PRESCRIPTION")
-    print("=" * 50)
-    print(f"  Drug(s)      : {', '.join(result.get('drugs',       [])) or '-'}")
-    print(f"  Dose(s)      : {', '.join(result.get('doses',       [])) or '-'}")
-    print(f"  Frequency    : {', '.join(result.get('frequencies', [])) or '-'}")
-    print(f"  Duration     : {', '.join(result.get('durations',   [])) or '-'}")
-    print(f"  Route        : {', '.join(result.get('routes',      [])) or '-'}")
-    print("=" * 50)
+    print("\n" + "=" * 58)
+    print("          EXTRACTED PRESCRIPTION")
+    print("=" * 58)
+
+    conf   = result.get("confidence_scores", {})
+    fields = [
+        ("Drug(s)",   "drugs"),
+        ("Dose(s)",   "doses"),
+        ("Frequency", "frequencies"),
+        ("Duration",  "durations"),
+        ("Route",     "routes"),
+    ]
+
+    for label, key in fields:
+        entities = result.get(key, [])
+        scores   = conf.get(key, [])
+        if not entities:
+            print(f"  {label:<13}: -")
+        else:
+            parts = []
+            for i, entity in enumerate(entities):
+                tag = f"  {_conf_tag(scores[i])}" if i < len(scores) else ""
+                parts.append(f"{entity}{tag}")
+            print(f"  {label:<13}: {', '.join(parts)}")
+
+    print("=" * 58)
 
     print("\nToken-level labels:")
     for tok, lbl in result.get("raw_tokens", []):

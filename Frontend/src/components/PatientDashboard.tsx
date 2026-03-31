@@ -32,7 +32,8 @@ import {
   Eye,
   BookOpen,
   X,
-  Star
+  Star,
+  CheckCircle
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 
@@ -415,6 +416,26 @@ export function PatientDashboard({ onLogout, onNavigateHome, onStartVideoCall }:
     setTimeout(() => setBookingMsg(""), 5000);
   };
 
+  const handleMarkDone = async (id: number) => {
+    try {
+      const res = await fetch(`${API}/prescriptions/${id}`, {
+        method: "PATCH",
+        headers: authHeader(),
+        body: JSON.stringify({ status: "completed" }),
+      });
+      if (res.ok) {
+        setRecentPrescriptions((prev) =>
+          prev.map((p) => p.id === id ? { ...p, status: "completed" } : p)
+        );
+        setBookingMsg("✅ Prescription marked as completed");
+        setTimeout(() => setBookingMsg(""), 3000);
+      }
+    } catch {
+      setBookingMsg("❌ Could not update prescription");
+      setTimeout(() => setBookingMsg(""), 3000);
+    }
+  };
+
   const appointments  = allAppointments;
   const doctors       = allDoctors;
   const prescriptions = recentPrescriptions;
@@ -489,6 +510,7 @@ export function PatientDashboard({ onLogout, onNavigateHome, onStartVideoCall }:
                 <DropdownMenuItem onClick={() => setActiveSection("home")}><Home className="w-4 h-4 mr-2" />Dashboard</DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setActiveSection("appointments")}><Calendar className="w-4 h-4 mr-2" />My Appointments</DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setActiveSection("doctors")}><Users className="w-4 h-4 mr-2" />Find Doctors</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setActiveSection("prescriptions")}><FileText className="w-4 h-4 mr-2" />My Prescriptions</DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setActiveSection("profile")}><User className="w-4 h-4 mr-2" />My Health Profile</DropdownMenuItem>
                 <DropdownMenuItem onClick={onStartVideoCall}><Video className="w-4 h-4 mr-2" />Video Conference</DropdownMenuItem>
                 <DropdownMenuSeparator />
@@ -641,20 +663,50 @@ export function PatientDashboard({ onLogout, onNavigateHome, onStartVideoCall }:
                 </Card>
 
                 <Card>
-                  <CardHeader><CardTitle>Recent Prescriptions</CardTitle></CardHeader>
+                  <CardHeader>
+                    <CardTitle className="flex items-center justify-between">
+                      Recent Prescriptions
+                      <Button variant="outline" size="sm" onClick={() => setActiveSection("prescriptions")}>
+                        <FileText className="w-4 h-4 mr-2" />View All
+                      </Button>
+                    </CardTitle>
+                  </CardHeader>
                   <CardContent className="space-y-4">
                     {prescriptions.length === 0 ? (
                       <p className="text-sm text-gray-400 text-center py-4">No prescriptions yet</p>
                     ) : prescriptions.map((p) => (
                       <div key={p.id} className="flex items-center justify-between p-4 border rounded-lg">
                         <div>
-                          <p className="text-sm">{p.medication}</p>
+                          <p className="text-sm font-medium">{p.medication}</p>
                           <p className="text-xs text-gray-500">Prescribed by {p.doctor}</p>
                           <p className="text-xs text-gray-500">{p.date}</p>
                         </div>
-                        <div className="flex items-center space-x-2">
-                          <Badge variant={p.status === "active" ? "default" : "secondary"}>{p.status}</Badge>
-                          <Button size="sm" variant="outline" onClick={() => setViewPrescriptionId(p.id)}><Download className="w-4 h-4 mr-1" />PDF</Button>
+                        <div className="flex items-center space-x-2 flex-wrap gap-1 justify-end">
+                          <Badge
+                            className={
+                              p.status === "active"
+                                ? "bg-green-100 text-green-700 border-green-200"
+                                : p.status === "completed"
+                                ? "bg-gray-100 text-gray-600 border-gray-200"
+                                : "bg-red-100 text-red-600 border-red-200"
+                            }
+                            variant="outline"
+                          >
+                            {p.status}
+                          </Badge>
+                          <Button size="sm" variant="outline" onClick={() => setViewPrescriptionId(p.id)}>
+                            <Download className="w-4 h-4 mr-1" />PDF
+                          </Button>
+                          {p.status === "active" && (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="text-green-600 hover:text-green-800 hover:border-green-400"
+                              onClick={() => handleMarkDone(p.id)}
+                            >
+                              <CheckCircle className="w-4 h-4 mr-1" />Mark Done
+                            </Button>
+                          )}
                         </div>
                       </div>
                     ))}
@@ -804,6 +856,87 @@ export function PatientDashboard({ onLogout, onNavigateHome, onStartVideoCall }:
                     ))}
                   </div>
                   {renderPagination(doctorsPage, getTotalPages(filteredDoctors.length), setDoctorsPage)}
+                </CardContent>
+              </Card>
+            </div>
+          )}
+
+          {/* PRESCRIPTIONS */}
+          {activeSection === "prescriptions" && (
+            <div className="space-y-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h1 className="text-3xl">My Prescriptions</h1>
+                  <p className="text-gray-500 text-sm mt-1">
+                    Active prescriptions are ongoing medications. Mark them as done once you finish the course.
+                  </p>
+                </div>
+                <Button variant="ghost" onClick={() => setActiveSection("home")} className="text-[#008080]">← Back</Button>
+              </div>
+
+              {/* Status legend */}
+              <div className="flex items-center gap-4 text-xs text-gray-500">
+                <span className="flex items-center gap-1">
+                  <span className="w-2.5 h-2.5 rounded-full bg-green-400 inline-block" /> Active — ongoing medication
+                </span>
+                <span className="flex items-center gap-1">
+                  <span className="w-2.5 h-2.5 rounded-full bg-gray-400 inline-block" /> Completed — course finished
+                </span>
+                <span className="flex items-center gap-1">
+                  <span className="w-2.5 h-2.5 rounded-full bg-red-400 inline-block" /> Cancelled
+                </span>
+              </div>
+
+              <Card>
+                <CardContent className="pt-6">
+                  {prescriptions.length === 0 ? (
+                    <p className="text-center text-sm text-gray-400 py-12">No prescriptions found.</p>
+                  ) : (
+                    <div className="space-y-3">
+                      {prescriptions.map((p) => (
+                        <div key={p.id} className={`flex items-center justify-between p-4 border rounded-xl transition-colors ${p.status === "completed" ? "bg-gray-50 opacity-75" : "bg-white hover:bg-gray-50"}`}>
+                          <div className="flex items-start gap-3">
+                            <div className={`mt-1 w-2.5 h-2.5 rounded-full flex-shrink-0 ${p.status === "active" ? "bg-green-400" : p.status === "completed" ? "bg-gray-400" : "bg-red-400"}`} />
+                            <div>
+                              <p className={`text-sm font-medium ${p.status === "completed" ? "line-through text-gray-400" : "text-gray-800"}`}>{p.medication}</p>
+                              <p className="text-xs text-gray-500 mt-0.5">Dr. {p.doctor}</p>
+                              <p className="text-xs text-gray-400">{p.date}</p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2 flex-shrink-0">
+                            <Badge
+                              variant="outline"
+                              className={
+                                p.status === "active"
+                                  ? "bg-green-50 text-green-700 border-green-200"
+                                  : p.status === "completed"
+                                  ? "bg-gray-100 text-gray-500 border-gray-200"
+                                  : "bg-red-50 text-red-600 border-red-200"
+                              }
+                            >
+                              {p.status}
+                            </Badge>
+                            <Button size="sm" variant="outline" onClick={() => setViewPrescriptionId(p.id)}>
+                              <Eye className="w-4 h-4 mr-1" />View
+                            </Button>
+                            <Button size="sm" variant="outline" onClick={() => setViewPrescriptionId(p.id)}>
+                              <Download className="w-4 h-4 mr-1" />PDF
+                            </Button>
+                            {p.status === "active" && (
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="text-green-600 hover:text-green-800 hover:border-green-400 hover:bg-green-50"
+                                onClick={() => handleMarkDone(p.id)}
+                              >
+                                <CheckCircle className="w-4 h-4 mr-1" />Mark Done
+                              </Button>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </div>

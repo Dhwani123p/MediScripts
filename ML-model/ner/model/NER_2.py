@@ -14,6 +14,7 @@ Improvements over original:
 import os
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 from torchcrf import CRF
 from torch.utils.data import Dataset, DataLoader
 from sklearn.metrics import classification_report
@@ -137,7 +138,7 @@ class BiLSTM_CRF(nn.Module):
         self.fc = nn.Linear(hidden_dim, tagset_size)
         self.crf = CRF(tagset_size, batch_first=True)
 
-    def forward(self, x, tags=None, mask=None):
+    def forward(self, x, tags=None, mask=None, return_emissions=False):
         emb = self.dropout(self.embedding(x))
         out, _ = self.lstm(emb)
         out = self.dropout(out)
@@ -146,6 +147,9 @@ class BiLSTM_CRF(nn.Module):
         if tags is not None:
             # Returns negative log-likelihood (loss)
             return -self.crf(emissions, tags, mask=mask, reduction="mean")
+        elif return_emissions:
+            # Returns (predictions, emissions) so caller can compute confidence
+            return self.crf.decode(emissions, mask=mask), emissions
         else:
             return self.crf.decode(emissions, mask=mask)
 
@@ -316,13 +320,22 @@ def predict_from_text(text, model, word_vocab, id_to_label, device="cpu"):
     Runs NER on a raw text string.
     Returns a structured prescription dict:
     {
-      "drugs": [...],
-      "doses": [...],
+      "drugs":       [...],
+      "doses":       [...],
       "frequencies": [...],
-      "durations": [...],
-      "routes": [...],
-      "raw_tokens": [(token, label), ...]
+      "durations":   [...],
+      "routes":      [...],
+      "raw_tokens":  [(token, label), ...],
+      "confidence_scores": {
+        "drugs":       [0.94, ...],
+        "doses":       [0.87, ...],
+        "frequencies": [0.76, ...],
+        "durations":   [0.91, ...],
+        "routes":      [0.65, ...],
+      }
     }
+    Confidence per entity = mean softmax probability of the predicted label
+    across the token(s) that make up that entity (B- + I- tokens averaged).
     """
     tokens = text.strip().split()
     if not tokens:
@@ -334,7 +347,13 @@ def predict_from_text(text, model, word_vocab, id_to_label, device="cpu"):
 
     model.eval()
     with torch.no_grad():
-        pred_ids = model(X, mask=mask)[0]
+        pred_ids_batch, emissions = model(X, mask=mask, return_emissions=True)
+        pred_ids = pred_ids_batch[0]  # list[int], length = len(tokens)
+
+    # Per-token confidence: softmax over emission logits, pick score of predicted label
+    # emissions shape: (1, seq_len, tagset_size)
+    probs      = F.softmax(emissions[0], dim=-1)          # (seq_len, tagset_size)
+    token_conf = [float(probs[t, pred_ids[t]]) for t in range(len(pred_ids))]
 
     # ── Group consecutive tokens by entity type ──
     result = {
@@ -344,6 +363,13 @@ def predict_from_text(text, model, word_vocab, id_to_label, device="cpu"):
         "durations":   [],
         "routes":      [],
         "raw_tokens":  [],
+        "confidence_scores": {
+            "drugs":       [],
+            "doses":       [],
+            "frequencies": [],
+            "durations":   [],
+            "routes":      [],
+        },
     }
 
     TAG_TO_KEY = {
@@ -356,38 +382,39 @@ def predict_from_text(text, model, word_vocab, id_to_label, device="cpu"):
 
     current_entity = []
     current_type   = None
+    current_confs  = []
 
-    for tok, tag_id in zip(tokens, pred_ids):
+    def _flush():
+        if current_entity and current_type:
+            key = TAG_TO_KEY.get(current_type)
+            if key:
+                result[key].append(" ".join(current_entity))
+                avg_conf = sum(current_confs) / len(current_confs)
+                result["confidence_scores"][key].append(round(avg_conf, 4))
+
+    for idx, (tok, tag_id) in enumerate(zip(tokens, pred_ids)):
         label = id_to_label.get(tag_id, "O")
         result["raw_tokens"].append((tok, label))
 
         if label.startswith("B-"):
-            # Save previous entity if any
-            if current_entity and current_type:
-                key = TAG_TO_KEY.get(current_type)
-                if key:
-                    result[key].append(" ".join(current_entity))
-            entity_type = label[2:]
+            _flush()
             current_entity = [tok]
-            current_type   = entity_type
+            current_type   = label[2:]
+            current_confs  = [token_conf[idx]]
 
         elif label.startswith("I-") and current_type == label[2:]:
             current_entity.append(tok)
+            current_confs.append(token_conf[idx])
 
         else:
-            # O label or unexpected transition — flush
-            if current_entity and current_type:
-                key = TAG_TO_KEY.get(current_type)
-                if key:
-                    result[key].append(" ".join(current_entity))
+            # O label or unexpected transition — flush current entity
+            _flush()
             current_entity = []
             current_type   = None
+            current_confs  = []
 
     # Flush last entity
-    if current_entity and current_type:
-        key = TAG_TO_KEY.get(current_type)
-        if key:
-            result[key].append(" ".join(current_entity))
+    _flush()
 
     return result
 

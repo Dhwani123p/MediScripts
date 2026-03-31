@@ -14,6 +14,16 @@ import {
 } from "lucide-react";
 import { motion } from "motion/react";
 
+/** Inline confidence badge for AI-filled prescription fields. */
+function ConfBadge({ score }: { score: number }) {
+  const pct = Math.round(score * 100);
+  if (score >= 0.85)
+    return <span className="ml-1 text-[10px] font-semibold text-green-600 bg-green-50 border border-green-200 rounded px-1 py-0.5">HIGH {pct}%</span>;
+  if (score >= 0.65)
+    return <span className="ml-1 text-[10px] font-semibold text-amber-500 bg-amber-50 border border-amber-200 rounded px-1 py-0.5">MED {pct}%</span>;
+  return <span className="ml-1 text-[10px] font-semibold text-red-500 bg-red-50 border border-red-200 rounded px-1 py-0.5">LOW {pct}% ⚠</span>;
+}
+
 const API = API_BASE;
 const authHeader = () => ({
   "Content-Type": "application/json",
@@ -76,6 +86,8 @@ export function VideoConferenceDoctor({
   const [isTranscribing, setIsTranscribing] = useState(false);
   const [extractError,   setExtractError]   = useState("");
   const [extractSuccess, setExtractSuccess] = useState("");
+  // medId → per-field confidence from ML dictation (cleared when user edits)
+  const [medConf, setMedConf] = useState<Record<number, any>>({});
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef   = useRef<Blob[]>([]);
 
@@ -317,7 +329,13 @@ export function VideoConferenceDoctor({
           dosage:       [m.dose, m.frequency].filter(Boolean).join(", "),
           instructions: [m.duration, m.route].filter(Boolean).join(", "),
         }));
+        // Store per-field confidence so badges appear on the prescription form
+        const newConf: Record<number, any> = {};
+        filled.forEach((med, i) => {
+          if (data.medicines[i]?.confidence) newConf[med.id] = data.medicines[i].confidence;
+        });
         setMedications(filled);
+        setMedConf(newConf);
         setExtractSuccess(`✅ ${filled.length} medicine(s) extracted — edit the form after ending the call.`);
       }
     } catch {
@@ -334,8 +352,38 @@ export function VideoConferenceDoctor({
   const removeMed = (id: number) =>
     setMedications((prev) => prev.length > 1 ? prev.filter((m) => m.id !== id) : prev);
 
-  const updateMed = (id: number, field: keyof MedLine, val: string) =>
+  const CONF_KEYS: Partial<Record<keyof MedLine, string[]>> = {
+    medication:   ["drug"],
+    dosage:       ["dose", "frequency"],
+    instructions: ["duration", "route"],
+  };
+
+  const updateMed = (id: number, field: keyof MedLine, val: string) => {
     setMedications((prev) => prev.map((m) => m.id === id ? { ...m, [field]: val } : m));
+    const keys = CONF_KEYS[field];
+    if (keys && medConf[id]) {
+      setMedConf((prev) => {
+        const updated = { ...prev[id] };
+        keys.forEach((k) => delete updated[k]);
+        return { ...prev, [id]: updated };
+      });
+    }
+  };
+
+  const getMedConf = (medId: number, field: "medication" | "dosage" | "instructions"): number | null => {
+    const c = medConf[medId];
+    if (!c) return null;
+    if (field === "medication") return c.drug ?? null;
+    if (field === "dosage") {
+      const vals = [c.dose, c.frequency].filter((v): v is number => v != null);
+      return vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : null;
+    }
+    if (field === "instructions") {
+      const vals = [c.duration, c.route].filter((v): v is number => v != null);
+      return vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : null;
+    }
+    return null;
+  };
 
   // ── Save prescription ────────────────────────────────────────────────────
   const savePrescription = async () => {
@@ -474,7 +522,12 @@ export function VideoConferenceDoctor({
                             </div>
                             <div className="grid grid-cols-2 gap-3">
                               <div>
-                                <Label className="text-xs text-gray-500 mb-1 block">Medicine Name *</Label>
+                                <Label className="text-xs text-gray-500 mb-1 flex items-center">
+                                  Medicine Name *
+                                  {getMedConf(med.id, "medication") !== null && (
+                                    <ConfBadge score={getMedConf(med.id, "medication")!} />
+                                  )}
+                                </Label>
                                 <Input
                                   placeholder="e.g. Paracetamol"
                                   value={med.medication}
@@ -483,7 +536,12 @@ export function VideoConferenceDoctor({
                                 />
                               </div>
                               <div>
-                                <Label className="text-xs text-gray-500 mb-1 block">Dosage &amp; Frequency</Label>
+                                <Label className="text-xs text-gray-500 mb-1 flex items-center">
+                                  Dosage &amp; Frequency
+                                  {getMedConf(med.id, "dosage") !== null && (
+                                    <ConfBadge score={getMedConf(med.id, "dosage")!} />
+                                  )}
+                                </Label>
                                 <Input
                                   placeholder="e.g. 650 mg, twice daily"
                                   value={med.dosage}
@@ -493,7 +551,12 @@ export function VideoConferenceDoctor({
                               </div>
                             </div>
                             <div>
-                              <Label className="text-xs text-gray-500 mb-1 block">Instructions</Label>
+                              <Label className="text-xs text-gray-500 mb-1 flex items-center">
+                                Instructions
+                                {getMedConf(med.id, "instructions") !== null && (
+                                  <ConfBadge score={getMedConf(med.id, "instructions")!} />
+                                )}
+                              </Label>
                               <Input
                                 placeholder="e.g. for 5 days, after food"
                                 value={med.instructions}

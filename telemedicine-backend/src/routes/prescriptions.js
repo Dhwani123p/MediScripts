@@ -116,6 +116,36 @@ router.post('/', verifyToken, async (req, res) => {
   }
 });
 
+// ── PATCH /api/prescriptions/:id — patient marks own prescription as done ────
+router.patch('/:id', verifyToken, async (req, res) => {
+  const { status } = req.body;
+  const allowed = ['active', 'completed', 'cancelled'];
+  if (!status || !allowed.includes(status)) {
+    return res.status(400).json({ error: `status must be one of: ${allowed.join(', ')}` });
+  }
+  try {
+    // Only the patient who owns the prescription (or doctor who wrote it) may update
+    const result = await pool.query(
+      `UPDATE prescriptions
+       SET    status = $1
+       WHERE  id = $2
+         AND  (
+           patient_id = $3
+           OR doctor_id IN (SELECT id FROM doctors WHERE user_id = $3)
+         )
+       RETURNING *`,
+      [status, req.params.id, req.userId]
+    );
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Prescription not found or access denied' });
+    }
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.error('PATCH /prescriptions/:id error:', error.message);
+    res.status(500).json({ error: 'Failed to update prescription status' });
+  }
+});
+
 // ── POST /api/prescriptions/extract ──────────────────────────────────────────
 // Calls the ML model API to extract structured medicine entities from text.
 // Returns medicines ready to populate an editable prescription form.
@@ -123,8 +153,9 @@ router.post('/', verifyToken, async (req, res) => {
 //
 // Request  : { "text": "Paracetamol 650 mg twice daily for 5 days after food" }
 // Response : {
-//   "medicines": [{ drug, dose, frequency, duration, route }, …],
-//   "raw":       { drugs:[…], doses:[…], frequencies:[…], durations:[…], routes:[…] }
+//   "medicines": [{ drug, dose, frequency, duration, route,
+//                   confidence: { drug, dose, frequency, duration, route } }, …],
+//   "raw":       { drugs:[…], …, confidence_scores: { drugs:[…], … } }
 // }
 router.post('/extract', verifyToken, async (req, res) => {
   const { text } = req.body;
