@@ -242,7 +242,7 @@ ROUTE_RULES = [
 # ── Engine ────────────────────────────────────────────────────────────────────
 
 # Words that can leak into any field from NER span boundaries
-_NOISE_WORDS = r'(?:for|a|an|the|and|or|aur|ke|ka|ki|ko|se|pe|par|mein|me)'
+_NOISE_WORDS = r'(?:for|a|an|the|and|or|on|with|aur|ke|ka|ki|ko|se|pe|par|mein|me)'
 
 _TRAILING_NOISE = re.compile(
     r'[\s,]+\b' + _NOISE_WORDS + r'\b[\s,]*$', re.IGNORECASE
