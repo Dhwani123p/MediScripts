@@ -24,6 +24,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, BASE_DIR)
 
 from ner.model.NER_2 import load_model, predict_from_text
+from normalize import normalize_entity
 
 NER_MODEL_PATH = os.path.join(BASE_DIR, "ner", "model", "mediscript_ner.pt")
 
@@ -49,35 +50,117 @@ def _run_ner(text: str) -> dict:
 
 
 def _group_entities(raw: dict) -> list:
-    drugs  = raw.get("drugs",       [])
-    doses  = raw.get("doses",       [])
-    freqs  = raw.get("frequencies", [])
-    durs   = raw.get("durations",   [])
-    routes = raw.get("routes",      [])
-    conf   = raw.get("confidence_scores", {})
+    """
+    Walk raw_tokens (BIO labels) to group entities by drug boundary so that
+    each medicine only picks up entities that appear after its own B-DRUG tag.
+    Confidence scores from raw['confidence_scores'] are attached per field.
+    Falls back to flat-list index alignment when raw_tokens is absent.
+    """
+    tokens      = raw.get("raw_tokens", [])   # [(word, label), ...]
+    conf_scores = raw.get("confidence_scores", {})
 
-    def _score(key, i):
-        s = conf.get(key, [])
-        return s[i] if i < len(s) else None
+    _LABEL_MAP = {
+        "DRUG": "drug", "DOSE": "dose", "FREQ": "freq",
+        "DUR":  "dur",  "ROUTE": "route",
+    }
+    _CONF_KEY = {
+        "drug":  "drugs",       "dose":  "doses",
+        "freq":  "frequencies", "dur":   "durations",
+        "route": "routes",
+    }
 
-    n = max(len(drugs), 1)
-    return [
-        {
-            "drug":      drugs[i]  if i < len(drugs)  else "",
-            "dose":      doses[i]  if i < len(doses)  else "",
-            "frequency": freqs[i]  if i < len(freqs)  else "",
-            "duration":  durs[i]   if i < len(durs)   else "",
-            "route":     routes[i] if i < len(routes) else "",
+    def _score(field, i):
+        lst = conf_scores.get(field, [])
+        return lst[i] if i < len(lst) else None
+
+    def _empty_block():
+        return {
+            "drug": [], "dose": [], "freq": [], "dur": [], "route": [],
+            "conf": {"drug": None, "dose": None, "freq": None, "dur": None, "route": None},
+        }
+
+    def _to_medicine(m: dict) -> dict:
+        return {
+            "drug":      " ".join(m["drug"]),
+            "dose":      " ".join(m["dose"]),
+            "frequency": " ".join(m["freq"]),
+            "duration":  " ".join(m["dur"]),
+            "route":     " ".join(m["route"]),
             "confidence": {
-                "drug":      _score("drugs",       i),
-                "dose":      _score("doses",       i),
-                "frequency": _score("frequencies", i),
-                "duration":  _score("durations",   i),
-                "route":     _score("routes",      i),
+                "drug":      m["conf"]["drug"],
+                "dose":      m["conf"]["dose"],
+                "frequency": m["conf"]["freq"],
+                "duration":  m["conf"]["dur"],
+                "route":     m["conf"]["route"],
             },
         }
-        for i in range(n)
-    ]
+
+    if not tokens:
+        # Fallback: simple index alignment
+        drugs  = raw.get("drugs",      [])
+        doses  = raw.get("doses",       [])
+        freqs  = raw.get("frequencies", [])
+        durs   = raw.get("durations",   [])
+        routes = raw.get("routes",      [])
+        n = max(len(drugs), 1)
+        return [
+            {
+                "drug":      drugs[i]  if i < len(drugs)  else "",
+                "dose":      doses[i]  if i < len(doses)  else "",
+                "frequency": freqs[i]  if i < len(freqs)  else "",
+                "duration":  durs[i]   if i < len(durs)   else "",
+                "route":     routes[i] if i < len(routes) else "",
+                "confidence": {
+                    "drug":      _score("drugs",       i),
+                    "dose":      _score("doses",       i),
+                    "frequency": _score("frequencies", i),
+                    "duration":  _score("durations",   i),
+                    "route":     _score("routes",      i),
+                },
+            }
+            for i in range(n)
+        ]
+
+    # BIO walk — track entity counts per type to index into confidence_scores
+    medicines  = []
+    current    = _empty_block()
+    entity_idx = {"drug": 0, "dose": 0, "freq": 0, "dur": 0, "route": 0}
+    active_key = None
+
+    for word, label in tokens:
+        if label == "O":
+            active_key = None
+            continue
+        bio, etype = label.split("-", 1)
+        key = _LABEL_MAP.get(etype)
+        if key is None:
+            continue
+
+        if bio == "B":
+            ck    = _CONF_KEY[key]
+            idx   = entity_idx[key]
+            score = conf_scores.get(ck, [])[idx] if idx < len(conf_scores.get(ck, [])) else None
+            entity_idx[key] += 1
+            if key == "drug":
+                if current["drug"]:
+                    medicines.append(current)
+                current = _empty_block()
+            current[key]         = [word]
+            current["conf"][key] = score
+            active_key           = key
+
+        elif bio == "I" and active_key == key:
+            current[key].append(word)
+
+    if current["drug"]:
+        medicines.append(current)
+
+    if not medicines:
+        return [{"drug": "", "dose": "", "frequency": "", "duration": "", "route": "",
+                 "confidence": {"drug": None, "dose": None, "frequency": None,
+                                "duration": None, "route": None}}]
+
+    return [_to_medicine(m) for m in medicines]
 
 
 # ── REST Endpoints ────────────────────────────────────────────────────────────
@@ -98,8 +181,10 @@ async def predict(req: PredictRequest):
     if not text:
         return JSONResponse({"error": "text is required"}, status_code=400)
     raw = _run_ner(text)
+    grouped = _group_entities(raw)
+    medicines = [{**normalize_entity(m), "confidence": m["confidence"]} for m in grouped]
     return {
-        "medicines": _group_entities(raw),
+        "medicines": medicines,
         "raw": {k: v for k, v in raw.items() if k != "raw_tokens"},
     }
 
@@ -127,9 +212,11 @@ async def process_audio(file: UploadFile = File(...)):
         return JSONResponse({"error": "No speech detected in audio"}, status_code=422)
 
     raw = _run_ner(transcript)
+    grouped = _group_entities(raw)
+    medicines = [{**normalize_entity(m), "confidence": m["confidence"]} for m in grouped]
     return {
         "transcript": transcript,
-        "medicines":  _group_entities(raw),
+        "medicines":  medicines,
         "raw":        {k: v for k, v in raw.items() if k != "raw_tokens"},
     }
 
