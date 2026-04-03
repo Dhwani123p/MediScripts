@@ -25,6 +25,7 @@ sys.path.insert(0, BASE_DIR)
 
 from ner.model.NER_2 import load_model, predict_from_text
 from normalize import normalize_entity
+from interactions import check_interactions
 
 NER_MODEL_PATH = os.path.join(BASE_DIR, "ner", "model", "mediscript_ner.pt")
 
@@ -183,8 +184,11 @@ async def predict(req: PredictRequest):
     raw = _run_ner(text)
     grouped = _group_entities(raw)
     medicines = [{**normalize_entity(m), "confidence": m["confidence"]} for m in grouped]
+    drug_names = [m["drug"] for m in medicines if m.get("drug")]
+    interactions = check_interactions(drug_names)
     return {
-        "medicines": medicines,
+        "medicines":    medicines,
+        "interactions": interactions,
         "raw": {k: v for k, v in raw.items() if k != "raw_tokens"},
     }
 
@@ -214,10 +218,13 @@ async def process_audio(file: UploadFile = File(...)):
     raw = _run_ner(transcript)
     grouped = _group_entities(raw)
     medicines = [{**normalize_entity(m), "confidence": m["confidence"]} for m in grouped]
+    drug_names = [m["drug"] for m in medicines if m.get("drug")]
+    interactions = check_interactions(drug_names)
     return {
-        "transcript": transcript,
-        "medicines":  medicines,
-        "raw":        {k: v for k, v in raw.items() if k != "raw_tokens"},
+        "transcript":  transcript,
+        "medicines":   medicines,
+        "interactions": interactions,
+        "raw":         {k: v for k, v in raw.items() if k != "raw_tokens"},
     }
 
 
@@ -248,6 +255,11 @@ async def index():
   .examples{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
   .ex{background:#e0f2f1;border:1px solid #008080;border-radius:6px;padding:6px 10px;cursor:pointer;font-size:12px;color:#008080}
   .ex:hover{background:#b2dfdb}
+  .warn{background:#fff3e0;border-left:4px solid #e65100;border-radius:6px;padding:12px 16px;margin-top:12px;font-size:13px}
+  .warn-high{border-color:#b71c1c;background:#ffebee}
+  .warn-title{font-weight:700;color:#b71c1c;margin-bottom:4px}
+  .warn-mod .warn-title{color:#e65100}
+  .warn-low .warn-title{color:#f9a825}
 </style>
 </head>
 <body>
@@ -262,12 +274,14 @@ Confidence scores (HIGH / MED / LOW) shown for each field.</p>
   <span class="ex" onclick="fill(this)">Azithromycin 250 mg OD for 3 days on empty stomach</span>
   <span class="ex" onclick="fill(this)">Ramipril 5 mg subah ko 1 mahine paani ke saath</span>
   <span class="ex" onclick="fill(this)">Paracetamol 650 mg twice daily for 5 days and Azithromycin 500 mg OD for 3 days</span>
+  <span class="ex" onclick="fill(this)">Warfarin 5 mg OD and Aspirin 75 mg OD after food</span>
 </div>
 <textarea id="inp" placeholder="Type a prescription sentence…"></textarea>
 <button onclick="extract()">Extract entities</button>
 
 <h3>Result</h3>
 <pre id="out">—</pre>
+<div id="interactions"></div>
 
 <script>
 function fill(el){document.getElementById('inp').value=el.textContent}
@@ -292,6 +306,24 @@ async function extract(){
       if(i<d.medicines.length-1)out+='\n';
     });
     document.getElementById('out').textContent=out;
+    // Render interactions
+    const ibox=document.getElementById('interactions');
+    ibox.innerHTML='';
+    if(d.interactions&&d.interactions.length){
+      d.interactions.forEach(ix=>{
+        const sev=(ix.severity||'').toLowerCase();
+        const cls=sev==='high'?'warn warn-high':sev==='moderate'?'warn warn-mod':'warn warn-low';
+        const label=sev==='high'?'⛔ HIGH':'sev'==='moderate'?'⚠️ MODERATE':'ℹ️ LOW';
+        const div=document.createElement('div');
+        div.className=cls;
+        div.innerHTML='<div class="warn-title">'+label+' Interaction: '+ix.drugs.join(' + ')+'</div>'
+          +'<div>'+ix.description+'</div>'
+          +(ix.source?'<div style="font-size:11px;color:#888;margin-top:4px">Source: '+ix.source+'</div>':'');
+        ibox.appendChild(div);
+      });
+    }else if(d.medicines&&d.medicines.length>1){
+      ibox.innerHTML='<div style="color:green;margin-top:8px;font-size:13px">✓ No known interactions found between these drugs.</div>';
+    }
   }catch(e){document.getElementById('out').textContent='Error: '+e.message}
 }
 </script>
