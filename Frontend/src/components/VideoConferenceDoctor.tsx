@@ -88,6 +88,8 @@ export function VideoConferenceDoctor({
   const [extractSuccess, setExtractSuccess] = useState("");
   // medId → per-field confidence from ML dictation (cleared when user edits)
   const [medConf, setMedConf] = useState<Record<number, any>>({});
+  // Drug-drug interactions returned by the ML API after audio extraction
+  const [medInteractions, setMedInteractions] = useState<any[]>([]);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef   = useRef<Blob[]>([]);
 
@@ -336,6 +338,7 @@ export function VideoConferenceDoctor({
         });
         setMedications(filled);
         setMedConf(newConf);
+        setMedInteractions(data.interactions || []);
         setExtractSuccess(`✅ ${filled.length} medicine(s) extracted — edit the form after ending the call.`);
       }
     } catch {
@@ -412,6 +415,7 @@ export function VideoConferenceDoctor({
           instructions:    valid.map((m) => m.instructions).filter(Boolean).join("; "),
           diagnosis:       diagnosis || undefined,
           medications_json: medicationsJson,              // full list as JSON
+          interactions:    medInteractions,               // drug-drug interactions from ML
         }),
       });
       const data = await res.json();
@@ -477,6 +481,37 @@ export function VideoConferenceDoctor({
                       <div className="bg-teal-50 border border-teal-200 rounded-lg px-4 py-3 text-sm text-teal-800">
                         <p className="font-medium mb-1">Dictated prescription:</p>
                         <p className="italic">&ldquo;{dictationText}&rdquo;</p>
+                      </div>
+                    )}
+
+                    {/* Drug-interaction warnings from ML */}
+                    {medInteractions.length > 0 && (
+                      <div className="space-y-2">
+                        <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                          Drug Interactions Detected
+                        </p>
+                        {medInteractions.map((ix, i) => {
+                          const isHigh = ix.severity === "high";
+                          const isMod  = ix.severity === "moderate";
+                          return (
+                            <div
+                              key={i}
+                              className={`rounded-lg border px-3 py-2 text-xs ${
+                                isHigh
+                                  ? "bg-red-50 border-red-200 text-red-800"
+                                  : isMod
+                                  ? "bg-amber-50 border-amber-200 text-amber-800"
+                                  : "bg-blue-50 border-blue-200 text-blue-800"
+                              }`}
+                            >
+                              <span className="font-semibold mr-1">
+                                {isHigh ? "⚠ HIGH" : isMod ? "△ MODERATE" : "ℹ LOW"}
+                              </span>
+                              <span className="font-semibold">{ix.drugs?.join(" + ")}: </span>
+                              {ix.description}
+                            </div>
+                          );
+                        })}
                       </div>
                     )}
 

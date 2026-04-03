@@ -72,7 +72,7 @@ router.get('/:id', verifyToken, async (req, res) => {
 //             or { appointment_id, medication, ... }  ← backend resolves patient
 router.post('/', verifyToken, async (req, res) => {
   try {
-    let { patient_id, appointment_id, medication, dosage, instructions, diagnosis, medications_json } = req.body;
+    let { patient_id, appointment_id, medication, dosage, instructions, diagnosis, medications_json, interactions } = req.body;
 
     // Resolve patient from appointment if patient_id is missing/zero
     if ((!patient_id || patient_id === 0) && appointment_id) {
@@ -89,6 +89,11 @@ router.post('/', verifyToken, async (req, res) => {
       return res.status(400).json({ error: 'patient_id (or appointment_id) and medication are required' });
     }
 
+    // Normalise interactions — default to empty array, validate it is an array
+    const interactionsArr = Array.isArray(interactions) ? interactions : [];
+    // Flag for the response — doctor may proceed; this is informational only
+    const interactionWarning = interactionsArr.some((i) => i.severity === 'high');
+
     // Get or auto-create doctor record for this user
     let docResult = await pool.query('SELECT id FROM doctors WHERE user_id = $1', [req.userId]);
     if (docResult.rows.length === 0) {
@@ -104,12 +109,12 @@ router.post('/', verifyToken, async (req, res) => {
 
     const result = await pool.query(
       `INSERT INTO prescriptions
-        (patient_id, doctor_id, medication, dosage, instructions, diagnosis, medications_json, status, prescribed_date, created_at)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, 'active', NOW(), NOW())
+        (patient_id, doctor_id, medication, dosage, instructions, diagnosis, medications_json, interactions, status, prescribed_date, created_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'active', NOW(), NOW())
        RETURNING *`,
-      [patient_id, doctor_id, medication, dosage || '', instructions || '', diagnosis || null, medications_json || null]
+      [patient_id, doctor_id, medication, dosage || '', instructions || '', diagnosis || null, medications_json || null, JSON.stringify(interactionsArr)]
     );
-    res.status(201).json(result.rows[0]);
+    res.status(201).json({ ...result.rows[0], interactionWarning });
   } catch (error) {
     console.error('POST /prescriptions error:', error.message);
     res.status(500).json({ error: 'Failed to create prescription' });
@@ -153,9 +158,11 @@ router.patch('/:id', verifyToken, async (req, res) => {
 //
 // Request  : { "text": "Paracetamol 650 mg twice daily for 5 days after food" }
 // Response : {
-//   "medicines": [{ drug, dose, frequency, duration, route,
-//                   confidence: { drug, dose, frequency, duration, route } }, …],
-//   "raw":       { drugs:[…], …, confidence_scores: { drugs:[…], … } }
+//   "medicines":     [{ drug, dose, frequency, duration, route,
+//                       confidence: { drug, dose, frequency, duration, route } }, …],
+//   "interactions":  [{ drugs: [string, string], severity: "high"|"moderate"|"low",
+//                       description: string, source: string }, …],
+//   "raw":           { drugs:[…], …, confidence_scores: { drugs:[…], … } }
 // }
 router.post('/extract', verifyToken, async (req, res) => {
   const { text } = req.body;
@@ -191,9 +198,10 @@ router.post('/extract', verifyToken, async (req, res) => {
 //
 // Request  : multipart/form-data  field name: "audio"
 // Response : {
-//   "transcript": "Paracetamol 650 mg …",
-//   "medicines":  [{ drug, dose, frequency, duration, route }, …],
-//   "raw":        { drugs:[…], … }
+//   "transcript":   "Paracetamol 650 mg …",
+//   "medicines":    [{ drug, dose, frequency, duration, route, confidence: {…} }, …],
+//   "interactions": [{ drugs, severity, description, source }, …],
+//   "raw":          { drugs:[…], … }
 // }
 router.post('/from-audio', verifyToken, upload.single('audio'), async (req, res) => {
   if (!req.file) {

@@ -402,6 +402,48 @@ export function PrescriptionViewer({ prescriptionId, onClose }: PrescriptionView
                 );
               })()}
 
+              {/* Drug Interactions */}
+              {(() => {
+                const interactions: any[] = Array.isArray(data.interactions) ? data.interactions : [];
+                if (!interactions.length) return null;
+                return (
+                  <div className="rounded-xl border border-gray-200 overflow-hidden">
+                    <div className="bg-gray-50 px-4 py-2 border-b border-gray-200">
+                      <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                        Drug Interaction Alerts
+                      </p>
+                    </div>
+                    <div className="divide-y divide-gray-100">
+                      {interactions.map((ix: any, i: number) => {
+                        const isHigh = ix.severity === "high";
+                        const isMod  = ix.severity === "moderate";
+                        return (
+                          <div
+                            key={i}
+                            className={`px-4 py-3 text-xs ${
+                              isHigh
+                                ? "bg-red-50 text-red-800"
+                                : isMod
+                                ? "bg-amber-50 text-amber-800"
+                                : "bg-blue-50 text-blue-800"
+                            }`}
+                          >
+                            <span className="font-semibold mr-1">
+                              {isHigh ? "⚠ HIGH" : isMod ? "△ MODERATE" : "ℹ LOW"}
+                            </span>
+                            <span className="font-semibold">{ix.drugs?.join(" + ")}: </span>
+                            {ix.description}
+                            {ix.source && (
+                              <span className="ml-2 opacity-60">— {ix.source}</span>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })()}
+
               {/* Digital Signature */}
               <div className="flex justify-end pt-4">
                 <div className="text-center">

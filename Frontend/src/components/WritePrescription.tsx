@@ -54,6 +54,8 @@ export function WritePrescription({ onClose }: WritePrescriptionProps) {
   const [aiSuccess, setAiSuccess]     = useState("");
   // medId → per-field confidence from ML (cleared when user edits the field)
   const [aiConfidence, setAiConfidence] = useState<Record<number, any>>({});
+  // Drug-drug interactions returned by the ML API after extraction
+  const [aiInteractions, setAiInteractions] = useState<any[] | null>(null);
 
   // Load patients who have appointments with this doctor
   useEffect(() => {
@@ -126,6 +128,7 @@ export function WritePrescription({ onClose }: WritePrescriptionProps) {
 
       setMedications(filled);
       setAiConfidence(newConf);
+      setAiInteractions(data.interactions || []);
       setAiSuccess(`✅ ${filled.length} medicine(s) extracted — review and edit below.`);
       setAiText("");
     } catch {
@@ -196,10 +199,38 @@ export function WritePrescription({ onClose }: WritePrescriptionProps) {
 
     setIsSubmitting(true);
     try {
-      const results = await Promise.all(
-        medications
-          .filter((m) => m.medication.trim())
-          .map((m) =>
+      const valid = medications.filter((m) => m.medication.trim());
+
+      // When AI was used (interactions present or multiple meds), save as one
+      // bundled record so interactions stay associated with the whole prescription.
+      if (aiInteractions !== null) {
+        const medicationsJson = JSON.stringify(
+          valid.map((m) => ({ name: m.medication, dosage: m.dosage, instructions: m.instructions }))
+        );
+        const res = await fetch(`${API}/prescriptions`, {
+          method:  "POST",
+          headers: authHeader(),
+          body:    JSON.stringify({
+            patient_id:      parseInt(patientId),
+            medication:      valid[0].medication,
+            dosage:          valid.map((m) => m.dosage).filter(Boolean).join("; "),
+            instructions:    valid.map((m) => m.instructions).filter(Boolean).join("; "),
+            medications_json: medicationsJson,
+            interactions:    aiInteractions,
+          }),
+        });
+        const data = await res.json();
+        if (data.id) {
+          setSubmitted(true);
+          setTimeout(onClose, 2500);
+        } else {
+          setToastMsg("❌ Failed to save prescription — " + (data.error || "please try again"));
+          setTimeout(() => setToastMsg(""), 3000);
+        }
+      } else {
+        // Manual entry — save one record per medication (legacy path)
+        const results = await Promise.all(
+          valid.map((m) =>
             fetch(`${API}/prescriptions`, {
               method:  "POST",
               headers: authHeader(),
@@ -211,13 +242,14 @@ export function WritePrescription({ onClose }: WritePrescriptionProps) {
               }),
             }).then((r) => r.json())
           )
-      );
-      if (results.every((r) => r.id)) {
-        setSubmitted(true);
-        setTimeout(onClose, 2500);
-      } else {
-        setToastMsg("❌ Some prescriptions failed to save");
-        setTimeout(() => setToastMsg(""), 3000);
+        );
+        if (results.every((r) => r.id)) {
+          setSubmitted(true);
+          setTimeout(onClose, 2500);
+        } else {
+          setToastMsg("❌ Some prescriptions failed to save");
+          setTimeout(() => setToastMsg(""), 3000);
+        }
       }
     } catch {
       setToastMsg("❌ Could not connect to server");
@@ -486,6 +518,37 @@ export function WritePrescription({ onClose }: WritePrescriptionProps) {
             </>
           )}
         </div>
+
+        {/* Drug-interaction warnings — shown after AI extraction */}
+        {aiInteractions !== null && aiInteractions.length > 0 && (
+          <div className="px-6 pb-4 space-y-2">
+            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-1">
+              Drug Interactions Detected
+            </p>
+            {aiInteractions.map((ix, i) => {
+              const isHigh = ix.severity === "high";
+              const isMod  = ix.severity === "moderate";
+              return (
+                <div
+                  key={i}
+                  className={`rounded-lg border px-3 py-2 text-xs ${
+                    isHigh
+                      ? "bg-red-50 border-red-200 text-red-800"
+                      : isMod
+                      ? "bg-amber-50 border-amber-200 text-amber-800"
+                      : "bg-blue-50 border-blue-200 text-blue-800"
+                  }`}
+                >
+                  <span className="font-semibold mr-1">
+                    {isHigh ? "⚠ HIGH" : isMod ? "△ MODERATE" : "ℹ LOW"}
+                  </span>
+                  <span className="font-semibold">{ix.drugs?.join(" + ")}: </span>
+                  {ix.description}
+                </div>
+              );
+            })}
+          </div>
+        )}
 
         {/* Footer */}
         {!submitted && (

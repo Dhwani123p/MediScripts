@@ -51,17 +51,25 @@ CREATE TABLE IF NOT EXISTS appointments (
 
 -- ── Prescriptions ────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS prescriptions (
-  id              SERIAL PRIMARY KEY,
-  patient_id      INT REFERENCES users(id) ON DELETE CASCADE,
-  doctor_id       INT REFERENCES doctors(id) ON DELETE SET NULL,
-  medication      TEXT    NOT NULL,
-  dosage          TEXT,
-  instructions    TEXT,
-  status          TEXT    NOT NULL DEFAULT 'active'
-                  CHECK (status IN ('active','completed','cancelled')),
-  prescribed_date TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  id               SERIAL PRIMARY KEY,
+  patient_id       INT REFERENCES users(id) ON DELETE CASCADE,
+  doctor_id        INT REFERENCES doctors(id) ON DELETE SET NULL,
+  medication       TEXT    NOT NULL,
+  dosage           TEXT,
+  instructions     TEXT,
+  diagnosis        TEXT,
+  medications_json TEXT,
+  interactions     JSONB   NOT NULL DEFAULT '[]',
+  status           TEXT    NOT NULL DEFAULT 'active'
+                   CHECK (status IN ('active','completed','cancelled')),
+  prescribed_date  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  created_at       TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+-- Migration for existing deployments (safe to run on a schema that already has the table):
+-- ALTER TABLE prescriptions ADD COLUMN IF NOT EXISTS diagnosis        TEXT;
+-- ALTER TABLE prescriptions ADD COLUMN IF NOT EXISTS medications_json TEXT;
+-- ALTER TABLE prescriptions ADD COLUMN IF NOT EXISTS interactions     JSONB NOT NULL DEFAULT '[]';
 
 -- ── Indexes for common queries ───────────────────────────────
 CREATE INDEX IF NOT EXISTS idx_appointments_patient  ON appointments(patient_id);
