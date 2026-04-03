@@ -320,7 +320,9 @@ export function VideoConferenceDoctor({
         return;
       }
 
-      setDictationText(data.transcript || "");
+      setDictationText((prev) =>
+        prev ? `${prev} / ${data.transcript || ""}` : (data.transcript || "")
+      );
 
       if (!data.medicines?.length || !data.medicines[0].drug) {
         setExtractError("No medicines detected — fill the prescription manually after ending the call.");
@@ -336,10 +338,24 @@ export function VideoConferenceDoctor({
         filled.forEach((med, i) => {
           if (data.medicines[i]?.confidence) newConf[med.id] = data.medicines[i].confidence;
         });
-        setMedications(filled);
-        setMedConf(newConf);
-        setMedInteractions(data.interactions || []);
-        setExtractSuccess(`✅ ${filled.length} medicine(s) extracted — edit the form after ending the call.`);
+
+        // Append to existing list (skip the blank placeholder row if it's the only entry)
+        setMedications((prev) => {
+          const hasOnlyBlank = prev.length === 1 && !prev[0].medication.trim();
+          return hasOnlyBlank ? filled : [...prev, ...filled];
+        });
+        setMedConf((prev) => ({ ...prev, ...newConf }));
+
+        // Merge interactions — deduplicate by drug-pair key
+        setMedInteractions((prev) => {
+          const existing = new Set(prev.map((ix) => (ix.drugs || []).slice().sort().join("|")));
+          const incoming = (data.interactions || []).filter(
+            (ix: any) => !existing.has((ix.drugs || []).slice().sort().join("|"))
+          );
+          return [...prev, ...incoming];
+        });
+
+        setExtractSuccess(`✅ ${filled.length} medicine(s) added — dictate again to add more, or edit below.`);
       }
     } catch {
       setExtractError("ML model not running — fill the prescription manually after ending the call.");
