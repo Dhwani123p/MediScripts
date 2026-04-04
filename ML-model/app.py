@@ -26,6 +26,7 @@ sys.path.insert(0, BASE_DIR)
 from ner.model.NER_2 import load_model, predict_from_text
 from normalize import normalize_entity
 from interactions import check_interactions
+from drug_mapper import map_prescription, COUNTRY_NAMES, _norm_country
 
 NER_MODEL_PATH = os.path.join(BASE_DIR, "ner", "model", "mediscript_ner.pt")
 
@@ -168,6 +169,7 @@ def _group_entities(raw: dict) -> list:
 
 class PredictRequest(BaseModel):
     text: str
+    country: str | None = None   # e.g. "USA", "UK", "Germany", "AE" — optional
 
 
 @app.post("/api/predict")
@@ -186,15 +188,17 @@ async def predict(req: PredictRequest):
     medicines = [{**normalize_entity(m), "confidence": m["confidence"]} for m in grouped]
     drug_names = [m["drug"] for m in medicines if m.get("drug")]
     interactions = check_interactions(drug_names)
+    mappings = map_prescription(medicines, req.country) if req.country else []
     return {
         "medicines":    medicines,
         "interactions": interactions,
+        "drug_mappings": mappings,
         "raw": {k: v for k, v in raw.items() if k != "raw_tokens"},
     }
 
 
 @app.post("/api/process-audio")
-async def process_audio(file: UploadFile = File(...)):
+async def process_audio(file: UploadFile = File(...), country: str | None = None):
     """
     Transcribe audio (webm/wav/mp3/m4a) with Whisper then run NER.
     Returns: { transcript, medicines, raw }
@@ -220,11 +224,13 @@ async def process_audio(file: UploadFile = File(...)):
     medicines = [{**normalize_entity(m), "confidence": m["confidence"]} for m in grouped]
     drug_names = [m["drug"] for m in medicines if m.get("drug")]
     interactions = check_interactions(drug_names)
+    mappings = map_prescription(medicines, country) if country else []
     return {
-        "transcript":  transcript,
-        "medicines":   medicines,
+        "transcript":   transcript,
+        "medicines":    medicines,
         "interactions": interactions,
-        "raw":         {k: v for k, v in raw.items() if k != "raw_tokens"},
+        "drug_mappings": mappings,
+        "raw":          {k: v for k, v in raw.items() if k != "raw_tokens"},
     }
 
 
@@ -260,6 +266,10 @@ async def index():
   .warn-title{font-weight:700;color:#b71c1c;margin-bottom:4px}
   .warn-mod .warn-title{color:#e65100}
   .warn-low .warn-title{color:#f9a825}
+  .map-card{background:#e8f5e9;border-left:4px solid #2e7d32;border-radius:6px;padding:12px 16px;margin-top:8px;font-size:13px}
+  .map-card.unmapped{background:#fff8e1;border-color:#f9a825}
+  .map-name{font-size:15px;font-weight:700;color:#1b5e20}
+  select{border:1px solid #ccc;border-radius:8px;padding:8px 12px;font-size:14px;margin-top:8px;width:100%}
 </style>
 </head>
 <body>
@@ -277,10 +287,22 @@ Confidence scores (HIGH / MED / LOW) shown for each field.</p>
   <span class="ex" onclick="fill(this)">Warfarin 5 mg OD and Aspirin 75 mg OD after food</span>
 </div>
 <textarea id="inp" placeholder="Type a prescription sentence…"></textarea>
+<select id="country">
+  <option value="">— No country mapping (default) —</option>
+  <option value="US">🇺🇸 USA</option>
+  <option value="GB">🇬🇧 UK</option>
+  <option value="AE">🇦🇪 UAE</option>
+  <option value="DE">🇩🇪 Germany</option>
+  <option value="AU">🇦🇺 Australia</option>
+  <option value="CA">🇨🇦 Canada</option>
+  <option value="FR">🇫🇷 France</option>
+  <option value="SA">🇸🇦 Saudi Arabia</option>
+</select>
 <button onclick="extract()">Extract entities</button>
 
 <h3>Result</h3>
 <pre id="out">—</pre>
+<div id="drug-mappings"></div>
 <div id="interactions"></div>
 
 <script>
@@ -289,8 +311,11 @@ async function extract(){
   const text=document.getElementById('inp').value.trim();
   if(!text)return;
   document.getElementById('out').textContent='Extracting…';
+  document.getElementById('drug-mappings').innerHTML='';
+  document.getElementById('interactions').innerHTML='';
+  const country=document.getElementById('country').value||null;
   try{
-    const r=await fetch('/api/predict',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text})});
+    const r=await fetch('/api/predict',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text,country})});
     const d=await r.json();
     if(d.error){document.getElementById('out').textContent='Error: '+d.error;return}
     let out='';
@@ -306,6 +331,21 @@ async function extract(){
       if(i<d.medicines.length-1)out+='\n';
     });
     document.getElementById('out').textContent=out;
+    // Render drug mappings
+    const mbox=document.getElementById('drug-mappings');
+    if(d.drug_mappings&&d.drug_mappings.length){
+      const hdr=document.createElement('h3');hdr.textContent='Drug name mapping → '+country;mbox.appendChild(hdr);
+      d.drug_mappings.forEach(m=>{
+        const div=document.createElement('div');
+        div.className=m.mapped?'map-card':'map-card unmapped';
+        let html='<div class="map-name">'+m.source_name+' → '+m.local_name+'</div>';
+        if(m.brand_examples&&m.brand_examples.length)
+          html+='<div>Brands: '+m.brand_examples.join(', ')+'</div>';
+        if(m.note) html+='<div style="color:#e65100;margin-top:4px">⚠ '+m.note+'</div>';
+        if(!m.mapped) html+='<div style="color:#999;font-size:11px">Not in mapping table — verify manually</div>';
+        div.innerHTML=html; mbox.appendChild(div);
+      });
+    }
     // Render interactions
     const ibox=document.getElementById('interactions');
     ibox.innerHTML='';
