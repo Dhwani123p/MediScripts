@@ -170,7 +170,7 @@ router.post('/extract', verifyToken, async (req, res) => {
     return res.status(400).json({ error: 'text is required' });
   }
 
-  const ML_API_URL = process.env.ML_API_URL || 'http://localhost:7860';
+  const ML_API_URL = (process.env.ML_API_URL || 'https://dhwani123p-mediscript-api.hf.space').replace(/\/$/, '');
   try {
     const mlRes = await axios.post(
       `${ML_API_URL}/api/predict`,
@@ -208,7 +208,7 @@ router.post('/from-audio', verifyToken, upload.single('audio'), async (req, res)
     return res.status(400).json({ error: 'audio file is required (field name: audio)' });
   }
 
-  const ML_API_URL = process.env.ML_API_URL || 'http://localhost:7860';
+  const ML_API_URL = (process.env.ML_API_URL || 'https://dhwani123p-mediscript-api.hf.space').replace(/\/$/, '');
   const form = new FormData();
   form.append('file', req.file.buffer, {
     filename:    req.file.originalname || 'recording.webm',
