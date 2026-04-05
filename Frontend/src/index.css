@@ -3538,6 +3538,13 @@ html.dark [class*="bg-white"]        { background-color: #1e293b !important; }
 /* --- Auth page specific --- */
 html.dark .min-h-screen              { background-color: #0f172a; }
 
+/* --- Section backgrounds (landing page sections) --- */
+html.dark section                    { background: #0f172a !important; }
+
+/* --- Headings in dark mode --- */
+html.dark h1, html.dark h2, html.dark h3, html.dark h4 { color: #f1f5f9 !important; }
+html.dark p                          { color: #94a3b8 !important; }
+
 /* --- Card headers & section backgrounds --- */
 html.dark [class*="bg-gray-50"]      { background-color: #0f172a !important; }
 html.dark [class*="bg-blue-50"]      { background-color: #1e293b !important; }
