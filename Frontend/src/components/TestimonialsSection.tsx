@@ -3,25 +3,25 @@ import { motion } from "motion/react";
 
 const testimonials = [
   {
-    name: "Sarah Johnson",
-    role: "Working Professional",
+    name: "Riya Desai",
+    role: "Beta Tester · Student",
     rating: 5,
-    comment: "The convenience of consulting with doctors from home is incredible. I got my prescription within 15 minutes and the doctor was very thorough.",
-    avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b002?w=150"
+    comment: "The AI prescription feature is impressive — it extracted all medicines from the doctor's dictation accurately. A huge step forward for digital healthcare in India.",
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Riya"
   },
   {
-    name: "Michael Chen",
-    role: "Father of 2",
+    name: "Arjun Nair",
+    role: "Beta Tester · Software Engineer",
     rating: 5,
-    comment: "When my daughter had fever at night, the 24/7 availability was a lifesaver. The pediatrician was amazing and gave us peace of mind.",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150"
+    comment: "Booking an appointment and joining a video call was seamless. The drug interaction warnings gave real confidence that the platform takes patient safety seriously.",
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Arjun"
   },
   {
-    name: "Emily Rodriguez",
-    role: "Senior Citizen",
+    name: "Sunita Verma",
+    role: "Beta Tester · Teacher",
     rating: 5,
-    comment: "As someone with mobility issues, this platform has been revolutionary. The doctors are patient and the technology is surprisingly easy to use.",
-    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150"
+    comment: "Even for someone not very tech-savvy, the interface was easy to use. The doctor could write and share a prescription with me instantly after the video call.",
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sunita"
   }
 ];
 
@@ -49,7 +49,7 @@ export function TestimonialsSection() {
             What Our Patients Say
           </h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Real stories from thousands of satisfied patients who trust us with their health
+            Feedback from our beta testers who helped shape MediScript
           </p>
         </motion.div>
 

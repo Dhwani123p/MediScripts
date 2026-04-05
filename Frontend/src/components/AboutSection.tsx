@@ -5,10 +5,10 @@ import { motion } from "motion/react";
 
 export function AboutSection() {
   const stats = [
-    { number: "50,000+", label: "Patients Served", icon: Users },
-    { number: "1,200+", label: "Certified Doctors", icon: Award },
+    { number: "Beta", label: "Currently in Testing", icon: Users },
+    { number: "v1.0", label: "Prototype Release", icon: Award },
     { number: "24/7", label: "Available Support", icon: Clock },
-    { number: "98%", label: "Patient Satisfaction", icon: Heart }
+    { number: "AI", label: "ML-Powered Prescriptions", icon: Heart }
   ];
 
   const features = [
@@ -55,13 +55,13 @@ export function AboutSection() {
           className="text-center mb-16"
         >
           <Badge variant="outline" className="mb-4 px-4 py-2 text-[#008080] border-[#008080]">
-            About TeleMed
+            About MediScript
           </Badge>
           <h2 className="text-4xl lg:text-5xl mb-6 text-gray-900">
-            About TeleMed
+            About MediScript
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            We connect patients with certified healthcare providers through our secure telemedicine platform, making quality healthcare accessible and convenient for everyone.
+            MediScript is an AI-powered telemedicine prototype that connects patients with doctors through secure video consultations and generates smart prescriptions using machine learning.
           </p>
         </motion.div>
 
