@@ -554,7 +554,7 @@ export function VideoConferenceDoctor({
                     )}
 
                     {/* Dose warnings on prescription form */}
-                    {doseWarnings.length > 0 && (
+                    {doseWarnings.some((dw: any) => dw.warnings?.length > 0) && (
                       <div className="space-y-2">
                         <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
                           Dose Warnings
@@ -942,7 +942,7 @@ export function VideoConferenceDoctor({
                   )}
 
                   {/* Dose warnings in side panel */}
-                  {doseWarnings.length > 0 && (
+                  {doseWarnings.some((dw: any) => dw.warnings?.length > 0) && (
                     <div className="space-y-1 pt-1 border-t border-gray-100 mt-2">
                       <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
                         Dose Warnings

@@ -551,7 +551,7 @@ export function WritePrescription({ onClose }: WritePrescriptionProps) {
         </div>
 
         {/* Dose warnings — WHO limit checks from ML API */}
-        {aiDoseWarnings.length > 0 && (
+        {aiDoseWarnings.some((dw: any) => dw.warnings?.length > 0) && (
           <div className="px-6 pb-4 space-y-2">
             <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-1">
               Dose Warnings
