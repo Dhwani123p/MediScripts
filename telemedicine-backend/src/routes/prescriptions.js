@@ -37,6 +37,36 @@ router.get('/', verifyToken, async (req, res) => {
   }
 });
 
+// ── GET /api/prescriptions/ml-test ───────────────────────────────────────────
+// Diagnostic: pings the ML model and returns status. No auth required.
+// Must be defined BEFORE /:id so Express doesn't swallow it as id="ml-test"
+router.get('/ml-test', async (req, res) => {
+  const ML_API_URL = (process.env.ML_API_URL || 'https://dhwani123p-mediscript-api.hf.space').replace(/\/$/, '');
+  try {
+    const start  = Date.now();
+    const result = await axios.post(
+      `${ML_API_URL}/api/predict`,
+      { text: 'Paracetamol 500mg twice daily' },
+      { timeout: 60000 }
+    );
+    res.json({
+      ok:          true,
+      ml_api_url:  ML_API_URL,
+      status:      result.status,
+      duration_ms: Date.now() - start,
+      medicines:   result.data?.medicines?.length ?? 0,
+    });
+  } catch (err) {
+    res.status(502).json({
+      ok:          false,
+      ml_api_url:  ML_API_URL,
+      error:       err.message,
+      http_status: err.response?.status ?? null,
+      details:     err.response?.data   ?? null,
+    });
+  }
+});
+
 // ── GET /api/prescriptions/:id — full prescription detail ─────────────────────
 router.get('/:id', verifyToken, async (req, res) => {
   try {
@@ -148,35 +178,6 @@ router.patch('/:id', verifyToken, async (req, res) => {
   } catch (error) {
     console.error('PATCH /prescriptions/:id error:', error.message);
     res.status(500).json({ error: 'Failed to update prescription status' });
-  }
-});
-
-// ── GET /api/prescriptions/ml-test ───────────────────────────────────────────
-// Diagnostic: pings the ML model and returns status. No auth required.
-router.get('/ml-test', async (req, res) => {
-  const ML_API_URL = (process.env.ML_API_URL || 'https://dhwani123p-mediscript-api.hf.space').replace(/\/$/, '');
-  try {
-    const start  = Date.now();
-    const result = await axios.post(
-      `${ML_API_URL}/api/predict`,
-      { text: 'Paracetamol 500mg twice daily' },
-      { timeout: 60000 }
-    );
-    res.json({
-      ok:           true,
-      ml_api_url:   ML_API_URL,
-      status:       result.status,
-      duration_ms:  Date.now() - start,
-      medicines:    result.data?.medicines?.length ?? 0,
-    });
-  } catch (err) {
-    res.status(502).json({
-      ok:          false,
-      ml_api_url:  ML_API_URL,
-      error:       err.message,
-      http_status: err.response?.status ?? null,
-      details:     err.response?.data   ?? null,
-    });
   }
 });
 
