@@ -35,7 +35,7 @@ NER_MODEL_PATH = os.path.join(BASE_DIR, "ner", "model", "mediscript_ner.pt")
 _device = "cuda" if torch.cuda.is_available() else "cpu"
 print(f"[MediScript] Loading models on {_device} …", flush=True)
 
-_whisper                    = whisper.load_model("base")
+_whisper                    = whisper.load_model("small")
 _ner, _vocab, _id2label     = load_model(NER_MODEL_PATH, _device)
 
 print("[MediScript] Models ready.", flush=True)
@@ -211,9 +211,27 @@ async def process_audio(file: UploadFile = File(...), country: str | None = None
         tmp.write(await file.read())
         tmp_path = tmp.name
 
+    # Drug-domain prompt: gives Whisper medical vocabulary context so it
+    # doesn't hallucinate random words instead of drug names.
+    _DRUG_PROMPT = (
+        "Prescription: Paracetamol, Ibuprofen, Azithromycin, Amoxicillin, "
+        "Metformin, Atorvastatin, Ciprofloxacin, Metronidazole, Omeprazole, "
+        "Pantoprazole, Ramipril, Amlodipine, Losartan, Aspirin, Warfarin, "
+        "Sertraline, Diazepam, Doxycycline, Ondansetron, Domperidone, "
+        "Tramadol, Digoxin, Salbutamol, Montelukast, Gabapentin, "
+        "Prednisolone, Levothyroxine, Hydroxychloroquine, Clopidogrel, "
+        "mg, mcg, OD, BD, TDS, QID, SOS, after food, empty stomach, "
+        "subah, raat, din, hafte, khali pet, khane ke baad."
+    )
+
     try:
         result = _whisper.transcribe(
-            tmp_path, language=None, fp16=False, temperature=0
+            tmp_path,
+            language=None,
+            fp16=False,
+            condition_on_previous_text=False,   # prevents looping/hallucination
+            initial_prompt=_DRUG_PROMPT,         # medical vocabulary context
+            temperature=(0.0, 0.2, 0.4),         # fallback temperatures on failure
         )
         transcript = result["text"].strip()
     finally:
