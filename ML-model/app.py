@@ -376,7 +376,7 @@ async function extract(){
       d.interactions.forEach(ix=>{
         const sev=(ix.severity||'').toLowerCase();
         const cls=sev==='high'?'warn warn-high':sev==='moderate'?'warn warn-mod':'warn warn-low';
-        const label=sev==='high'?'⛔ HIGH':'sev'==='moderate'?'⚠️ MODERATE':'ℹ️ LOW';
+        const label=sev==='high'?'⛔ HIGH':sev==='moderate'?'⚠️ MODERATE':'ℹ️ LOW';
         const div=document.createElement('div');
         div.className=cls;
         div.innerHTML='<div class="warn-title">'+label+' Interaction: '+ix.drugs.join(' + ')+'</div>'
