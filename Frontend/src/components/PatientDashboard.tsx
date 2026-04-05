@@ -465,8 +465,15 @@ export function PatientDashboard({ onLogout, onNavigateHome, onStartVideoCall }:
     );
   };
 
+  const getTimeOfDay = () => {
+    const h = new Date().getHours();
+    if (h < 12) return "morning";
+    if (h < 17) return "afternoon";
+    return "evening";
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/40 to-teal-50/30">
 
       {/* Booking Modal */}
       <AnimatePresence>
@@ -488,14 +495,14 @@ export function PatientDashboard({ onLogout, onNavigateHome, onStartVideoCall }:
       )}
 
       {/* Header */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-40">
+      <header className="bg-white/80 backdrop-blur-xl border-b border-white/60 shadow-sm sticky top-0 z-40">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-2 cursor-pointer" onClick={onNavigateHome}>
-              <div className="w-10 h-10 bg-gradient-to-r from-[#008080] to-[#00BFFF] rounded-xl flex items-center justify-center">
-                <Heart size={24} className="text-white" />
+              <div className="w-10 h-10 bg-gradient-to-r from-[#008080] to-[#00BFFF] rounded-xl flex items-center justify-center shadow-md shadow-teal-200">
+                <Heart size={20} className="text-white" />
               </div>
-              <span className="text-2xl text-gray-900">Mediscript</span>
+              <span className="text-2xl font-bold bg-gradient-to-r from-[#008080] to-[#00BFFF] bg-clip-text text-transparent">MediScript</span>
             </div>
             <DropdownMenu>
               <DropdownMenuTrigger className="inline-flex items-center space-x-2 rounded-md px-2 py-1 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#008080]" aria-label="Open user menu">
@@ -536,83 +543,97 @@ export function PatientDashboard({ onLogout, onNavigateHome, onStartVideoCall }:
           {/* HOME */}
           {activeSection === "home" && (
             <>
-              <div className="mb-8">
-                <h1 className="text-3xl mb-2">Welcome back, {userName}!</h1>
-                <p className="text-gray-600">Manage your health appointments and records</p>
+              {/* Welcome banner */}
+              <div className="mb-8 relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#008080] via-[#009090] to-[#00BFFF] p-6 text-white shadow-xl shadow-teal-200/40">
+                <div className="absolute -right-8 -top-8 w-40 h-40 bg-white/10 rounded-full" />
+                <div className="absolute -right-4 top-10 w-24 h-24 bg-white/10 rounded-full" />
+                <div className="absolute left-1/2 -bottom-10 w-52 h-52 bg-white/5 rounded-full" />
+                <div className="relative z-10">
+                  <p className="text-white/70 text-xs font-semibold uppercase tracking-widest mb-1">Good {getTimeOfDay()}</p>
+                  <h1 className="text-3xl font-bold mb-1">Welcome back, {userName}! 👋</h1>
+                  <p className="text-white/75 text-sm">You have <span className="font-semibold text-white">{upcomingCount}</span> upcoming appointment{upcomingCount !== 1 ? "s" : ""} · <span className="font-semibold text-white">{prescriptions.length}</span> active prescription{prescriptions.length !== 1 ? "s" : ""}</p>
+                </div>
+                <div className="absolute right-6 bottom-4 text-7xl opacity-20 select-none">🏥</div>
               </div>
 
+              {/* Stat cards */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <Card>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm">Upcoming</CardTitle>
-                    <Calendar className="h-4 w-4 text-muted-foreground" />
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl">{upcomingCount}</div>
-                    <p className="text-xs text-muted-foreground">Appointments</p>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm">My Doctors</CardTitle>
-                    <Users className="h-4 w-4 text-muted-foreground" />
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl">{doctors.length}</div>
-                    <p className="text-xs text-muted-foreground">Healthcare providers</p>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm">Prescriptions</CardTitle>
-                    <FileText className="h-4 w-4 text-muted-foreground" />
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl">{prescriptions.length}</div>
-                    <p className="text-xs text-muted-foreground">Active medications</p>
-                  </CardContent>
-                </Card>
+                <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#008080] to-[#00BFFF] p-5 text-white shadow-lg shadow-teal-200/50 cursor-pointer hover:scale-[1.02] transition-transform" onClick={() => setActiveSection("appointments")}>
+                  <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-white/10 rounded-full" />
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+                      <Calendar className="w-5 h-5 text-white" />
+                    </div>
+                    <span className="text-xs font-medium bg-white/20 px-2 py-0.5 rounded-full">Upcoming</span>
+                  </div>
+                  <div className="text-4xl font-bold mb-0.5">{upcomingCount}</div>
+                  <p className="text-white/75 text-sm">Appointments</p>
+                </div>
+
+                <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-violet-500 to-purple-600 p-5 text-white shadow-lg shadow-purple-200/50 cursor-pointer hover:scale-[1.02] transition-transform" onClick={() => setActiveSection("doctors")}>
+                  <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-white/10 rounded-full" />
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+                      <Users className="w-5 h-5 text-white" />
+                    </div>
+                    <span className="text-xs font-medium bg-white/20 px-2 py-0.5 rounded-full">Healthcare</span>
+                  </div>
+                  <div className="text-4xl font-bold mb-0.5">{doctors.length}</div>
+                  <p className="text-white/75 text-sm">My Doctors</p>
+                </div>
+
+                <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 p-5 text-white shadow-lg shadow-emerald-200/50 cursor-pointer hover:scale-[1.02] transition-transform" onClick={() => setActiveSection("prescriptions")}>
+                  <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-white/10 rounded-full" />
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+                      <FileText className="w-5 h-5 text-white" />
+                    </div>
+                    <span className="text-xs font-medium bg-white/20 px-2 py-0.5 rounded-full">Active</span>
+                  </div>
+                  <div className="text-4xl font-bold mb-0.5">{prescriptions.length}</div>
+                  <p className="text-white/75 text-sm">Prescriptions</p>
+                </div>
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center justify-between">
-                      Upcoming Appointments
-                      <Button variant="outline" size="sm" onClick={() => setActiveSection("appointments")}>
-                        <Plus className="w-4 h-4 mr-2" />View All
+                <Card className="border-0 shadow-lg shadow-gray-200/60 rounded-2xl">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="flex items-center justify-between text-gray-800">
+                      <span className="flex items-center gap-2"><span className="w-1.5 h-5 bg-gradient-to-b from-[#008080] to-[#00BFFF] rounded-full inline-block" />Upcoming Appointments</span>
+                      <Button variant="outline" size="sm" className="text-xs border-teal-200 text-teal-700 hover:bg-teal-50" onClick={() => setActiveSection("appointments")}>
+                        View All
                       </Button>
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4">
+                  <CardContent className="space-y-3">
                     {upcomingAppointments.length === 0 ? (
-                      <div className="text-center py-4">
+                      <div className="text-center py-6 bg-teal-50/50 rounded-xl">
                         <p className="text-sm text-gray-400 mb-3">No upcoming appointments</p>
-                        <Button size="sm" className="bg-[#008080] hover:bg-[#008080]/90" onClick={() => setActiveSection("doctors")}>
+                        <Button size="sm" className="bg-gradient-to-r from-[#008080] to-[#00BFFF] text-white border-0" onClick={() => setActiveSection("doctors")}>
                           <BookOpen className="w-4 h-4 mr-2" />Book Now
                         </Button>
                       </div>
                     ) : upcomingAppointments.map((appointment) => (
-                      <div key={appointment.id} className="flex items-center justify-between p-4 border rounded-lg">
-                        <div className="flex items-center space-x-4">
-                          <Avatar>
+                      <div key={appointment.id} className="flex items-center justify-between p-4 bg-gradient-to-r from-teal-50/60 to-blue-50/40 rounded-xl border border-teal-100/60 hover:shadow-md transition-shadow">
+                        <div className="flex items-center space-x-3">
+                          <Avatar className="ring-2 ring-teal-200">
                             <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${appointment.doctor}`} />
-                            <AvatarFallback>DR</AvatarFallback>
+                            <AvatarFallback className="bg-teal-100 text-teal-700 font-bold">DR</AvatarFallback>
                           </Avatar>
                           <div>
-                            <p className="text-sm">{appointment.doctor}</p>
-                            <p className="text-xs text-gray-500">{appointment.specialty}</p>
-                            <div className="flex items-center space-x-2 mt-1">
+                            <p className="text-sm font-semibold text-gray-800">{appointment.doctor}</p>
+                            <p className="text-xs text-teal-600 font-medium">{appointment.specialty}</p>
+                            <div className="flex items-center space-x-1 mt-0.5">
                               <Clock className="w-3 h-3 text-gray-400" />
-                              <span className="text-xs text-gray-500">{appointment.date} at {appointment.time}</span>
+                              <span className="text-xs text-gray-500">{appointment.date} · {appointment.time}</span>
                             </div>
                           </div>
                         </div>
                         <div className="text-right space-y-2">
-                          <Badge variant={appointment.status === "upcoming" ? "default" : "secondary"}>{appointment.type}</Badge>
+                          <Badge className="bg-teal-100 text-teal-700 border-teal-200 text-xs">{appointment.type}</Badge>
                           {["upcoming","scheduled","confirmed"].includes(appointment.status) && (
-                            <Button size="sm" className="w-full bg-[#008080] hover:bg-[#008080]/90" onClick={() => onStartVideoCall?.(`mediscript-appt-${appointment.id}`)}>
-                              <Video className="w-4 h-4 mr-2" />Join Call
+                            <Button size="sm" className="w-full bg-gradient-to-r from-[#008080] to-[#00BFFF] text-white border-0 text-xs" onClick={() => onStartVideoCall?.(`mediscript-appt-${appointment.id}`)}>
+                              <Video className="w-3.5 h-3.5 mr-1" />Join Call
                             </Button>
                           )}
                         </div>
@@ -621,10 +642,12 @@ export function PatientDashboard({ onLogout, onNavigateHome, onStartVideoCall }:
                   </CardContent>
                 </Card>
 
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Find a Doctor</CardTitle>
-                    <CardDescription>Search for healthcare providers by specialty</CardDescription>
+                <Card className="border-0 shadow-lg shadow-gray-200/60 rounded-2xl">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="flex items-center gap-2 text-gray-800">
+                      <span className="w-1.5 h-5 bg-gradient-to-b from-violet-500 to-purple-600 rounded-full inline-block" />Find a Doctor
+                    </CardTitle>
+                    <CardDescription>Search by specialty or name</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="relative">
@@ -635,76 +658,79 @@ export function PatientDashboard({ onLogout, onNavigateHome, onStartVideoCall }:
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         onKeyDown={(e) => { if (e.key === "Enter" && searchQuery.trim()) setActiveSection("doctors"); }}
-                        className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#008080]"
+                        className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-400 bg-gray-50/80 text-sm"
                       />
                     </div>
-                    <div className="grid grid-cols-2 gap-3">
-                      {["Cardiology","Dermatology","Pediatrics","Neurology"].map((specialty) => (
-                        <Button
-                          key={specialty}
-                          variant="outline"
-                          className="justify-start border-[#008080]/20 hover:bg-[#008080]/10"
-                          onClick={() => { setSearchQuery(specialty); setActiveSection("doctors"); }}
+                    <div className="grid grid-cols-2 gap-2">
+                      {[
+                        { name: "Cardiology",   color: "from-red-50 to-pink-50 border-red-100 text-red-600 hover:from-red-100"   },
+                        { name: "Dermatology",  color: "from-amber-50 to-orange-50 border-amber-100 text-amber-600 hover:from-amber-100" },
+                        { name: "Pediatrics",   color: "from-blue-50 to-cyan-50 border-blue-100 text-blue-600 hover:from-blue-100" },
+                        { name: "Neurology",    color: "from-purple-50 to-violet-50 border-purple-100 text-purple-600 hover:from-purple-100" },
+                      ].map(({ name, color }) => (
+                        <button
+                          key={name}
+                          className={`flex items-center gap-2 px-3 py-2.5 rounded-xl border bg-gradient-to-r ${color} text-xs font-medium transition-all hover:shadow-sm`}
+                          onClick={() => { setSearchQuery(name); setActiveSection("doctors"); }}
                         >
-                          <Heart className="w-4 h-4 mr-2 text-[#008080]" />{specialty}
-                        </Button>
+                          <Heart className="w-3.5 h-3.5" />{name}
+                        </button>
                       ))}
                     </div>
                     {searchQuery && (
                       <Button
-                        className="w-full bg-[#008080] hover:bg-[#008080]/90 text-white"
+                        className="w-full bg-gradient-to-r from-[#008080] to-[#00BFFF] text-white border-0"
                         onClick={() => setActiveSection("doctors")}
                       >
                         <Search className="w-4 h-4 mr-2" />
-                        Search "{searchQuery}" — View {filteredDoctors.length} doctor{filteredDoctors.length !== 1 ? "s" : ""}
+                        Search "{searchQuery}" — {filteredDoctors.length} doctor{filteredDoctors.length !== 1 ? "s" : ""}
                       </Button>
                     )}
                   </CardContent>
                 </Card>
 
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center justify-between">
-                      Recent Prescriptions
-                      <Button variant="outline" size="sm" onClick={() => setActiveSection("prescriptions")}>
-                        <FileText className="w-4 h-4 mr-2" />View All
+                <Card className="border-0 shadow-lg shadow-gray-200/60 rounded-2xl">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="flex items-center justify-between text-gray-800">
+                      <span className="flex items-center gap-2"><span className="w-1.5 h-5 bg-gradient-to-b from-emerald-500 to-teal-600 rounded-full inline-block" />Recent Prescriptions</span>
+                      <Button variant="outline" size="sm" className="text-xs border-emerald-200 text-emerald-700 hover:bg-emerald-50" onClick={() => setActiveSection("prescriptions")}>
+                        View All
                       </Button>
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4">
+                  <CardContent className="space-y-3">
                     {prescriptions.length === 0 ? (
-                      <p className="text-sm text-gray-400 text-center py-4">No prescriptions yet</p>
+                      <p className="text-sm text-gray-400 text-center py-6 bg-gray-50/50 rounded-xl">No prescriptions yet</p>
                     ) : prescriptions.map((p) => (
-                      <div key={p.id} className="flex items-center justify-between p-4 border rounded-lg">
+                      <div key={p.id} className="flex items-center justify-between p-4 bg-gradient-to-r from-emerald-50/50 to-teal-50/30 rounded-xl border border-emerald-100/60 hover:shadow-md transition-shadow">
                         <div>
-                          <p className="text-sm font-medium">{p.medication}</p>
-                          <p className="text-xs text-gray-500">Prescribed by {p.doctor}</p>
-                          <p className="text-xs text-gray-500">{p.date}</p>
+                          <p className="text-sm font-semibold text-gray-800">{p.medication}</p>
+                          <p className="text-xs text-gray-500">Dr. {p.doctor}</p>
+                          <p className="text-xs text-gray-400">{p.date}</p>
                         </div>
-                        <div className="flex items-center space-x-2 flex-wrap gap-1 justify-end">
+                        <div className="flex items-center gap-1.5 flex-wrap justify-end">
                           <Badge
                             className={
                               p.status === "active"
-                                ? "bg-green-100 text-green-700 border-green-200"
+                                ? "bg-emerald-100 text-emerald-700 border-emerald-200 text-xs"
                                 : p.status === "completed"
-                                ? "bg-gray-100 text-gray-600 border-gray-200"
-                                : "bg-red-100 text-red-600 border-red-200"
+                                ? "bg-gray-100 text-gray-500 border-gray-200 text-xs"
+                                : "bg-red-100 text-red-600 border-red-200 text-xs"
                             }
                             variant="outline"
                           >
                             {p.status}
                           </Badge>
-                          <Button size="sm" variant="outline" onClick={() => setViewPrescriptionId(p.id)}>
-                            <Download className="w-4 h-4 mr-1" />PDF
+                          <Button size="sm" variant="outline" className="text-xs h-7 px-2 border-gray-200" onClick={() => setViewPrescriptionId(p.id)}>
+                            <Download className="w-3 h-3 mr-1" />PDF
                           </Button>
                           {p.status === "active" && (
                             <Button
                               size="sm"
-                              variant="outline"
-                              className="text-green-600 hover:text-green-800 hover:border-green-400"
+                              className="text-xs h-7 px-2 bg-emerald-500 hover:bg-emerald-600 text-white border-0"
                               onClick={() => handleMarkDone(p.id)}
                             >
-                              <CheckCircle className="w-4 h-4 mr-1" />Mark Done
+                              <CheckCircle className="w-3 h-3 mr-1" />Done
                             </Button>
                           )}
                         </div>
@@ -713,20 +739,24 @@ export function PatientDashboard({ onLogout, onNavigateHome, onStartVideoCall }:
                   </CardContent>
                 </Card>
 
-                <Card>
-                  <CardHeader><CardTitle>My Healthcare Team</CardTitle></CardHeader>
-                  <CardContent className="space-y-4">
+                <Card className="border-0 shadow-lg shadow-gray-200/60 rounded-2xl">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="flex items-center gap-2 text-gray-800">
+                      <span className="w-1.5 h-5 bg-gradient-to-b from-amber-400 to-orange-500 rounded-full inline-block" />My Healthcare Team
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
                     {filteredDoctors.map((doctor) => (
-                      <div key={doctor.id} className="flex items-center justify-between p-4 border rounded-lg">
-                        <div className="flex items-center space-x-4">
-                          <Avatar>
+                      <div key={doctor.id} className="flex items-center justify-between p-4 bg-gradient-to-r from-amber-50/50 to-orange-50/30 rounded-xl border border-amber-100/60 hover:shadow-md transition-shadow">
+                        <div className="flex items-center space-x-3">
+                          <Avatar className="ring-2 ring-amber-200">
                             <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${doctor.name}`} />
-                            <AvatarFallback>DR</AvatarFallback>
+                            <AvatarFallback className="bg-amber-100 text-amber-700 font-bold">DR</AvatarFallback>
                           </Avatar>
                           <div>
-                            <p className="text-sm">{doctor.name}</p>
-                            <p className="text-xs text-gray-500">{doctor.specialty}</p>
-                            <div className="flex items-center space-x-1 mt-1">
+                            <p className="text-sm font-semibold text-gray-800">{doctor.name}</p>
+                            <p className="text-xs text-amber-600 font-medium">{doctor.specialty}</p>
+                            <div className="flex items-center space-x-1 mt-0.5">
                               <div className="flex">{[1,2,3,4,5].map((s) => <span key={s} className="text-yellow-400 text-xs">★</span>)}</div>
                               <span className="text-xs text-gray-500">{doctor.rating}</span>
                             </div>
@@ -749,13 +779,16 @@ export function PatientDashboard({ onLogout, onNavigateHome, onStartVideoCall }:
           {activeSection === "appointments" && (
             <div className="space-y-6">
               <div className="flex items-center justify-between">
-                <h1 className="text-3xl">My Appointments</h1>
-                <Button className="bg-[#008080] hover:bg-[#008080]/90" onClick={() => setActiveSection("doctors")}>
+                <div>
+                  <h1 className="text-2xl font-bold bg-gradient-to-r from-[#008080] to-[#00BFFF] bg-clip-text text-transparent">My Appointments</h1>
+                  <p className="text-sm text-gray-500 mt-0.5">Track and manage all your consultations</p>
+                </div>
+                <Button className="bg-gradient-to-r from-[#008080] to-[#00BFFF] text-white border-0 shadow-md shadow-teal-200/50" onClick={() => setActiveSection("doctors")}>
                   <Plus className="w-4 h-4 mr-2" />Book New
                 </Button>
               </div>
-              <Card>
-                <CardHeader><CardTitle>All Appointments</CardTitle></CardHeader>
+              <Card className="border-0 shadow-lg shadow-gray-200/60 rounded-2xl">
+                <CardHeader><CardTitle className="text-gray-800">All Appointments</CardTitle></CardHeader>
                 <CardContent>
                   {appointments.length === 0 ? (
                     <div className="text-center py-8">
@@ -802,7 +835,10 @@ export function PatientDashboard({ onLogout, onNavigateHome, onStartVideoCall }:
           {activeSection === "doctors" && (
             <div className="space-y-6">
               <div className="flex items-center justify-between">
-                <h1 className="text-3xl">Find Doctors</h1>
+                <div>
+                  <h1 className="text-2xl font-bold bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">Find Doctors</h1>
+                  <p className="text-sm text-gray-500 mt-0.5">Browse and book from our network of specialists</p>
+                </div>
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                   <input type="text" placeholder="Search doctors..." value={searchQuery} onChange={(e) => { setSearchQuery(e.target.value); setDoctorsPage(1); }} className="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#008080]" />
@@ -866,7 +902,7 @@ export function PatientDashboard({ onLogout, onNavigateHome, onStartVideoCall }:
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <h1 className="text-3xl">My Prescriptions</h1>
+                  <h1 className="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">My Prescriptions</h1>
                   <p className="text-gray-500 text-sm mt-1">
                     Active prescriptions are ongoing medications. Mark them as done once you finish the course.
                   </p>

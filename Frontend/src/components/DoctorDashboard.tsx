@@ -238,8 +238,15 @@ export function DoctorDashboard({ onLogout, onNavigateHome, onStartVideoCall }: 
     );
   };
 
+  const getTimeOfDay = () => {
+    const h = new Date().getHours();
+    if (h < 12) return "morning";
+    if (h < 17) return "afternoon";
+    return "evening";
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-indigo-50/30 to-blue-50/20">
 
       {/* Write Prescription Modal */}
       <AnimatePresence>
@@ -401,14 +408,14 @@ export function DoctorDashboard({ onLogout, onNavigateHome, onStartVideoCall }: 
       </AnimatePresence>
 
       {/* Header */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
+      <header className="bg-white/80 backdrop-blur-xl border-b border-white/60 shadow-sm sticky top-0 z-50">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-2 cursor-pointer" onClick={onNavigateHome}>
-              <div className="w-10 h-10 bg-gradient-to-r from-[#008080] to-[#00BFFF] rounded-xl flex items-center justify-center">
-                <Heart size={24} className="text-white" />
+              <div className="w-10 h-10 bg-gradient-to-r from-[#008080] to-[#00BFFF] rounded-xl flex items-center justify-center shadow-md shadow-teal-200">
+                <Heart size={20} className="text-white" />
               </div>
-              <span className="text-2xl text-gray-900">Mediscript</span>
+              <span className="text-2xl font-bold bg-gradient-to-r from-[#008080] to-[#00BFFF] bg-clip-text text-transparent">MediScript</span>
             </div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -449,68 +456,82 @@ export function DoctorDashboard({ onLogout, onNavigateHome, onStartVideoCall }: 
           {/* HOME */}
           {activeSection === "home" && (
             <>
-              <div className="mb-8">
-                <h1 className="text-3xl mb-2">Good day, {doctorName}!</h1>
-                <p className="text-gray-600">You have {upcomingCount} upcoming appointments</p>
+              {/* Welcome banner */}
+              <div className="mb-8 relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#1a3a5c] via-[#1e4d7b] to-[#008080] p-6 text-white shadow-xl shadow-blue-200/40">
+                <div className="absolute -right-8 -top-8 w-40 h-40 bg-white/10 rounded-full" />
+                <div className="absolute -right-4 top-10 w-24 h-24 bg-white/10 rounded-full" />
+                <div className="absolute left-1/2 -bottom-10 w-52 h-52 bg-white/5 rounded-full" />
+                <div className="relative z-10">
+                  <p className="text-white/70 text-xs font-semibold uppercase tracking-widest mb-1">Good {getTimeOfDay()}, Doctor</p>
+                  <h1 className="text-3xl font-bold mb-1">Dr. {doctorName} 👨‍⚕️</h1>
+                  <p className="text-white/75 text-sm">You have <span className="font-semibold text-white">{upcomingCount}</span> upcoming patient{upcomingCount !== 1 ? "s" : ""} · <span className="font-semibold text-white">{completedCount}</span> completed today</p>
+                </div>
+                <div className="absolute right-6 bottom-4 text-7xl opacity-20 select-none">🩺</div>
               </div>
 
+              {/* Stat cards */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <Card>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm">Today's Patients</CardTitle>
-                    <Users className="h-4 w-4 text-muted-foreground" />
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl">{upcomingCount}</div>
-                    <p className="text-xs text-muted-foreground">{completedCount} completed</p>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm">Total Appointments</CardTitle>
-                    <Calendar className="h-4 w-4 text-muted-foreground" />
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl">{appointments.length}</div>
-                    <p className="text-xs text-muted-foreground">All time</p>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm">Prescriptions</CardTitle>
-                    <FileText className="h-4 w-4 text-muted-foreground" />
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl">{prescriptions.length}</div>
-                    <p className="text-xs text-muted-foreground">Total issued</p>
-                  </CardContent>
-                </Card>
+                <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 p-5 text-white shadow-lg shadow-blue-200/50 cursor-pointer hover:scale-[1.02] transition-transform" onClick={() => setActiveSection("appointments")}>
+                  <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-white/10 rounded-full" />
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+                      <Users className="w-5 h-5 text-white" />
+                    </div>
+                    <span className="text-xs font-medium bg-white/20 px-2 py-0.5 rounded-full">Today</span>
+                  </div>
+                  <div className="text-4xl font-bold mb-0.5">{upcomingCount}</div>
+                  <p className="text-white/75 text-sm">{completedCount} completed</p>
+                </div>
+
+                <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 p-5 text-white shadow-lg shadow-amber-200/50 cursor-pointer hover:scale-[1.02] transition-transform" onClick={() => setActiveSection("appointments")}>
+                  <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-white/10 rounded-full" />
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+                      <Calendar className="w-5 h-5 text-white" />
+                    </div>
+                    <span className="text-xs font-medium bg-white/20 px-2 py-0.5 rounded-full">All time</span>
+                  </div>
+                  <div className="text-4xl font-bold mb-0.5">{appointments.length}</div>
+                  <p className="text-white/75 text-sm">Total Appointments</p>
+                </div>
+
+                <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#008080] to-[#00BFFF] p-5 text-white shadow-lg shadow-teal-200/50 cursor-pointer hover:scale-[1.02] transition-transform" onClick={() => setActiveSection("prescriptions")}>
+                  <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-white/10 rounded-full" />
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+                      <FileText className="w-5 h-5 text-white" />
+                    </div>
+                    <span className="text-xs font-medium bg-white/20 px-2 py-0.5 rounded-full">Issued</span>
+                  </div>
+                  <div className="text-4xl font-bold mb-0.5">{prescriptions.length}</div>
+                  <p className="text-white/75 text-sm">Prescriptions</p>
+                </div>
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Today's Appointments */}
-                <Card className="lg:col-span-2">
-                  <CardHeader>
-                    <CardTitle className="flex justify-between items-center">
-                      Today's Appointment Timeline
-                      <Button variant="outline" size="sm" onClick={() => setActiveSection("appointments")}>
-                        <Calendar className="w-4 h-4 mr-2" />View All
+                <Card className="lg:col-span-2 border-0 shadow-lg shadow-gray-200/60 rounded-2xl">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="flex justify-between items-center text-gray-800">
+                      <span className="flex items-center gap-2"><span className="w-1.5 h-5 bg-gradient-to-b from-blue-500 to-indigo-600 rounded-full inline-block" />Today's Appointment Timeline</span>
+                      <Button variant="outline" size="sm" className="text-xs border-blue-200 text-blue-700 hover:bg-blue-50" onClick={() => setActiveSection("appointments")}>
+                        View All
                       </Button>
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
                     {todayAppointments.length === 0 ? (
-                      <p className="text-sm text-gray-400 text-center py-6">No appointments today</p>
+                      <p className="text-sm text-gray-400 text-center py-6 bg-gray-50/50 rounded-xl">No appointments today</p>
                     ) : (
-                      <div className="space-y-4">
+                      <div className="space-y-3">
                         {todayAppointments.map((appt, index) => (
-                          <div key={appt.id} className="flex items-center space-x-4 p-4 border rounded-lg">
+                          <div key={appt.id} className="flex items-center space-x-4 p-4 bg-gradient-to-r from-blue-50/60 to-indigo-50/30 rounded-xl border border-blue-100/60 hover:shadow-md transition-shadow">
                             <div className="flex flex-col items-center">
-                              <div className={`w-3 h-3 rounded-full ${
-                                appt.status === "in-progress" ? "bg-green-500" :
-                                appt.status === "completed"   ? "bg-blue-500"  : "bg-gray-300"
+                              <div className={`w-3 h-3 rounded-full shadow-sm ${
+                                appt.status === "in-progress" ? "bg-green-500 ring-2 ring-green-200" :
+                                appt.status === "completed"   ? "bg-blue-500 ring-2 ring-blue-200"  : "bg-gray-300"
                               }`} />
-                              {index < todayAppointments.length - 1 && <div className="w-px h-8 bg-gray-200 mt-2" />}
+                              {index < todayAppointments.length - 1 && <div className="w-px h-8 bg-gradient-to-b from-blue-200 to-transparent mt-2" />}
                             </div>
                             <div className="flex-1 flex items-center space-x-4">
                               <Avatar>
@@ -554,10 +575,10 @@ export function DoctorDashboard({ onLogout, onNavigateHome, onStartVideoCall }: 
                 </Card>
 
                 {/* Recent Patients */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex justify-between items-center">
-                      Recent Patients
+                <Card className="border-0 shadow-lg shadow-gray-200/60 rounded-2xl">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="flex justify-between items-center text-gray-800">
+                      <span className="flex items-center gap-2"><span className="w-1.5 h-5 bg-gradient-to-b from-violet-500 to-purple-600 rounded-full inline-block" />Recent Patients</span>
                       <div className="relative">
                         <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                         <input
@@ -570,9 +591,9 @@ export function DoctorDashboard({ onLogout, onNavigateHome, onStartVideoCall }: 
                       </div>
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4">
+                  <CardContent className="space-y-3">
                     {recentPatients.filter((p) => p.name.toLowerCase().includes(searchQuery.toLowerCase())).map((patient) => (
-                      <div key={patient.id} className="flex items-center justify-between p-4 border rounded-lg">
+                      <div key={patient.id} className="flex items-center justify-between p-4 bg-gradient-to-r from-violet-50/60 to-purple-50/30 rounded-xl border border-violet-100/60 hover:shadow-md transition-shadow">
                         <div className="flex items-center space-x-4">
                           <Avatar>
                             <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${patient.name}`} />
@@ -599,20 +620,20 @@ export function DoctorDashboard({ onLogout, onNavigateHome, onStartVideoCall }: 
                 </Card>
 
                 {/* Recent Prescriptions */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex justify-between items-center">
-                      Recent Prescriptions
-                      <Button variant="outline" size="sm" onClick={() => setShowPrescriptionModal(true)}>
-                        <Plus className="w-4 h-4 mr-2" />View All
+                <Card className="border-0 shadow-lg shadow-gray-200/60 rounded-2xl">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="flex justify-between items-center text-gray-800">
+                      <span className="flex items-center gap-2"><span className="w-1.5 h-5 bg-gradient-to-b from-[#008080] to-[#00BFFF] rounded-full inline-block" />Recent Prescriptions</span>
+                      <Button variant="outline" size="sm" className="text-xs border-teal-200 text-teal-700 hover:bg-teal-50" onClick={() => setShowPrescriptionModal(true)}>
+                        View All
                       </Button>
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4">
+                  <CardContent className="space-y-3">
                     {recentPrescriptions.length === 0 ? (
-                      <p className="text-sm text-gray-400 text-center py-4">No prescriptions yet</p>
+                      <p className="text-sm text-gray-400 text-center py-6 bg-gray-50/50 rounded-xl">No prescriptions yet</p>
                     ) : recentPrescriptions.map((prescription) => (
-                      <div key={prescription.id} className="flex items-center justify-between p-4 border rounded-lg">
+                      <div key={prescription.id} className="flex items-center justify-between p-4 bg-gradient-to-r from-teal-50/60 to-cyan-50/30 rounded-xl border border-teal-100/60 hover:shadow-md transition-shadow">
                         <div>
                           <p className="text-sm">{prescription.medication}</p>
                           <p className="text-xs text-gray-500">For {prescription.patient}</p>
@@ -636,13 +657,16 @@ export function DoctorDashboard({ onLogout, onNavigateHome, onStartVideoCall }: 
           {activeSection === "appointments" && (
             <div className="space-y-6">
               <div className="flex items-center justify-between">
-                <h1 className="text-3xl">Appointments</h1>
-                <Button className="bg-[#008080] hover:bg-[#008080]/90" onClick={() => setShowScheduleModal(true)}>
+                <div>
+                  <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Appointments</h1>
+                  <p className="text-sm text-gray-500 mt-0.5">Manage your patient schedule</p>
+                </div>
+                <Button className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white border-0 shadow-md shadow-blue-200/50" onClick={() => setShowScheduleModal(true)}>
                   <Plus className="w-4 h-4 mr-2" />Schedule New
                 </Button>
               </div>
-              <Card>
-                <CardHeader><CardTitle>All Appointments ({appointments.length})</CardTitle></CardHeader>
+              <Card className="border-0 shadow-lg shadow-gray-200/60 rounded-2xl">
+                <CardHeader><CardTitle className="text-gray-800">All Appointments ({appointments.length})</CardTitle></CardHeader>
                 <CardContent>
                   {appointments.length === 0 ? (
                     <p className="text-sm text-gray-400 text-center py-8">No appointments yet</p>
@@ -692,7 +716,10 @@ export function DoctorDashboard({ onLogout, onNavigateHome, onStartVideoCall }: 
           {activeSection === "patients" && (
             <div className="space-y-6">
               <div className="flex items-center justify-between">
-                <h1 className="text-3xl">Patients</h1>
+                <div>
+                  <h1 className="text-2xl font-bold bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">Patients</h1>
+                  <p className="text-sm text-gray-500 mt-0.5">Your patient records and history</p>
+                </div>
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                   <input type="text" placeholder="Search patients..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#008080]" />
@@ -733,8 +760,11 @@ export function DoctorDashboard({ onLogout, onNavigateHome, onStartVideoCall }: 
           {activeSection === "prescriptions" && (
             <div className="space-y-6">
               <div className="flex items-center justify-between">
-                <h1 className="text-3xl">Prescriptions</h1>
-                <Button className="bg-[#008080] hover:bg-[#008080]/90" onClick={() => setShowPrescriptionModal(true)}>
+                <div>
+                  <h1 className="text-2xl font-bold bg-gradient-to-r from-[#008080] to-[#00BFFF] bg-clip-text text-transparent">Prescriptions</h1>
+                  <p className="text-sm text-gray-500 mt-0.5">All prescriptions you've written</p>
+                </div>
+                <Button className="bg-gradient-to-r from-[#008080] to-[#00BFFF] text-white border-0 shadow-md shadow-teal-200/50" onClick={() => setShowPrescriptionModal(true)}>
                   <Plus className="w-4 h-4 mr-2" />New Prescription
                 </Button>
               </div>
