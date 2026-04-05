@@ -3,6 +3,7 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Badge } from "./ui/badge";
+import { ThemeToggle } from "./ThemeToggle";
 
 interface DashboardHeaderProps {
   userName: string;
@@ -39,6 +40,9 @@ export function DashboardHeader({ userName, userRole, onLogout, onNavigateHome }
 
         {/* Right Side */}
         <div className="flex items-center space-x-4">
+          {/* Theme Toggle */}
+          <ThemeToggle />
+
           {/* Notifications */}
           <Button variant="ghost" size="sm" className="relative">
             <Bell className="w-5 h-5" />

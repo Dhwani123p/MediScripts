@@ -2,6 +2,7 @@ import { Button } from "./ui/button";
 import { Heart, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { motion } from "motion/react";
+import { ThemeToggle } from "./ThemeToggle";
 
 const getNavItems = (onNavigateAbout?: () => void) => [
   { name: "Home", href: "#", action: () => window.scrollTo(0, 0) },
@@ -54,6 +55,7 @@ export function Header({ onNavigateSignIn, onNavigateSignUp, onNavigateAbout, on
 
           {/* Desktop CTA Buttons */}
           <div className="hidden lg:flex items-center space-x-4">
+            <ThemeToggle />
             <Button 
               //variant="ghost" 
               className="text-gray-600 bg-blue-600 to-teal-100 hover:text-[#008080] text-white"
