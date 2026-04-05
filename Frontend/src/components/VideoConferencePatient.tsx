@@ -151,7 +151,7 @@ export function VideoConferencePatient({
   };
 
   return (
-    <div className="min-h-screen bg-[#0d1117] flex flex-col">
+    <div className="h-screen bg-[#0d1117] flex flex-col overflow-hidden">
 
       {/* ── Top bar ───────────────────────────────────────────────── */}
       <div className="flex items-center justify-between px-6 py-3 bg-[#161b22] border-b border-white/10">

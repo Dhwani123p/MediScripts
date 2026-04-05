@@ -512,7 +512,6 @@ export function PatientDashboard({ onLogout, onNavigateHome, onStartVideoCall }:
                 <DropdownMenuItem onClick={() => setActiveSection("doctors")}><Users className="w-4 h-4 mr-2" />Find Doctors</DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setActiveSection("prescriptions")}><FileText className="w-4 h-4 mr-2" />My Prescriptions</DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setActiveSection("profile")}><User className="w-4 h-4 mr-2" />My Health Profile</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => onStartVideoCall?.()}><Video className="w-4 h-4 mr-2" />Video Conference</DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={onLogout}><LogOut className="w-4 h-4 mr-2" />Logout</DropdownMenuItem>
               </DropdownMenuContent>
