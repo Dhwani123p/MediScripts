@@ -52,10 +52,13 @@ export function WritePrescription({ onClose }: WritePrescriptionProps) {
   const [aiLoading, setAiLoading]     = useState(false);
   const [aiError, setAiError]         = useState("");
   const [aiSuccess, setAiSuccess]     = useState("");
+  const [aiCountry, setAiCountry]     = useState("");   // patient's country for name mapping
   // medId → per-field confidence from ML (cleared when user edits the field)
   const [aiConfidence, setAiConfidence] = useState<Record<number, any>>({});
   // Drug-drug interactions returned by the ML API after extraction
   const [aiInteractions, setAiInteractions] = useState<any[] | null>(null);
+  // Drug name mappings (INN → local name) for patient's country
+  const [aiDrugMappings, setAiDrugMappings] = useState<any[]>([]);
 
   // Load patients who have appointments with this doctor
   useEffect(() => {
@@ -95,7 +98,7 @@ export function WritePrescription({ onClose }: WritePrescriptionProps) {
       const res = await fetch(`${API}/prescriptions/extract`, {
         method:  "POST",
         headers: authHeader(),
-        body:    JSON.stringify({ text: aiText.trim() }),
+        body:    JSON.stringify({ text: aiText.trim(), ...(aiCountry ? { country: aiCountry } : {}) }),
       });
       const data = await res.json();
 
@@ -129,6 +132,7 @@ export function WritePrescription({ onClose }: WritePrescriptionProps) {
       setMedications(filled);
       setAiConfidence(newConf);
       setAiInteractions(data.interactions || []);
+      setAiDrugMappings(data.drug_mappings || []);
       setAiSuccess(`✅ ${filled.length} medicine(s) extracted — review and edit below.`);
       setAiText("");
     } catch {
@@ -365,6 +369,30 @@ export function WritePrescription({ onClose }: WritePrescriptionProps) {
                           onChange={(e) => setAiText(e.target.value)}
                         />
 
+                        {/* Patient's country — enables local drug name mapping */}
+                        <div>
+                          <label className="text-xs text-gray-500 mb-1 block">
+                            Patient's country <span className="text-gray-400">(optional — shows local drug names)</span>
+                          </label>
+                          <select
+                            value={aiCountry}
+                            onChange={(e) => setAiCountry(e.target.value)}
+                            className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm
+                                       focus:outline-none focus:ring-2 focus:ring-teal-400 bg-white"
+                          >
+                            <option value="">— No mapping —</option>
+                            <option value="IN">🇮🇳 India</option>
+                            <option value="US">🇺🇸 USA</option>
+                            <option value="GB">🇬🇧 United Kingdom</option>
+                            <option value="AE">🇦🇪 UAE / Dubai</option>
+                            <option value="DE">🇩🇪 Germany</option>
+                            <option value="AU">🇦🇺 Australia</option>
+                            <option value="CA">🇨🇦 Canada</option>
+                            <option value="FR">🇫🇷 France</option>
+                            <option value="SA">🇸🇦 Saudi Arabia</option>
+                          </select>
+                        </div>
+
                         {aiError   && <p className="text-red-500 text-xs">{aiError}</p>}
                         {aiSuccess && <p className="text-teal-600 text-xs font-medium">{aiSuccess}</p>}
 
@@ -518,6 +546,36 @@ export function WritePrescription({ onClose }: WritePrescriptionProps) {
             </>
           )}
         </div>
+
+        {/* Drug name mappings — shown when country was selected */}
+        {aiDrugMappings.length > 0 && (
+          <div className="px-6 pb-4">
+            <div className="rounded-xl border border-green-200 overflow-hidden">
+              <div className="bg-green-50 px-4 py-2 border-b border-green-200">
+                <p className="text-xs font-semibold uppercase tracking-wide text-green-700">
+                  Local Drug Names
+                </p>
+              </div>
+              <div className="divide-y divide-green-100">
+                {aiDrugMappings.map((m: any, i: number) => (
+                  <div key={i} className="px-4 py-2.5 text-xs flex items-start gap-2 bg-white">
+                    <div className="flex-1">
+                      <span className="font-semibold text-gray-700">{m.source_name}</span>
+                      {m.mapped && m.local_name !== m.source_name && (
+                        <span className="text-green-700"> → <span className="font-semibold">{m.local_name}</span></span>
+                      )}
+                      {m.brand_examples?.length > 0 && (
+                        <span className="text-gray-400 ml-1">({m.brand_examples.slice(0, 3).join(", ")})</span>
+                      )}
+                      {m.note && <div className="text-amber-600 mt-0.5">{m.note}</div>}
+                    </div>
+                    <span className="text-gray-400 shrink-0">{m.country_name}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Drug-interaction warnings — shown after AI extraction */}
         {aiInteractions !== null && aiInteractions.length > 0 && (

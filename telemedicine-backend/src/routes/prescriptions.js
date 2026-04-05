@@ -165,7 +165,7 @@ router.patch('/:id', verifyToken, async (req, res) => {
 //   "raw":           { drugs:[…], …, confidence_scores: { drugs:[…], … } }
 // }
 router.post('/extract', verifyToken, async (req, res) => {
-  const { text } = req.body;
+  const { text, country } = req.body;
   if (!text || !text.trim()) {
     return res.status(400).json({ error: 'text is required' });
   }
@@ -174,7 +174,7 @@ router.post('/extract', verifyToken, async (req, res) => {
   try {
     const mlRes = await axios.post(
       `${ML_API_URL}/api/predict`,
-      { text: text.trim() },
+      { text: text.trim(), ...(country ? { country } : {}) },
       { timeout: 30000 }           // 30 s — model inference can be slow on CPU
     );
     res.json(mlRes.data);
@@ -214,6 +214,9 @@ router.post('/from-audio', verifyToken, upload.single('audio'), async (req, res)
     filename:    req.file.originalname || 'recording.webm',
     contentType: req.file.mimetype     || 'audio/webm',
   });
+  // Forward country if provided (ML API returns drug_mappings when set)
+  const country = req.body?.country;
+  if (country) form.append('country', country);
 
   try {
     const mlRes = await axios.post(`${ML_API_URL}/api/process-audio`, form, {

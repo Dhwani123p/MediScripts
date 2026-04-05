@@ -81,6 +81,7 @@ export function VideoConferenceDoctor({
 
   // ── Prescription dictation ───────────────────────────────────────────────
   const [language,       setLanguage]       = useState("english");
+  const [country,        setCountry]        = useState("");   // ISO/free-text for drug name mapping
   const [isRecording,    setIsRecording]    = useState(false);
   const [dictationText,  setDictationText]  = useState("");
   const [isTranscribing, setIsTranscribing] = useState(false);
@@ -90,6 +91,8 @@ export function VideoConferenceDoctor({
   const [medConf, setMedConf] = useState<Record<number, any>>({});
   // Drug-drug interactions returned by the ML API after audio extraction
   const [medInteractions, setMedInteractions] = useState<any[]>([]);
+  // Drug name mappings (INN → local name) from ML API
+  const [drugMappings, setDrugMappings] = useState<any[]>([]);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef   = useRef<Blob[]>([]);
 
@@ -305,6 +308,7 @@ export function VideoConferenceDoctor({
     const form = new FormData();
     const ext  = mimeType.includes("webm") ? "webm" : "wav";
     form.append("audio", blob, `recording.${ext}`);
+    if (country) form.append("country", country);
 
     try {
       const res  = await fetch(`${API}/prescriptions/from-audio`, {
@@ -352,6 +356,13 @@ export function VideoConferenceDoctor({
           const incoming = (data.interactions || []).filter(
             (ix: any) => !existing.has((ix.drugs || []).slice().sort().join("|"))
           );
+          return [...prev, ...incoming];
+        });
+
+        // Merge drug mappings — deduplicate by INN
+        setDrugMappings((prev) => {
+          const seen = new Set(prev.map((m: any) => m.inn));
+          const incoming = (data.drug_mappings || []).filter((m: any) => !seen.has(m.inn));
           return [...prev, ...incoming];
         });
 
@@ -531,6 +542,34 @@ export function VideoConferenceDoctor({
                       </div>
                     )}
 
+                    {/* Drug name mappings for patient's country */}
+                    {drugMappings.length > 0 && (
+                      <div className="rounded-xl border border-green-200 overflow-hidden">
+                        <div className="bg-green-50 px-4 py-2 border-b border-green-200">
+                          <p className="text-xs font-semibold uppercase tracking-wide text-green-700">
+                            Local Drug Names
+                          </p>
+                        </div>
+                        <div className="divide-y divide-green-100">
+                          {drugMappings.map((m: any, i: number) => (
+                            <div key={i} className="px-4 py-2.5 text-xs flex items-start gap-2 bg-white">
+                              <div className="flex-1">
+                                <span className="font-semibold text-gray-700">{m.source_name}</span>
+                                {m.mapped && m.local_name !== m.source_name && (
+                                  <span className="text-green-700"> → <span className="font-semibold">{m.local_name}</span></span>
+                                )}
+                                {m.brand_examples?.length > 0 && (
+                                  <span className="text-gray-400 ml-1">({m.brand_examples.slice(0, 3).join(", ")})</span>
+                                )}
+                                {m.note && <div className="text-amber-600 mt-0.5">{m.note}</div>}
+                              </div>
+                              <span className="text-gray-400 shrink-0">{m.country_name}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
                     <div>
                       <Label className="text-sm font-medium mb-2 block">Diagnosis</Label>
                       <Textarea
@@ -694,6 +733,23 @@ export function VideoConferenceDoctor({
                         <SelectItem value="hindi">Hindi</SelectItem>
                       </SelectContent>
                     </Select>
+                    <Select value={country} onValueChange={setCountry}>
+                      <SelectTrigger className="w-44">
+                        <SelectValue placeholder="Patient's country" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="">No mapping</SelectItem>
+                        <SelectItem value="IN">🇮🇳 India</SelectItem>
+                        <SelectItem value="US">🇺🇸 USA</SelectItem>
+                        <SelectItem value="GB">🇬🇧 United Kingdom</SelectItem>
+                        <SelectItem value="AE">🇦🇪 UAE / Dubai</SelectItem>
+                        <SelectItem value="DE">🇩🇪 Germany</SelectItem>
+                        <SelectItem value="AU">🇦🇺 Australia</SelectItem>
+                        <SelectItem value="CA">🇨🇦 Canada</SelectItem>
+                        <SelectItem value="FR">🇫🇷 France</SelectItem>
+                        <SelectItem value="SA">🇸🇦 Saudi Arabia</SelectItem>
+                      </SelectContent>
+                    </Select>
                     <Button
                       onClick={handleEndCall}
                       className="bg-red-500 hover:bg-red-600 text-white"
@@ -844,6 +900,33 @@ export function VideoConferenceDoctor({
                         </div>
                       ))}
                       <p className="text-xs text-gray-400 pt-1">Edit the full form after ending the call.</p>
+                    </div>
+                  )}
+
+                  {/* Drug name mappings for patient's country */}
+                  {drugMappings.length > 0 && (
+                    <div className="space-y-1 pt-1 border-t border-gray-100 mt-2">
+                      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                        Local drug names
+                      </p>
+                      {drugMappings.map((m: any, i: number) => (
+                        <div key={i} className={`text-xs rounded-lg px-3 py-1.5 border ${
+                          m.mapped
+                            ? "bg-green-50 border-green-100 text-green-800"
+                            : "bg-amber-50 border-amber-100 text-amber-700"
+                        }`}>
+                          <span className="font-semibold">{m.source_name}</span>
+                          {m.mapped && m.local_name !== m.source_name && (
+                            <span> → <span className="font-semibold">{m.local_name}</span></span>
+                          )}
+                          {m.brand_examples?.length > 0 && (
+                            <span className="text-gray-500"> ({m.brand_examples.slice(0, 2).join(", ")})</span>
+                          )}
+                          {m.note && (
+                            <div className="text-amber-600 mt-0.5">{m.note}</div>
+                          )}
+                        </div>
+                      ))}
                     </div>
                   )}
                 </CardContent>
