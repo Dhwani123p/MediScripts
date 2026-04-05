@@ -1,5 +1,7 @@
 const jwt = require('jsonwebtoken');
 
+const JWT_SECRET = process.env.JWT_SECRET || 'telemedicine_jwt_secret_key_change_this_2024_xyz';
+
 const verifyToken = (req, res, next) => {
   const token = req.headers['authorization']?.split(' ')[1];
 
@@ -8,7 +10,7 @@ const verifyToken = (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, JWT_SECRET);
     req.userId = decoded.id;
     req.userRole = decoded.role;
     next();

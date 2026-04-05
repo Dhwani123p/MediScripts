@@ -2,6 +2,8 @@ const pool = require('../config/database');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+const JWT_SECRET = process.env.JWT_SECRET || 'telemedicine_jwt_secret_key_change_this_2024_xyz';
+
 // SIGNUP
 const signup = async (req, res) => {
   try {
@@ -50,7 +52,7 @@ const signup = async (req, res) => {
     // Create JWT token
     const token = jwt.sign(
       { id: user.id, email: user.email, role: user.role },
-      process.env.JWT_SECRET,
+      JWT_SECRET,
       { expiresIn: '7d' }
     );
 
@@ -96,7 +98,7 @@ const signin = async (req, res) => {
     // Create token
     const token = jwt.sign(
       { id: user.id, email: user.email, role: user.role },
-      process.env.JWT_SECRET,
+      JWT_SECRET,
       { expiresIn: '7d' }
     );
 
