@@ -512,7 +512,7 @@ export function PatientDashboard({ onLogout, onNavigateHome, onStartVideoCall }:
                 <DropdownMenuItem onClick={() => setActiveSection("doctors")}><Users className="w-4 h-4 mr-2" />Find Doctors</DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setActiveSection("prescriptions")}><FileText className="w-4 h-4 mr-2" />My Prescriptions</DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setActiveSection("profile")}><User className="w-4 h-4 mr-2" />My Health Profile</DropdownMenuItem>
-                <DropdownMenuItem onClick={onStartVideoCall}><Video className="w-4 h-4 mr-2" />Video Conference</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => onStartVideoCall?.()}><Video className="w-4 h-4 mr-2" />Video Conference</DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={onLogout}><LogOut className="w-4 h-4 mr-2" />Logout</DropdownMenuItem>
               </DropdownMenuContent>
@@ -785,7 +785,7 @@ export function PatientDashboard({ onLogout, onNavigateHome, onStartVideoCall }:
                           <div className="flex items-center space-x-2">
                             <Badge variant={appointment.status === "upcoming" ? "default" : "secondary"}>{appointment.type}</Badge>
                             <Badge variant="outline">{appointment.status}</Badge>
-                            <Button size="sm" variant="outline" onClick={onStartVideoCall}><Video className="w-4 h-4" />Join Call</Button>
+                            <Button size="sm" variant="outline" onClick={() => onStartVideoCall?.(`mediscript-appt-${appointment.id}`)}><Video className="w-4 h-4" />Join Call</Button>
                             <Button size="sm" variant="outline" className="text-red-500 hover:text-red-700 hover:border-red-300" onClick={() => handleCancelAppointment(appointment.id)}>Cancel</Button>
                           </div>
                         </div>
@@ -848,7 +848,7 @@ export function PatientDashboard({ onLogout, onNavigateHome, onStartVideoCall }:
                           <Button size="sm" variant="outline" onClick={() => setSelectedDoctor(doctor)}>
                             <BookOpen className="w-4 h-4" />Book Appointment
                           </Button>
-                          <Button size="sm" className="bg-[#008080] hover:bg-[#008080]/90" onClick={onStartVideoCall}>
+                          <Button size="sm" className="bg-[#008080] hover:bg-[#008080]/90" onClick={() => onStartVideoCall?.()}>
                             <Video className="w-4 h-4" />Join Call
                           </Button>
                         </div>
