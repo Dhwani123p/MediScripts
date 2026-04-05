@@ -321,13 +321,8 @@ export function VideoConferenceDoctor({
       const data = await res.json();
 
       if (!res.ok) {
-        const errMsg = data?.details?.message || data?.details || data?.error || "ML model unreachable";
-        const isUnreachable = res.status === 503 || res.status === 502;
-        setExtractError(
-          isUnreachable
-            ? "⚠️ ML model is offline or not configured on the server. Please fill the prescription manually."
-            : `⚠️ ML error: ${errMsg}`
-        );
+        const errMsg = data?.details?.message || data?.details || data?.error || "Unknown error";
+        setExtractError(`⚠️ [${res.status}] ${errMsg}`);
         setIsTranscribing(false);
         return;
       }
