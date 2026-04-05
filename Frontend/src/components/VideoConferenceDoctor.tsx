@@ -91,6 +91,8 @@ export function VideoConferenceDoctor({
   const [medConf, setMedConf] = useState<Record<number, any>>({});
   // Drug-drug interactions returned by the ML API after audio extraction
   const [medInteractions, setMedInteractions] = useState<any[]>([]);
+  // Dose-range warnings (WHO limits) from ML API
+  const [doseWarnings, setDoseWarnings] = useState<any[]>([]);
   // Drug name mappings (INN → local name) from ML API
   const [drugMappings, setDrugMappings] = useState<any[]>([]);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -359,6 +361,15 @@ export function VideoConferenceDoctor({
           return [...prev, ...incoming];
         });
 
+        // Merge dose warnings — deduplicate by drug name
+        setDoseWarnings((prev) => {
+          const seen = new Set(prev.map((d: any) => d.drug?.toLowerCase()));
+          const incoming = (data.dose_warnings || []).filter(
+            (d: any) => !seen.has(d.drug?.toLowerCase())
+          );
+          return [...prev, ...incoming];
+        });
+
         // Merge drug mappings — deduplicate by INN
         setDrugMappings((prev) => {
           const seen = new Set(prev.map((m: any) => m.inn));
@@ -539,6 +550,33 @@ export function VideoConferenceDoctor({
                             </div>
                           );
                         })}
+                      </div>
+                    )}
+
+                    {/* Dose warnings on prescription form */}
+                    {doseWarnings.length > 0 && (
+                      <div className="space-y-2">
+                        <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                          Dose Warnings
+                        </p>
+                        {doseWarnings.map((dw: any, di: number) =>
+                          (dw.warnings || []).map((w: any, wi: number) => (
+                            <div
+                              key={`${di}-${wi}`}
+                              className={`rounded-lg border px-3 py-2 text-xs ${
+                                w.severity === "high"
+                                  ? "bg-red-50 border-red-200 text-red-800"
+                                  : "bg-amber-50 border-amber-200 text-amber-800"
+                              }`}
+                            >
+                              <span className="font-semibold mr-1">
+                                {w.severity === "high" ? "⛔ HIGH" : "⚠ MODERATE"}
+                              </span>
+                              {w.message}
+                              <div className="mt-1 opacity-60">{w.who_limit} · {w.source}</div>
+                            </div>
+                          ))
+                        )}
                       </div>
                     )}
 
@@ -900,6 +938,32 @@ export function VideoConferenceDoctor({
                         </div>
                       ))}
                       <p className="text-xs text-gray-400 pt-1">Edit the full form after ending the call.</p>
+                    </div>
+                  )}
+
+                  {/* Dose warnings in side panel */}
+                  {doseWarnings.length > 0 && (
+                    <div className="space-y-1 pt-1 border-t border-gray-100 mt-2">
+                      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                        Dose Warnings
+                      </p>
+                      {doseWarnings.map((dw: any, di: number) =>
+                        (dw.warnings || []).map((w: any, wi: number) => (
+                          <div
+                            key={`${di}-${wi}`}
+                            className={`text-xs rounded-lg px-3 py-1.5 border ${
+                              w.severity === "high"
+                                ? "bg-red-50 border-red-100 text-red-800"
+                                : "bg-amber-50 border-amber-100 text-amber-800"
+                            }`}
+                          >
+                            <span className="font-semibold">
+                              {w.severity === "high" ? "⛔" : "⚠"} {dw.drug}:
+                            </span>{" "}
+                            {w.who_limit}
+                          </div>
+                        ))
+                      )}
                     </div>
                   )}
 

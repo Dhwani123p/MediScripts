@@ -57,6 +57,8 @@ export function WritePrescription({ onClose }: WritePrescriptionProps) {
   const [aiConfidence, setAiConfidence] = useState<Record<number, any>>({});
   // Drug-drug interactions returned by the ML API after extraction
   const [aiInteractions, setAiInteractions] = useState<any[] | null>(null);
+  // Dose-range warnings (WHO limits) from ML API
+  const [aiDoseWarnings, setAiDoseWarnings] = useState<any[]>([]);
   // Drug name mappings (INN → local name) for patient's country
   const [aiDrugMappings, setAiDrugMappings] = useState<any[]>([]);
 
@@ -132,6 +134,7 @@ export function WritePrescription({ onClose }: WritePrescriptionProps) {
       setMedications(filled);
       setAiConfidence(newConf);
       setAiInteractions(data.interactions || []);
+      setAiDoseWarnings(data.dose_warnings || []);
       setAiDrugMappings(data.drug_mappings || []);
       setAiSuccess(`✅ ${filled.length} medicine(s) extracted — review and edit below.`);
       setAiText("");
@@ -546,6 +549,33 @@ export function WritePrescription({ onClose }: WritePrescriptionProps) {
             </>
           )}
         </div>
+
+        {/* Dose warnings — WHO limit checks from ML API */}
+        {aiDoseWarnings.length > 0 && (
+          <div className="px-6 pb-4 space-y-2">
+            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-1">
+              Dose Warnings
+            </p>
+            {aiDoseWarnings.map((dw: any, di: number) =>
+              (dw.warnings || []).map((w: any, wi: number) => (
+                <div
+                  key={`${di}-${wi}`}
+                  className={`rounded-lg border px-3 py-2 text-xs ${
+                    w.severity === "high"
+                      ? "bg-red-50 border-red-200 text-red-800"
+                      : "bg-amber-50 border-amber-200 text-amber-800"
+                  }`}
+                >
+                  <span className="font-semibold mr-1">
+                    {w.severity === "high" ? "⛔ HIGH" : "⚠ MODERATE"}
+                  </span>
+                  {w.message}
+                  <div className="mt-1 opacity-60">{w.who_limit} · {w.source}</div>
+                </div>
+              ))
+            )}
+          </div>
+        )}
 
         {/* Drug name mappings — shown when country was selected */}
         {aiDrugMappings.length > 0 && (
