@@ -310,7 +310,7 @@ export function VideoConferenceDoctor({
     const form = new FormData();
     const ext  = mimeType.includes("webm") ? "webm" : "wav";
     form.append("audio", blob, `recording.${ext}`);
-    if (country) form.append("country", country);
+    if (country && country !== "none") form.append("country", country);
 
     try {
       const res  = await fetch(`${API}/prescriptions/from-audio`, {
@@ -776,7 +776,7 @@ export function VideoConferenceDoctor({
                         <SelectValue placeholder="Patient's country" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">No mapping</SelectItem>
+                        <SelectItem value="none">No mapping</SelectItem>
                         <SelectItem value="IN">🇮🇳 India</SelectItem>
                         <SelectItem value="US">🇺🇸 USA</SelectItem>
                         <SelectItem value="GB">🇬🇧 United Kingdom</SelectItem>
