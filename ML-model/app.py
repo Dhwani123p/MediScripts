@@ -27,6 +27,7 @@ from ner.model.NER_2 import load_model, predict_from_text
 from normalize import normalize_entity
 from interactions import check_interactions
 from drug_mapper import map_prescription, COUNTRY_NAMES, _norm_country
+from dose_validator import validate_prescription
 
 NER_MODEL_PATH = os.path.join(BASE_DIR, "ner", "model", "mediscript_ner.pt")
 
@@ -187,11 +188,13 @@ async def predict(req: PredictRequest):
     grouped = _group_entities(raw)
     medicines = [{**normalize_entity(m), "confidence": m["confidence"]} for m in grouped]
     drug_names = [m["drug"] for m in medicines if m.get("drug")]
-    interactions = check_interactions(drug_names)
-    mappings = map_prescription(medicines, req.country) if req.country else []
+    interactions   = check_interactions(drug_names)
+    dose_warnings  = validate_prescription(medicines)
+    mappings       = map_prescription(medicines, req.country) if req.country else []
     return {
-        "medicines":    medicines,
-        "interactions": interactions,
+        "medicines":     medicines,
+        "interactions":  interactions,
+        "dose_warnings": dose_warnings,
         "drug_mappings": mappings,
         "raw": {k: v for k, v in raw.items() if k != "raw_tokens"},
     }
@@ -223,14 +226,16 @@ async def process_audio(file: UploadFile = File(...), country: str | None = None
     grouped = _group_entities(raw)
     medicines = [{**normalize_entity(m), "confidence": m["confidence"]} for m in grouped]
     drug_names = [m["drug"] for m in medicines if m.get("drug")]
-    interactions = check_interactions(drug_names)
-    mappings = map_prescription(medicines, country) if country else []
+    interactions  = check_interactions(drug_names)
+    dose_warnings = validate_prescription(medicines)
+    mappings      = map_prescription(medicines, country) if country else []
     return {
-        "transcript":   transcript,
-        "medicines":    medicines,
-        "interactions": interactions,
+        "transcript":    transcript,
+        "medicines":     medicines,
+        "interactions":  interactions,
+        "dose_warnings": dose_warnings,
         "drug_mappings": mappings,
-        "raw":          {k: v for k, v in raw.items() if k != "raw_tokens"},
+        "raw":           {k: v for k, v in raw.items() if k != "raw_tokens"},
     }
 
 
@@ -285,6 +290,8 @@ Confidence scores (HIGH / MED / LOW) shown for each field.</p>
   <span class="ex" onclick="fill(this)">Ramipril 5 mg subah ko 1 mahine paani ke saath</span>
   <span class="ex" onclick="fill(this)">Paracetamol 650 mg twice daily for 5 days and Azithromycin 500 mg OD for 3 days</span>
   <span class="ex" onclick="fill(this)">Warfarin 5 mg OD and Aspirin 75 mg OD after food</span>
+  <span class="ex" onclick="fill(this)">Paracetamol 1500 mg TDS for 5 days after food</span>
+  <span class="ex" onclick="fill(this)">Ibuprofen 800 mg QID for 3 days</span>
 </div>
 <textarea id="inp" placeholder="Type a prescription sentence…"></textarea>
 <select id="country">
@@ -302,6 +309,7 @@ Confidence scores (HIGH / MED / LOW) shown for each field.</p>
 
 <h3>Result</h3>
 <pre id="out">—</pre>
+<div id="dose-warnings"></div>
 <div id="drug-mappings"></div>
 <div id="interactions"></div>
 
@@ -311,6 +319,7 @@ async function extract(){
   const text=document.getElementById('inp').value.trim();
   if(!text)return;
   document.getElementById('out').textContent='Extracting…';
+  document.getElementById('dose-warnings').innerHTML='';
   document.getElementById('drug-mappings').innerHTML='';
   document.getElementById('interactions').innerHTML='';
   const country=document.getElementById('country').value||null;
@@ -331,6 +340,20 @@ async function extract(){
       if(i<d.medicines.length-1)out+='\n';
     });
     document.getElementById('out').textContent=out;
+    // Render dose warnings
+    const dbox=document.getElementById('dose-warnings');
+    if(d.dose_warnings&&d.dose_warnings.length){
+      d.dose_warnings.forEach(dw=>{
+        dw.warnings.forEach(w=>{
+          const div=document.createElement('div');
+          div.className=w.severity==='high'?'warn warn-high':'warn warn-mod';
+          div.innerHTML='<div class="warn-title">'+(w.severity==='high'?'⛔':'⚠️')+' Dose Warning: '+dw.drug+'</div>'
+            +'<div>'+w.message+'</div>'
+            +'<div style="font-size:11px;color:#888;margin-top:4px">'+w.who_limit+' · '+w.source+'</div>';
+          dbox.appendChild(div);
+        });
+      });
+    }
     // Render drug mappings
     const mbox=document.getElementById('drug-mappings');
     if(d.drug_mappings&&d.drug_mappings.length){
