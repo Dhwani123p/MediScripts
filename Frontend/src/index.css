@@ -3515,6 +3515,52 @@ html.dark .shadow-lg            { box-shadow: 0 10px 15px -3px rgba(0,0,0,.5), 0
 /* --- Outline / ghost buttons (keep readable) --- */
 html.dark .border.border-gray-200.bg-white { background-color: #1e293b !important; }
 
+/* --- Opacity/backdrop variants (e.g. bg-white/95, bg-white/80) --- */
+html.dark [class*="bg-white\/"]       { background-color: #1e293b !important; }
+
+/* --- Gradient page backgrounds (auth pages, hero, etc.) --- */
+html.dark [class*="from-blue-50"],
+html.dark [class*="from-slate-50"],
+html.dark [class*="from-teal-50"]     { --tw-gradient-from: #0f172a !important; }
+html.dark [class*="via-teal-50"],
+html.dark [class*="via-blue-50"]      { --tw-gradient-via: #0f172a !important; }
+html.dark [class*="to-white"]         { --tw-gradient-to: #1e293b  !important; }
+html.dark .bg-gradient-to-br,
+html.dark .bg-gradient-to-r,
+html.dark .bg-gradient-to-b          { background-color: #0f172a !important; }
+/* Force gradient wrappers that are full-page containers */
+html.dark .min-h-screen[class*="gradient"],
+html.dark .min-h-screen[class*="from-"] { background: #0f172a !important; }
+
+/* --- Card / dialog backgrounds --- */
+html.dark [class*="bg-white"]        { background-color: #1e293b !important; }
+
+/* --- Auth page specific --- */
+html.dark .min-h-screen              { background-color: #0f172a; }
+
+/* --- Card headers & section backgrounds --- */
+html.dark [class*="bg-gray-50"]      { background-color: #0f172a !important; }
+html.dark [class*="bg-blue-50"]      { background-color: #1e293b !important; }
+html.dark [class*="bg-teal-50"]      { background-color: #1e293b !important; }
+html.dark [class*="bg-green-50"]     { background-color: #162032 !important; }
+html.dark [class*="bg-red-50"]       { background-color: #2d1f1f !important; }
+html.dark [class*="bg-yellow-50"]    { background-color: #2d2710 !important; }
+html.dark [class*="bg-orange-50"]    { background-color: #2d2010 !important; }
+html.dark [class*="bg-purple-50"]    { background-color: #1f1a2d !important; }
+html.dark [class*="bg-indigo-50"]    { background-color: #1a1e2d !important; }
+
+/* --- Text on colored backgrounds --- */
+html.dark [class*="text-blue-"]      { opacity: 0.9; }
+html.dark [class*="text-teal-"]      { opacity: 0.9; }
+
+/* --- Label text --- */
+html.dark label                      { color: #cbd5e1 !important; }
+
+/* --- Card component (Radix/shadcn) --- */
+html.dark .rounded-xl,
+html.dark .rounded-2xl,
+html.dark .rounded-lg                { background-color: inherit; }
+
 /* --- Scrollbar (webkit) --- */
 html.dark ::-webkit-scrollbar         { background: #1e293b; }
 html.dark ::-webkit-scrollbar-thumb   { background: #334155; border-radius: 4px; }
