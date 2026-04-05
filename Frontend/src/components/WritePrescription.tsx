@@ -105,7 +105,12 @@ export function WritePrescription({ onClose }: WritePrescriptionProps) {
       const data = await res.json();
 
       if (!res.ok) {
-        setAiError(data.error || "Extraction failed.");
+        const isUnreachable = res.status === 503 || res.status === 502;
+        setAiError(
+          isUnreachable
+            ? "⚠️ ML model is offline. Set ML_API_URL on the server, or fill the prescription manually."
+            : `⚠️ ${data.error || "Extraction failed."}`
+        );
         setAiLoading(false);
         return;
       }
@@ -139,7 +144,7 @@ export function WritePrescription({ onClose }: WritePrescriptionProps) {
       setAiSuccess(`✅ ${filled.length} medicine(s) extracted — review and edit below.`);
       setAiText("");
     } catch {
-      setAiError("Could not reach the ML service. Make sure ML_API_URL is set.");
+      setAiError("⚠️ Could not reach the server. Check your connection and try again.");
     }
 
     setAiLoading(false);

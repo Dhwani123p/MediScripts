@@ -321,7 +321,13 @@ export function VideoConferenceDoctor({
       const data = await res.json();
 
       if (!res.ok) {
-        setExtractError("ML model not running — fill the prescription manually after ending the call.");
+        const errMsg = data?.details?.message || data?.details || data?.error || "ML model unreachable";
+        const isUnreachable = res.status === 503 || res.status === 502;
+        setExtractError(
+          isUnreachable
+            ? "⚠️ ML model is offline or not configured on the server. Please fill the prescription manually."
+            : `⚠️ ML error: ${errMsg}`
+        );
         setIsTranscribing(false);
         return;
       }
@@ -380,7 +386,7 @@ export function VideoConferenceDoctor({
         setExtractSuccess(`✅ ${filled.length} medicine(s) added — dictate again to add more, or edit below.`);
       }
     } catch {
-      setExtractError("ML model not running — fill the prescription manually after ending the call.");
+      setExtractError("⚠️ Could not reach the server. Check your connection and try again.");
     }
 
     setIsTranscribing(false);
