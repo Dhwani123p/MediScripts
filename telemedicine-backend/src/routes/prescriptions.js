@@ -151,6 +151,35 @@ router.patch('/:id', verifyToken, async (req, res) => {
   }
 });
 
+// ── GET /api/prescriptions/ml-test ───────────────────────────────────────────
+// Diagnostic: pings the ML model and returns status. No auth required.
+router.get('/ml-test', async (req, res) => {
+  const ML_API_URL = (process.env.ML_API_URL || 'https://dhwani123p-mediscript-api.hf.space').replace(/\/$/, '');
+  try {
+    const start  = Date.now();
+    const result = await axios.post(
+      `${ML_API_URL}/api/predict`,
+      { text: 'Paracetamol 500mg twice daily' },
+      { timeout: 60000 }
+    );
+    res.json({
+      ok:           true,
+      ml_api_url:   ML_API_URL,
+      status:       result.status,
+      duration_ms:  Date.now() - start,
+      medicines:    result.data?.medicines?.length ?? 0,
+    });
+  } catch (err) {
+    res.status(502).json({
+      ok:          false,
+      ml_api_url:  ML_API_URL,
+      error:       err.message,
+      http_status: err.response?.status ?? null,
+      details:     err.response?.data   ?? null,
+    });
+  }
+});
+
 // ── POST /api/prescriptions/extract ──────────────────────────────────────────
 // Calls the ML model API to extract structured medicine entities from text.
 // Returns medicines ready to populate an editable prescription form.
@@ -175,7 +204,7 @@ router.post('/extract', verifyToken, async (req, res) => {
     const mlRes = await axios.post(
       `${ML_API_URL}/api/predict`,
       { text: text.trim(), ...(country ? { country } : {}) },
-      { timeout: 30000 }           // 30 s — model inference can be slow on CPU
+      { timeout: 60000 }           // 60 s — allow for HuggingFace cold start
     );
     res.json(mlRes.data);
   } catch (error) {
