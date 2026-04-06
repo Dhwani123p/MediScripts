@@ -95,6 +95,8 @@ export function VideoConferenceDoctor({
   const [doseWarnings, setDoseWarnings] = useState<any[]>([]);
   // Drug name mappings (INN → local name) from ML API
   const [drugMappings, setDrugMappings] = useState<any[]>([]);
+  // Per-medicine mapping keyed by MedLine.id — index-matched to medicines[] from API
+  const [medMappings, setMedMappings] = useState<Record<number, any>>({});
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef   = useRef<Blob[]>([]);
 
@@ -378,6 +380,16 @@ export function VideoConferenceDoctor({
           return [...prev, ...incoming];
         });
 
+        // Store per-medicine mapping keyed by MedLine.id (index-matched to API response)
+        setMedMappings((prev) => {
+          const next = { ...prev };
+          filled.forEach((med, i) => {
+            const dm = (data.drug_mappings || [])[i];
+            if (dm) next[med.id] = dm;
+          });
+          return next;
+        });
+
         setExtractSuccess(`✅ ${filled.length} medicine(s) added — dictate again to add more, or edit below.`);
       }
     } catch {
@@ -581,34 +593,6 @@ export function VideoConferenceDoctor({
                       </div>
                     )}
 
-                    {/* Drug name mappings for patient's country */}
-                    {drugMappings.length > 0 && (
-                      <div className="rounded-xl border border-green-200 overflow-hidden">
-                        <div className="bg-green-50 px-4 py-2 border-b border-green-200">
-                          <p className="text-xs font-semibold uppercase tracking-wide text-green-700">
-                            Local Drug Names
-                          </p>
-                        </div>
-                        <div className="divide-y divide-green-100">
-                          {drugMappings.map((m: any, i: number) => (
-                            <div key={i} className="px-4 py-2.5 text-xs flex items-start gap-2 bg-white">
-                              <div className="flex-1">
-                                <span className="font-semibold text-gray-700">{m.source_name}</span>
-                                {m.mapped && m.local_name !== m.source_name && (
-                                  <span className="text-green-700"> → <span className="font-semibold">{m.local_name}</span></span>
-                                )}
-                                {m.brand_examples?.length > 0 && (
-                                  <span className="text-gray-400 ml-1">({m.brand_examples.slice(0, 3).join(", ")})</span>
-                                )}
-                                {m.note && <div className="text-amber-600 mt-0.5">{m.note}</div>}
-                              </div>
-                              <span className="text-gray-400 shrink-0">{m.country_name}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
                     <div>
                       <Label className="text-sm font-medium mb-2 block">Diagnosis</Label>
                       <Textarea
@@ -693,6 +677,29 @@ export function VideoConferenceDoctor({
                                 className="h-9 text-sm"
                               />
                             </div>
+
+                            {/* Drug mapping for this medicine */}
+                            {medMappings[med.id] && (() => {
+                              const dm = medMappings[med.id];
+                              return dm.mapped ? (
+                                <div className="text-xs bg-teal-50 border border-teal-100 rounded-lg px-3 py-2 space-y-0.5">
+                                  <p className="text-teal-700">
+                                    🌍 In <span className="font-semibold">{dm.country_name}</span>:{" "}
+                                    <span className="font-bold text-teal-800">{dm.local_name}</span>
+                                  </p>
+                                  {dm.brand_examples?.length > 0 && (
+                                    <p className="text-gray-500">Brands: {dm.brand_examples.join(", ")}</p>
+                                  )}
+                                  {dm.note && (
+                                    <p className="text-amber-600 italic">{dm.note}</p>
+                                  )}
+                                </div>
+                              ) : (
+                                <div className="text-xs bg-gray-50 border border-gray-200 rounded-lg px-3 py-1.5 text-gray-500">
+                                  ⚠ No mapping found for {dm.country_name} — confirm local name manually
+                                </div>
+                              );
+                            })()}
                           </div>
                         ))}
                       </div>
@@ -932,12 +939,33 @@ export function VideoConferenceDoctor({
 
                   {extractSuccess && medications[0].medication && (
                     <div className="space-y-1 pt-1">
-                      {medications.map((m, i) => (
-                        <div key={m.id} className="text-xs bg-teal-50 border border-teal-100 rounded-lg px-3 py-1.5">
-                          <span className="font-medium text-teal-800">{i + 1}. {m.medication}</span>
-                          {m.dosage && <span className="text-teal-600"> — {m.dosage}</span>}
-                        </div>
-                      ))}
+                      {medications.map((m, i) => {
+                        const dm = medMappings[m.id];
+                        return (
+                          <div key={m.id} className="text-xs bg-teal-50 border border-teal-100 rounded-lg px-3 py-1.5 space-y-0.5">
+                            <div className="flex items-center flex-wrap gap-1">
+                              <span className="font-medium text-teal-800">{i + 1}. {m.medication}</span>
+                              {m.dosage && <span className="text-teal-600"> — {m.dosage}</span>}
+                              {dm && dm.mapped && (
+                                <span className="inline-flex items-center px-1.5 py-0.5 rounded-full border border-teal-300 bg-white text-teal-700 text-[10px] font-semibold whitespace-nowrap">
+                                  → {dm.local_name} ({dm.country_name})
+                                </span>
+                              )}
+                              {dm && !dm.mapped && (
+                                <span className="inline-flex items-center px-1.5 py-0.5 rounded-full border border-gray-200 bg-white text-gray-400 text-[10px]">
+                                  ⚠ verify locally
+                                </span>
+                              )}
+                            </div>
+                            {dm && dm.mapped && dm.brand_examples?.length > 0 && (
+                              <p className="text-gray-400">Brands: {dm.brand_examples.slice(0, 3).join(", ")}</p>
+                            )}
+                            {dm && dm.mapped && dm.note && (
+                              <p className="text-amber-600 italic">{dm.note}</p>
+                            )}
+                          </div>
+                        );
+                      })}
                       <p className="text-xs text-gray-400 pt-1">Edit the full form after ending the call.</p>
                     </div>
                   )}
