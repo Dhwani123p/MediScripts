@@ -679,8 +679,15 @@ export function VideoConferenceDoctor({
                             </div>
 
                             {/* Drug mapping for this medicine */}
-                            {medMappings[med.id] && (() => {
-                              const dm = medMappings[med.id];
+                            {(() => {
+                              // Primary: index-matched lookup by med ID
+                              // Fallback: match by drug name against the flat drugMappings array
+                              const medNameLower = med.medication.toLowerCase();
+                              const dm = medMappings[med.id] || drugMappings.find((m: any) =>
+                                medNameLower.startsWith((m.inn || "").toLowerCase()) ||
+                                medNameLower.startsWith((m.source_name || "").toLowerCase())
+                              );
+                              if (!dm) return null;
                               return dm.mapped ? (
                                 <div className="text-xs bg-teal-50 border border-teal-100 rounded-lg px-3 py-2 space-y-0.5">
                                   <p className="text-teal-700">
@@ -940,7 +947,11 @@ export function VideoConferenceDoctor({
                   {extractSuccess && medications[0].medication && (
                     <div className="space-y-1 pt-1">
                       {medications.map((m, i) => {
-                        const dm = medMappings[m.id];
+                        const medNameLower = m.medication.toLowerCase();
+                        const dm = medMappings[m.id] || drugMappings.find((dm: any) =>
+                          medNameLower.startsWith((dm.inn || "").toLowerCase()) ||
+                          medNameLower.startsWith((dm.source_name || "").toLowerCase())
+                        );
                         return (
                           <div key={m.id} className="text-xs bg-teal-50 border border-teal-100 rounded-lg px-3 py-1.5 space-y-0.5">
                             <div className="flex items-center flex-wrap gap-1">

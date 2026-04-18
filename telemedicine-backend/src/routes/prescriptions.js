@@ -253,7 +253,31 @@ router.post('/from-audio', verifyToken, upload.single('audio'), async (req, res)
       headers: form.getHeaders(),
       timeout: 60_000,          // Whisper on CPU can take ~30 s
     });
-    res.json(mlRes.data);
+    let responseData = mlRes.data;
+
+    // If the audio endpoint didn't return drug_mappings (common — Whisper endpoints
+    // often skip the mapping step), and we have a transcript + country, fall back
+    // to /api/predict with the transcript to fetch drug_mappings.
+    if (
+      country &&
+      responseData.transcript &&
+      (!responseData.drug_mappings || responseData.drug_mappings.length === 0)
+    ) {
+      try {
+        const predictRes = await axios.post(
+          `${ML_API_URL}/api/predict`,
+          { text: responseData.transcript, country },
+          { timeout: 30_000 }
+        );
+        if (predictRes.data?.drug_mappings?.length > 0) {
+          responseData = { ...responseData, drug_mappings: predictRes.data.drug_mappings };
+        }
+      } catch {
+        // fallback failed — continue without drug_mappings, not a fatal error
+      }
+    }
+
+    res.json(responseData);
   } catch (error) {
     const status  = error.response?.status;
     const details = error.response?.data || error.message;
